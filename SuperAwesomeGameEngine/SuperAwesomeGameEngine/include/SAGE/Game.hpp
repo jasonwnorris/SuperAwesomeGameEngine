@@ -4,8 +4,6 @@
 #define __SAGE_GAME_HPP__
 
 // HGF Includes
-#include <HGF\Window.hpp>
-#include <HGF\Renderer.hpp>
 #include <HGF\Timer.hpp>
 
 namespace SAGE
@@ -16,14 +14,16 @@ namespace SAGE
 			Game();
 			virtual ~Game();
 
-			virtual int Run();
+			int Run();
+
+		protected:
+			virtual int Initialize() = 0;
+			virtual int Finalize() = 0;
 
 			virtual int Update(float pDeltaTime) = 0;
 			virtual int Render() = 0;
 
 		protected:
-			HGF::Window mWindow;
-			HGF::Renderer mRenderer;
 			HGF::Timer mTimer;
 			bool mRunning;
 	};

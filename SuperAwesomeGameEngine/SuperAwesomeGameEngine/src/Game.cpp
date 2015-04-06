@@ -21,6 +21,9 @@ namespace SAGE
 	{
 		mTimer.Start();
 
+		if (Initialize() < 0)
+			return -1;
+
 		while (mRunning)
 		{
 			HGF::Events::Poll();
@@ -31,6 +34,9 @@ namespace SAGE
 			if (Render() < 0)
 				return -1;
 		}
+
+		if (Finalize() < 0)
+			return - 1;
 
 		return 0;
 	}
