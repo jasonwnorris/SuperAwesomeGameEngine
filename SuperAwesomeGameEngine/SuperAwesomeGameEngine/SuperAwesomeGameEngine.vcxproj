@@ -41,8 +41,8 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>F:\Documents\GitHub\HybridGameFramework\HybridGameFramework\HybridGameFramework\include;C:\Libraries\SDL2_2_0_3\include;C:\Libraries\OpenAL_1_16_1\include;$(IncludePath)</IncludePath>
-    <LibraryPath>F:\Documents\GitHub\HybridGameFramework\HybridGameFramework\Debug;C:\Libraries\SDL2_2_0_3\lib\x86;C:\Libraries\OpenAL_1_16_1\libs\Win32;$(LibraryPath)</LibraryPath>
+    <IncludePath>F:\Documents\GitHub\HybridGameFramework\HybridGameFramework\HybridGameFramework\include;C:\Libraries\SDL2_2_0_3\include;C:\Libraries\OpenAL_1_16_1\include;C:\Libraries\GLEW_1_11_0\include;C:\Libraries\GLM_0_9_5_4\include;$(IncludePath)</IncludePath>
+    <LibraryPath>F:\Documents\GitHub\HybridGameFramework\HybridGameFramework\Debug;C:\Libraries\SDL2_2_0_3\lib\x86;C:\Libraries\OpenAL_1_16_1\libs\Win32;C:\Libraries\GLEW_1_11_0\lib\Release\Win32;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -62,7 +62,8 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <Lib>
-      <AdditionalDependencies>HybridGameFramework.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>glew32.lib;HybridGameFramework.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <IgnoreSpecificDefaultLibraries>msvcrt.lib;libcmt.lib</IgnoreSpecificDefaultLibraries>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -86,15 +87,20 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\Camera2D.cpp" />
+    <ClCompile Include="src\GeometryBatch.cpp" />
     <ClCompile Include="src\MenuScreen.cpp" />
     <ClCompile Include="src\Screen.cpp" />
     <ClCompile Include="src\Game.cpp" />
+    <ClCompile Include="src\SpriteBatch.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\SAGE\Camera2D.hpp" />
     <ClInclude Include="include\SAGE\Game.hpp" />
+    <ClInclude Include="include\SAGE\GeometryBatch.hpp" />
     <ClInclude Include="include\SAGE\MenuScreen.hpp" />
     <ClInclude Include="include\SAGE\Screen.hpp" />
+    <ClInclude Include="include\SAGE\SpriteBatch.hpp" />
+    <ClInclude Include="include\SAGE\VertexDefinitions.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
