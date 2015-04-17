@@ -3,11 +3,6 @@
 #ifndef __SAGE_VERTEXDEFINITIONS_HPP__
 #define __SAGE_VERTEXDEFINITIONS_HPP__
 
-// HGF Includes
-#include <HGF\Color.hpp>
-#include <HGF\Vector2.hpp>
-#include <HGF\Vector3.hpp>
-
 namespace SAGE
 {
 	struct VertexVector2
@@ -37,25 +32,10 @@ namespace SAGE
 		VertexColor Color;
 	};
 
-	struct VertexPositionColorNormal
-	{
-		VertexVector3 Position;
-		VertexColor Color;
-		VertexVector3 Normal;
-	};
-
 	struct VertexPositionColorTexture
 	{
 		VertexVector3 Position;
 		VertexColor Color;
-		VertexVector2 TexCoord;
-	};
-
-	struct VertexPositionColorNormalTexture
-	{
-		VertexVector3 Position;
-		VertexColor Color;
-		VertexVector3 Normal;
 		VertexVector2 TexCoord;
 	};
 }

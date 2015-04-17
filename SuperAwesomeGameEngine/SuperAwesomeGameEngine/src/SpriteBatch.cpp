@@ -6,7 +6,6 @@
 #include <SAGE\SpriteBatch.hpp>
 // STL Includes
 #include <algorithm>
-#include <iostream>
 
 namespace SAGE
 {
@@ -25,14 +24,14 @@ namespace SAGE
 	{
 		GLsizei sizeUShort = sizeof(GLushort);
 		GLsizei sizeFloat = sizeof(GLfloat);
-		GLsizei sizeVPCNT = sizeof(VertexPositionColorNormalTexture);
+		GLsizei sizeVPCT = sizeof(VertexPositionColorTexture);
 
 		// Enable GLew.
 		glewExperimental = GL_TRUE;
 		GLenum res = glewInit();
 		if (res != GLEW_OK)
 		{
-			SDL_Log("[Window::Initialize] GLEW failed to initialize: %s", glewGetErrorString(res));
+			SDL_Log("[SpriteBatch::Initialize] GLEW failed to initialize: %s", glewGetErrorString(res));
 			return false;
 		}
 
@@ -61,20 +60,17 @@ namespace SAGE
 			mVertexBufferObject[i] = -1;
 			glGenBuffers(1, &mVertexBufferObject[i]);
 			glBindBuffer(GL_ARRAY_BUFFER, mVertexBufferObject[i]);
-			glBufferData(GL_ARRAY_BUFFER, MaxVertexCount * sizeVPCNT, nullptr, GL_DYNAMIC_DRAW);
+			glBufferData(GL_ARRAY_BUFFER, MaxVertexCount * sizeVPCT, nullptr, GL_DYNAMIC_DRAW);
 
 			// Position
 			glEnableVertexAttribArray(0);
-			glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeVPCNT, (GLvoid*)(sizeFloat * 0));
+			glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeVPCT, (GLvoid*)(sizeFloat * 0));
 			// Color
 			glEnableVertexAttribArray(1);
-			glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeVPCNT, (GLvoid*)(sizeFloat * 3));
-			// Normal
-			glEnableVertexAttribArray(2);
-			glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeVPCNT, (GLvoid*)(sizeFloat * 7));
+			glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeVPCT, (GLvoid*)(sizeFloat * 3));
 			// Texcoord
-			glEnableVertexAttribArray(3);
-			glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, sizeVPCNT, (GLvoid*)(sizeFloat * 10));
+			glEnableVertexAttribArray(2);
+			glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeVPCT, (GLvoid*)(sizeFloat * 7));
 		}
 
 		glBindVertexArray(0);
@@ -103,7 +99,7 @@ namespace SAGE
 	{
 		if (mWithinDrawPair)
 		{
-			std::cout << "[SpriteBatch::Begin] Cannot nest draw pairs." << std::endl;
+			SDL_Log("[SpriteBatch::Begin] Cannot nest draw pairs.");
 			return false;
 		}
 
@@ -122,7 +118,7 @@ namespace SAGE
 	{
 		if (!mWithinDrawPair)
 		{
-			std::cout << "[SpriteBatch::Draw] Must start a draw pair first." << std::endl;
+			SDL_Log("[SpriteBatch::Draw] Must start a draw pair first.");
 			return false;
 		}
 
@@ -163,9 +159,6 @@ namespace SAGE
 		item.VertexTL.Color.G = pColor.GetGreen();
 		item.VertexTL.Color.B = pColor.GetBlue();
 		item.VertexTL.Color.A = pColor.GetAlpha();
-		item.VertexTL.Normal.X = 0.0f;
-		item.VertexTL.Normal.Y = 0.0f;
-		item.VertexTL.Normal.Z = 1.0f;
 		item.VertexTL.TexCoord.X = texCoordTL.X;
 		item.VertexTL.TexCoord.Y = texCoordTL.Y;
 
@@ -176,9 +169,6 @@ namespace SAGE
 		item.VertexTR.Color.G = pColor.GetGreen();
 		item.VertexTR.Color.B = pColor.GetBlue();
 		item.VertexTR.Color.A = pColor.GetAlpha();
-		item.VertexTR.Normal.X = 0.0f;
-		item.VertexTR.Normal.Y = 0.0f;
-		item.VertexTR.Normal.Z = 1.0f;
 		item.VertexTR.TexCoord.X = texCoordBR.X;
 		item.VertexTR.TexCoord.Y = texCoordTL.Y;
 
@@ -189,9 +179,6 @@ namespace SAGE
 		item.VertexBL.Color.G = pColor.GetGreen();
 		item.VertexBL.Color.B = pColor.GetBlue();
 		item.VertexBL.Color.A = pColor.GetAlpha();
-		item.VertexBL.Normal.X = 0.0f;
-		item.VertexBL.Normal.Y = 0.0f;
-		item.VertexBL.Normal.Z = 1.0f;
 		item.VertexBL.TexCoord.X = texCoordTL.X;
 		item.VertexBL.TexCoord.Y = texCoordBR.Y;
 
@@ -202,9 +189,6 @@ namespace SAGE
 		item.VertexBR.Color.G = pColor.GetGreen();
 		item.VertexBR.Color.B = pColor.GetBlue();
 		item.VertexBR.Color.A = pColor.GetAlpha();
-		item.VertexBR.Normal.X = 0.0f;
-		item.VertexBR.Normal.Y = 0.0f;
-		item.VertexBR.Normal.Z = 1.0f;
 		item.VertexBR.TexCoord.X = texCoordBR.X;
 		item.VertexBR.TexCoord.Y = texCoordBR.Y;
 
@@ -217,7 +201,7 @@ namespace SAGE
 	{
 		if (!mWithinDrawPair)
 		{
-			std::cout << "[SpriteBatch::End] Cannot end a pair without starting." << std::endl;
+			SDL_Log("[SpriteBatch::End] Cannot end a pair without starting.");
 			return false;
 		}
 
@@ -315,15 +299,15 @@ namespace SAGE
 		glBindBuffer(GL_ARRAY_BUFFER, mVertexBufferObject[mBufferIndex]);
 
 		// Option 1: Insert subset into buffer.
-		glBufferSubData(GL_ARRAY_BUFFER, 0, pLength * 4 * sizeof(VertexPositionColorNormalTexture), mVertexBuffer.data());
+		glBufferSubData(GL_ARRAY_BUFFER, 0, pLength * 4 * sizeof(VertexPositionColorTexture), mVertexBuffer.data());
 
 		// Option 2: Write to buffer mapping.
 		/*
-		glBufferData(GL_ARRAY_BUFFER, mVertexBuffer.size() * sizeof(VertexPositionColorNormalTexture), nullptr, GL_DYNAMIC_DRAW);
-		VertexPositionColorNormalTexture* map = reinterpret_cast<VertexPositionColorNormalTexture*>(
+		glBufferData(GL_ARRAY_BUFFER, mVertexBuffer.size() * sizeof(VertexPositionColorTexture), nullptr, GL_DYNAMIC_DRAW);
+		VertexPositionColorTexture* map = reinterpret_cast<VertexPositionColorTexture*>(
 		glMapBufferRange(GL_ARRAY_BUFFER,
 		0,
-		pLength * sizeof(VertexPositionColorNormalTexture),
+		pLength * sizeof(VertexPositionColorTexture),
 		GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_BUFFER_BIT)
 		);
 		std::copy(mVertexBuffer.begin(), mVertexBuffer.end(), map);

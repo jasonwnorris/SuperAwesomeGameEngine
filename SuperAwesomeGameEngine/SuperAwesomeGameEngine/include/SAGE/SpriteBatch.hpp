@@ -6,23 +6,15 @@
 // SAGE Includes
 #include <SAGE\VertexDefinitions.hpp>
 // HGF Includes
+#include <HGF\Color.hpp>
 #include <HGF\Rectangle.hpp>
 #include <HGF\Texture.hpp>
+#include <HGF\Vector2.hpp>
 // STL Includes
 #include <vector>
 
 namespace SAGE
 {
-	struct SpriteBatchItem
-	{
-		unsigned int TextureID;
-		float Depth;
-		VertexPositionColorNormalTexture VertexTL;
-		VertexPositionColorNormalTexture VertexTR;
-		VertexPositionColorNormalTexture VertexBL;
-		VertexPositionColorNormalTexture VertexBR;
-	};
-
 	enum class SortMode
 	{
 		None,
@@ -102,6 +94,16 @@ namespace SAGE
 			bool End();
 
 		private:
+			struct SpriteBatchItem
+			{
+				unsigned int TextureID;
+				float Depth;
+				VertexPositionColorTexture VertexTL;
+				VertexPositionColorTexture VertexTR;
+				VertexPositionColorTexture VertexBL;
+				VertexPositionColorTexture VertexBR;
+			};
+
 			void Render();
 			void Flush(int pTextureID, int pLength);
 
@@ -116,7 +118,7 @@ namespace SAGE
 			GLuint mVertexBufferObject[RingBufferCount];
 			GLuint mIndexBufferObject;
 			std::vector<SpriteBatchItem> mBatchItemList;
-			std::vector<VertexPositionColorNormalTexture> mVertexBuffer;
+			std::vector<VertexPositionColorTexture> mVertexBuffer;
 	};
 }
 
