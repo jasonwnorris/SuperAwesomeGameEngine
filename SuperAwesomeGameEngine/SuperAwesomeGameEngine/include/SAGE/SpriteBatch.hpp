@@ -4,6 +4,7 @@
 #define __SAGE_SPRITEBATCH_HPP__
 
 // SAGE Includes
+#include <SAGE\Orientation.hpp>
 #include <SAGE\VertexDefinitions.hpp>
 // HGF Includes
 #include <HGF\Color.hpp>
@@ -56,24 +57,6 @@ namespace SAGE
 		CullCounterClockwise,
 	};
 
-	enum class OrientationEffect
-	{
-		None = 1 << 0,
-		FlipHorizontal = 1 << 1,
-		FlipVertical = 1 << 2,
-		FlipBoth = (1 << 1) | (1 << 2)
-	};
-
-	inline OrientationEffect operator|(OrientationEffect pEffectA, OrientationEffect pEffectB)
-	{
-		return static_cast<OrientationEffect>(static_cast<int>(pEffectA) | static_cast<int>(pEffectB));
-	}
-
-	inline OrientationEffect operator&(OrientationEffect pEffectA, OrientationEffect pEffectB)
-	{
-		return static_cast<OrientationEffect>(static_cast<int>(pEffectA)& static_cast<int>(pEffectB));
-	}
-
 	class SpriteBatch
 	{
 		private:
@@ -89,8 +72,9 @@ namespace SAGE
 			bool Initialize();
 			bool Finalize();
 
+			int GetDrawCallCount() const;
 			bool Begin(SortMode pSortMode = SortMode::None, BlendMode pBlendMode = BlendMode::None, SamplerState pSamplerState = SamplerState::LinearClamp, DepthStencilState pDepthStencilState = DepthStencilState::Default, RasterizerState pRasterizerState = RasterizerState::CullCounterClockwise);
-			bool Draw(const HGF::Texture& pTexture, const HGF::Vector2& pPosition, const HGF::Rectangle& pSource, const HGF::Color& pColor, const HGF::Vector2& pOrigin, float pRotation, const HGF::Vector2& pScale, OrientationEffect pOrientationEffect, float pDepth = 0.0f);
+			bool Draw(const HGF::Texture& pTexture, const HGF::Vector2& pPosition, const HGF::Rectangle& pSource, const HGF::Color& pColor, const HGF::Vector2& pOrigin, float pRotation, const HGF::Vector2& pScale, Orientation pOrientation, float pDepth = 0.0f);
 			bool End();
 
 		private:
@@ -108,6 +92,7 @@ namespace SAGE
 			void Flush(int pTextureID, int pLength);
 
 			bool mWithinDrawPair;
+			int mFlushCount;
 			SortMode mSortMode;
 			BlendMode mBlendMode;
 			SamplerState mSamplerState;

@@ -29,6 +29,7 @@ namespace SAGE
 			bool Initialize();
 			bool Finalize();
 
+			int GetDrawCallCount() const;
 			bool Begin();
 			bool Draw(const HGF::Vector2& pPositionA, const HGF::Vector2& pPositionB, const HGF::Color& pColor);
 			bool End();
@@ -44,6 +45,7 @@ namespace SAGE
 			void Flush(int pLength);
 
 			bool mWithinDrawPair;
+			int mFlushCount;
 			GLuint mVertexArrayObject;
 			GLuint mVertexBufferObject;
 			GLuint mIndexBufferObject;

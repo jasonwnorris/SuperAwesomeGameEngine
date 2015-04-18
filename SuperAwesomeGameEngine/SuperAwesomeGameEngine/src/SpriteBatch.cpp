@@ -12,6 +12,7 @@ namespace SAGE
 	SpriteBatch::SpriteBatch()
 	{
 		mWithinDrawPair = false;
+		mFlushCount = 0;
 		mBufferIndex = 0;
 	}
 
@@ -95,6 +96,11 @@ namespace SAGE
 		return true;
 	}
 
+	int SpriteBatch::GetDrawCallCount() const
+	{
+		return mFlushCount;
+	}
+
 	bool SpriteBatch::Begin(SortMode pSortMode, BlendMode pBlendMode, SamplerState pSamplerState, DepthStencilState pDepthStencilState, RasterizerState pRasterizerState)
 	{
 		if (mWithinDrawPair)
@@ -110,11 +116,12 @@ namespace SAGE
 		mRasterizerState = pRasterizerState;
 
 		mWithinDrawPair = true;
+		mFlushCount = 0;
 
 		return true;
 	}
 
-	bool SpriteBatch::Draw(const HGF::Texture& pTexture, const HGF::Vector2& pPosition, const HGF::Rectangle& pSource, const HGF::Color& pColor, const HGF::Vector2& pOrigin, float pRotation, const HGF::Vector2& pScale, OrientationEffect pOrientationEffect, float pDepth)
+	bool SpriteBatch::Draw(const HGF::Texture& pTexture, const HGF::Vector2& pPosition, const HGF::Rectangle& pSource, const HGF::Color& pColor, const HGF::Vector2& pOrigin, float pRotation, const HGF::Vector2& pScale, Orientation pOrientation, float pDepth)
 	{
 		if (!mWithinDrawPair)
 		{
@@ -143,9 +150,9 @@ namespace SAGE
 		float sin = sinf(pRotation * (float)M_PI / 180.0f);
 
 		// Flip texture coordinates for orientation.
-		if ((pOrientationEffect & OrientationEffect::FlipHorizontal) == OrientationEffect::FlipHorizontal)
+		if ((pOrientation & Orientation::FlipHorizontal) == Orientation::FlipHorizontal)
 			std::swap(texCoordTL.X, texCoordBR.X);
-		if ((pOrientationEffect & OrientationEffect::FlipVertical) == OrientationEffect::FlipVertical)
+		if ((pOrientation & Orientation::FlipVertical) == Orientation::FlipVertical)
 			std::swap(texCoordTL.Y, texCoordBR.Y);
 
 		SpriteBatchItem item;
@@ -328,5 +335,7 @@ namespace SAGE
 
 		// Clear the current vertices.
 		mVertexBuffer.clear();
+
+		mFlushCount++;
 	}
 }

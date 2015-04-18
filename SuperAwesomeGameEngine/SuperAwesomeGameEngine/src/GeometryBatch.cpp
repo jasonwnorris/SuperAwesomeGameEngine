@@ -12,6 +12,7 @@ namespace SAGE
 	GeometryBatch::GeometryBatch()
 	{
 		mWithinDrawPair = false;
+		mFlushCount = 0;
 	}
 
 	GeometryBatch::~GeometryBatch()
@@ -79,6 +80,11 @@ namespace SAGE
 		return true;
 	}
 
+	int GeometryBatch::GetDrawCallCount() const
+	{
+		return mFlushCount;
+	}
+
 	bool GeometryBatch::Begin()
 	{
 		if (mWithinDrawPair)
@@ -88,6 +94,7 @@ namespace SAGE
 		}
 
 		mWithinDrawPair = true;
+		mFlushCount = 0;
 
 		return true;
 	}
@@ -188,5 +195,7 @@ namespace SAGE
 
 		// Clear the current vertices.
 		mVertexBuffer.clear();
+
+		mFlushCount++;
 	}
 }

@@ -56,5 +56,8 @@
     <ClInclude Include="include\SAGE\VertexDefinitions.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\SAGE\Orientation.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

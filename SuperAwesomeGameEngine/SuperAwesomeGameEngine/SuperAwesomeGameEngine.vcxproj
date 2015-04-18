@@ -101,6 +101,7 @@
     <ClInclude Include="include\SAGE\Screen.hpp" />
     <ClInclude Include="include\SAGE\SpriteBatch.hpp" />
     <ClInclude Include="include\SAGE\VertexDefinitions.hpp" />
+    <ClInclude Include="include\SAGE\Orientation.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
