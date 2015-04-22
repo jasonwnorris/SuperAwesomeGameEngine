@@ -12,6 +12,7 @@ namespace SAGE
 	GeometryBatch::GeometryBatch()
 	{
 		mWithinDrawPair = false;
+		mItemCount = 0;
 		mFlushCount = 0;
 	}
 
@@ -75,8 +76,6 @@ namespace SAGE
 		glDeleteBuffers(1, &mVertexBufferObject);
 		glDeleteBuffers(1, &mIndexBufferObject);
 
-		mBatchItemList.clear();
-
 		return true;
 	}
 
@@ -94,6 +93,7 @@ namespace SAGE
 		}
 
 		mWithinDrawPair = true;
+		mItemCount = 0;
 		mFlushCount = 0;
 
 		return true;
@@ -107,7 +107,7 @@ namespace SAGE
 			return false;
 		}
 
-		GeometryBatchItem item;
+		GeometryBatchItem& item = mBatchItemList[mItemCount++];
 
 		item.VertexA.Position.X = pPositionA.X;
 		item.VertexA.Position.Y = pPositionA.Y;
@@ -125,8 +125,6 @@ namespace SAGE
 		item.VertexB.Color.B = pColor.GetBlue();
 		item.VertexB.Color.A = pColor.GetAlpha();
 
-		mBatchItemList.push_back(item);
-
 		return true;
 	}
 
@@ -138,10 +136,8 @@ namespace SAGE
 			return false;
 		}
 
-		if (!mBatchItemList.empty())
+		if (mItemCount > 0)
 			Render();
-
-		mBatchItemList.clear();
 
 		mWithinDrawPair = false;
 
@@ -153,16 +149,19 @@ namespace SAGE
 		int length = 0;
 		int texID = -1;
 
-		for (const auto& item : mBatchItemList)
+		for (int i = 0; i < mItemCount; ++i)
 		{
+			GeometryBatchItem& item = mBatchItemList[i];
+
 			if (length * 2 > MaxVertexCount)
 			{
 				Flush(length);
 				length = 0;
 			}
 
-			mVertexBuffer.push_back(item.VertexA);
-			mVertexBuffer.push_back(item.VertexB);
+			mVertexBuffer[length * 2 + 0] = item.VertexA;
+			mVertexBuffer[length * 2 + 1] = item.VertexB;
+
 			length++;
 		}
 
@@ -182,7 +181,7 @@ namespace SAGE
 		glBindBuffer(GL_ARRAY_BUFFER, mVertexBufferObject);
 
 		// Insert subset into buffer.
-		glBufferSubData(GL_ARRAY_BUFFER, 0, pLength * 2 * sizeof(VertexPositionColor), mVertexBuffer.data());
+		glBufferSubData(GL_ARRAY_BUFFER, 0, pLength * 2 * sizeof(VertexPositionColor), mVertexBuffer);
 
 		// Bind the element buffer and draw.
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mIndexBufferObject);
@@ -192,9 +191,6 @@ namespace SAGE
 		glBindVertexArray(0);
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-
-		// Clear the current vertices.
-		mVertexBuffer.clear();
 
 		mFlushCount++;
 	}

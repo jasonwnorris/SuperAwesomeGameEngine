@@ -92,18 +92,18 @@ namespace SAGE
 			void Flush(int pTextureID, int pLength);
 
 			bool mWithinDrawPair;
+			int mItemCount;
 			int mFlushCount;
 			SortMode mSortMode;
 			BlendMode mBlendMode;
 			SamplerState mSamplerState;
 			DepthStencilState mDepthStencilState;
 			RasterizerState mRasterizerState;
-			int mBufferIndex;
-			GLuint mVertexArrayObject[RingBufferCount];
-			GLuint mVertexBufferObject[RingBufferCount];
+			GLuint mVertexArrayObject;
+			GLuint mVertexBufferObject;
 			GLuint mIndexBufferObject;
-			std::vector<SpriteBatchItem> mBatchItemList;
-			std::vector<VertexPositionColorTexture> mVertexBuffer;
+			SpriteBatchItem mBatchItemList[MaxBatchSize];
+			VertexPositionColorTexture mVertexBuffer[MaxVertexCount];
 	};
 }
 

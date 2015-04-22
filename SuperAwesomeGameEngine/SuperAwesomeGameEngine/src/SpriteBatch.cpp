@@ -12,8 +12,8 @@ namespace SAGE
 	SpriteBatch::SpriteBatch()
 	{
 		mWithinDrawPair = false;
+		mItemCount = 0;
 		mFlushCount = 0;
-		mBufferIndex = 0;
 	}
 
 	SpriteBatch::~SpriteBatch()
@@ -52,27 +52,24 @@ namespace SAGE
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mIndexBufferObject);
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, MaxIndexCount * sizeUShort, indexData, GL_STATIC_DRAW);
 
-		for (int i = 0; i < RingBufferCount; i++)
-		{
-			mVertexArrayObject[i] = -1;
-			glGenVertexArrays(1, &mVertexArrayObject[i]);
-			glBindVertexArray(mVertexArrayObject[i]);
+		mVertexArrayObject = -1;
+		glGenVertexArrays(1, &mVertexArrayObject);
+		glBindVertexArray(mVertexArrayObject);
 
-			mVertexBufferObject[i] = -1;
-			glGenBuffers(1, &mVertexBufferObject[i]);
-			glBindBuffer(GL_ARRAY_BUFFER, mVertexBufferObject[i]);
-			glBufferData(GL_ARRAY_BUFFER, MaxVertexCount * sizeVPCT, nullptr, GL_DYNAMIC_DRAW);
+		mVertexBufferObject = -1;
+		glGenBuffers(1, &mVertexBufferObject);
+		glBindBuffer(GL_ARRAY_BUFFER, mVertexBufferObject);
+		glBufferData(GL_ARRAY_BUFFER, MaxVertexCount * sizeVPCT, nullptr, GL_DYNAMIC_DRAW);
 
-			// Position
-			glEnableVertexAttribArray(0);
-			glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeVPCT, (GLvoid*)(sizeFloat * 0));
-			// Color
-			glEnableVertexAttribArray(1);
-			glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeVPCT, (GLvoid*)(sizeFloat * 3));
-			// Texcoord
-			glEnableVertexAttribArray(2);
-			glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeVPCT, (GLvoid*)(sizeFloat * 7));
-		}
+		// Position
+		glEnableVertexAttribArray(0);
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeVPCT, (GLvoid*)(sizeFloat * 0));
+		// Color
+		glEnableVertexAttribArray(1);
+		glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeVPCT, (GLvoid*)(sizeFloat * 3));
+		// Texcoord
+		glEnableVertexAttribArray(2);
+		glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeVPCT, (GLvoid*)(sizeFloat * 7));
 
 		glBindVertexArray(0);
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -83,15 +80,9 @@ namespace SAGE
 
 	bool SpriteBatch::Finalize()
 	{
-		for (int i = 0; i < RingBufferCount; i++)
-		{
-			glDeleteVertexArrays(1, &mVertexArrayObject[i]);
-			glDeleteBuffers(1, &mVertexBufferObject[i]);
-		}
-
+		glDeleteVertexArrays(1, &mVertexArrayObject);
+		glDeleteBuffers(1, &mVertexBufferObject);
 		glDeleteBuffers(1, &mIndexBufferObject);
-
-		mBatchItemList.clear();
 
 		return true;
 	}
@@ -116,6 +107,7 @@ namespace SAGE
 		mRasterizerState = pRasterizerState;
 
 		mWithinDrawPair = true;
+		mItemCount = 0;
 		mFlushCount = 0;
 
 		return true;
@@ -155,7 +147,7 @@ namespace SAGE
 		if ((pOrientation & Orientation::FlipVertical) == Orientation::FlipVertical)
 			std::swap(texCoordTL.Y, texCoordBR.Y);
 
-		SpriteBatchItem item;
+		SpriteBatchItem& item = mBatchItemList[mItemCount++];
 		item.TextureID = pTexture.GetID();
 		item.Depth = pDepth;
 
@@ -199,8 +191,6 @@ namespace SAGE
 		item.VertexBR.TexCoord.X = texCoordBR.X;
 		item.VertexBR.TexCoord.Y = texCoordBR.Y;
 
-		mBatchItemList.push_back(item);
-
 		return true;
 	}
 
@@ -215,13 +205,13 @@ namespace SAGE
 		switch (mSortMode)
 		{
 		case SortMode::Texture:
-			std::sort(mBatchItemList.begin(), mBatchItemList.end(), [](const SpriteBatchItem& pItemA, const SpriteBatchItem& pItemB) { return pItemA.TextureID > pItemB.TextureID; });
+			std::sort(std::begin(mBatchItemList), std::end(mBatchItemList), [](const SpriteBatchItem& pItemA, const SpriteBatchItem& pItemB) { return pItemA.TextureID > pItemB.TextureID; });
 			break;
 		case SortMode::FrontToBack:
-			std::sort(mBatchItemList.begin(), mBatchItemList.end(), [](const SpriteBatchItem& pItemA, const SpriteBatchItem& pItemB) { return pItemA.Depth > pItemB.Depth; });
+			std::sort(std::begin(mBatchItemList), std::end(mBatchItemList), [](const SpriteBatchItem& pItemA, const SpriteBatchItem& pItemB) { return pItemA.Depth > pItemB.Depth; });
 			break;
 		case SortMode::BackToFront:
-			std::sort(mBatchItemList.begin(), mBatchItemList.end(), [](const SpriteBatchItem& pItemA, const SpriteBatchItem& pItemB) { return pItemA.Depth < pItemB.Depth; });
+			std::sort(std::begin(mBatchItemList), std::end(mBatchItemList), [](const SpriteBatchItem& pItemA, const SpriteBatchItem& pItemB) { return pItemA.Depth < pItemB.Depth; });
 			break;
 		}
 
@@ -244,10 +234,8 @@ namespace SAGE
 			break;
 		}
 
-		if (!mBatchItemList.empty())
+		if (mItemCount > 0)
 			Render();
-
-		mBatchItemList.clear();
 
 		mWithinDrawPair = false;
 
@@ -259,8 +247,10 @@ namespace SAGE
 		int length = 0;
 		int texID = -1;
 
-		for (const auto& item : mBatchItemList)
+		for (int i = 0; i < mItemCount; ++i)
 		{
+			SpriteBatchItem& item = mBatchItemList[i];
+
 			if (item.TextureID != texID)
 			{
 				if (texID != -1)
@@ -277,16 +267,15 @@ namespace SAGE
 				length = 0;
 			}
 
-			mVertexBuffer.push_back(item.VertexBL);
-			mVertexBuffer.push_back(item.VertexBR);
-			mVertexBuffer.push_back(item.VertexTR);
-			mVertexBuffer.push_back(item.VertexTL);
+			mVertexBuffer[length * 4 + 0] = item.VertexBL;
+			mVertexBuffer[length * 4 + 1] = item.VertexBR;
+			mVertexBuffer[length * 4 + 2] = item.VertexTR;
+			mVertexBuffer[length * 4 + 3] = item.VertexTL;
+
 			length++;
 		}
 
 		Flush(texID, length);
-
-		mBufferIndex = (mBufferIndex + 1) % RingBufferCount;
 	}
 
 	void SpriteBatch::Flush(int pTextureID, int pLength)
@@ -300,13 +289,13 @@ namespace SAGE
 		glBindTexture(GL_TEXTURE_2D, pTextureID);
 
 		// Bind the vertex array.
-		glBindVertexArray(mVertexArrayObject[mBufferIndex]);
+		glBindVertexArray(mVertexArrayObject);
 
 		// Bind the vertex buffer.
-		glBindBuffer(GL_ARRAY_BUFFER, mVertexBufferObject[mBufferIndex]);
+		glBindBuffer(GL_ARRAY_BUFFER, mVertexBufferObject);
 
 		// Option 1: Insert subset into buffer.
-		glBufferSubData(GL_ARRAY_BUFFER, 0, pLength * 4 * sizeof(VertexPositionColorTexture), mVertexBuffer.data());
+		glBufferSubData(GL_ARRAY_BUFFER, 0, pLength * 4 * sizeof(VertexPositionColorTexture), mVertexBuffer);
 
 		// Option 2: Write to buffer mapping.
 		/*
@@ -332,9 +321,6 @@ namespace SAGE
 
 		// Disable textures.
 		glDisable(GL_TEXTURE_2D);
-
-		// Clear the current vertices.
-		mVertexBuffer.clear();
 
 		mFlushCount++;
 	}

@@ -45,12 +45,13 @@ namespace SAGE
 			void Flush(int pLength);
 
 			bool mWithinDrawPair;
+			int mItemCount;
 			int mFlushCount;
 			GLuint mVertexArrayObject;
 			GLuint mVertexBufferObject;
 			GLuint mIndexBufferObject;
-			std::vector<GeometryBatchItem> mBatchItemList;
-			std::vector<VertexPositionColor> mVertexBuffer;
+			GeometryBatchItem mBatchItemList[MaxBatchSize];
+			VertexPositionColor mVertexBuffer[MaxVertexCount];
 	};
 }
 
