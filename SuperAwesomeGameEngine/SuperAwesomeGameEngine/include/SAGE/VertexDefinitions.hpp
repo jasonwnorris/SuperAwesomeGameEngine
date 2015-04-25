@@ -11,13 +11,6 @@ namespace SAGE
 		float Y;
 	};
 
-	struct VertexVector3
-	{
-		float X;
-		float Y;
-		float Z;
-	};
-
 	struct VertexColor
 	{
 		float R;
@@ -28,13 +21,13 @@ namespace SAGE
 
 	struct VertexPositionColor
 	{
-		VertexVector3 Position;
+		VertexVector2 Position;
 		VertexColor Color;
 	};
 
 	struct VertexPositionColorTexture
 	{
-		VertexVector3 Position;
+		VertexVector2 Position;
 		VertexColor Color;
 		VertexVector2 TexCoord;
 	};

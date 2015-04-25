@@ -92,6 +92,7 @@
     <ClCompile Include="src\Screen.cpp" />
     <ClCompile Include="src\Game.cpp" />
     <ClCompile Include="src\SpriteBatch.cpp" />
+    <ClCompile Include="src\SpriteFont.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\SAGE\Camera2D.hpp" />
@@ -100,6 +101,7 @@
     <ClInclude Include="include\SAGE\MenuScreen.hpp" />
     <ClInclude Include="include\SAGE\Screen.hpp" />
     <ClInclude Include="include\SAGE\SpriteBatch.hpp" />
+    <ClInclude Include="include\SAGE\SpriteFont.hpp" />
     <ClInclude Include="include\SAGE\VertexDefinitions.hpp" />
     <ClInclude Include="include\SAGE\Orientation.hpp" />
   </ItemGroup>

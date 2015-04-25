@@ -63,13 +63,13 @@ namespace SAGE
 
 		// Position
 		glEnableVertexAttribArray(0);
-		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeVPCT, (GLvoid*)(sizeFloat * 0));
+		glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeVPCT, (GLvoid*)(sizeFloat * 0));
 		// Color
 		glEnableVertexAttribArray(1);
-		glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeVPCT, (GLvoid*)(sizeFloat * 3));
+		glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeVPCT, (GLvoid*)(sizeFloat * 2));
 		// Texcoord
 		glEnableVertexAttribArray(2);
-		glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeVPCT, (GLvoid*)(sizeFloat * 7));
+		glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeVPCT, (GLvoid*)(sizeFloat * 6));
 
 		glBindVertexArray(0);
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -123,14 +123,13 @@ namespace SAGE
 
 		int texWidth = pTexture.GetWidth();
 		int texHeight = pTexture.GetHeight();
+		HGF::Vector2 correction(1.0f / (float)texWidth, 1.0f / (float)texHeight);
 
 		HGF::Rectangle rect;
 		if (pSource != HGF::Rectangle::Empty)
 			rect = pSource;
 		else
 			rect = HGF::Rectangle(0, 0, texWidth, texHeight);
-
-		HGF::Vector2 correction(1.0f / (float)texWidth, 1.0f / (float)texHeight);
 
 		HGF::Vector2 size(rect.Width * pScale.X, rect.Height * pScale.Y);
 		HGF::Vector2 origin(-pOrigin.X * pScale.X, -pOrigin.Y * pScale.Y);
@@ -153,7 +152,6 @@ namespace SAGE
 
 		item.VertexTL.Position.X = pPosition.X + origin.X * cos - origin.Y * sin;
 		item.VertexTL.Position.Y = pPosition.Y + origin.X * sin + origin.Y * cos;
-		item.VertexTL.Position.Z = pDepth;
 		item.VertexTL.Color.R = pColor.GetRed();
 		item.VertexTL.Color.G = pColor.GetGreen();
 		item.VertexTL.Color.B = pColor.GetBlue();
@@ -163,7 +161,6 @@ namespace SAGE
 
 		item.VertexTR.Position.X = pPosition.X + (origin.X + size.X) * cos - origin.Y * sin;
 		item.VertexTR.Position.Y = pPosition.Y + (origin.X + size.X) * sin + origin.Y * cos;
-		item.VertexTR.Position.Z = pDepth;
 		item.VertexTR.Color.R = pColor.GetRed();
 		item.VertexTR.Color.G = pColor.GetGreen();
 		item.VertexTR.Color.B = pColor.GetBlue();
@@ -173,7 +170,6 @@ namespace SAGE
 
 		item.VertexBL.Position.X = pPosition.X + origin.X * cos - (origin.Y + size.Y) * sin;
 		item.VertexBL.Position.Y = pPosition.Y + origin.X * sin + (origin.Y + size.Y) * cos;
-		item.VertexBL.Position.Z = pDepth;
 		item.VertexBL.Color.R = pColor.GetRed();
 		item.VertexBL.Color.G = pColor.GetGreen();
 		item.VertexBL.Color.B = pColor.GetBlue();
@@ -183,7 +179,6 @@ namespace SAGE
 
 		item.VertexBR.Position.X = pPosition.X + (origin.X + size.X) * cos - (origin.Y + size.Y) * sin;
 		item.VertexBR.Position.Y = pPosition.Y + (origin.X + size.X) * sin + (origin.Y + size.Y) * cos;
-		item.VertexBR.Position.Z = pDepth;
 		item.VertexBR.Color.R = pColor.GetRed();
 		item.VertexBR.Color.G = pColor.GetGreen();
 		item.VertexBR.Color.B = pColor.GetBlue();
@@ -192,6 +187,101 @@ namespace SAGE
 		item.VertexBR.TexCoord.Y = texCoordBR.Y;
 
 		return true;
+	}
+
+	bool SpriteBatch::DrawString(const SAGE::SpriteFont& pSpriteFont, const std::string& pString, const HGF::Vector2& pPosition, const HGF::Color& pColor, const HGF::Vector2& pOrigin, float pRotation, const HGF::Vector2& pScale, Orientation pOrientation, float pDepth)
+	{
+		if (!mWithinDrawPair)
+		{
+			SDL_Log("[SpriteBatch::DrawString] Must start a draw pair first.");
+			return false;
+		}
+
+		const HGF::Texture& texture = pSpriteFont.GetTexture();
+
+		int texWidth = texture.GetWidth();
+		int texHeight = texture.GetHeight();
+
+		float size = pSpriteFont.GetSize();
+		float spacing = pSpriteFont.GetSpacing();
+
+		HGF::Vector2 correction(1.0f / (float)texWidth, 1.0f / (float)texHeight);
+		HGF::Vector2 origin(-pOrigin.X * pScale.X, -pOrigin.Y * pScale.Y);
+
+		HGF::Vector2 offset = HGF::Vector2::Zero;
+
+		for (char glyph : pString)
+		{
+			if (glyph == '\n')
+			{
+				offset.X = 0.0f;
+				offset.Y += size * pScale.Y;
+			}
+			else
+			{
+				HGF::Rectangle rect = pSpriteFont.GetGlyphBounds(glyph);
+
+				HGF::Vector2 size(rect.Width * pScale.X, rect.Height * pScale.Y);
+				HGF::Vector2 texCoordTL(rect.X / (float)texWidth + correction.X, rect.Y / (float)texHeight + correction.X);
+				HGF::Vector2 texCoordBR((rect.X + rect.Width) / (float)texWidth - correction.X, (rect.Y + rect.Height) / (float)texHeight - correction.Y);
+
+				SpriteBatchItem& item = mBatchItemList[mItemCount++];
+				item.TextureID = texture.GetID();
+				item.Depth = pDepth;
+
+				item.VertexTL.Position.X = pPosition.X + origin.X + offset.X;
+				item.VertexTL.Position.Y = pPosition.Y + origin.Y + offset.Y;
+				item.VertexTL.Color.R = pColor.GetRed();
+				item.VertexTL.Color.G = pColor.GetGreen();
+				item.VertexTL.Color.B = pColor.GetBlue();
+				item.VertexTL.Color.A = pColor.GetAlpha();
+				item.VertexTL.TexCoord.X = texCoordTL.X;
+				item.VertexTL.TexCoord.Y = texCoordTL.Y;
+
+				RotateAbout(pPosition, pRotation, item.VertexTL.Position);
+				FlipAbout(pPosition, pOrientation, item.VertexTL.Position);
+
+				item.VertexTR.Position.X = pPosition.X + origin.X + size.X + offset.X;
+				item.VertexTR.Position.Y = pPosition.Y + origin.Y + offset.Y;
+				item.VertexTR.Color.R = pColor.GetRed();
+				item.VertexTR.Color.G = pColor.GetGreen();
+				item.VertexTR.Color.B = pColor.GetBlue();
+				item.VertexTR.Color.A = pColor.GetAlpha();
+				item.VertexTR.TexCoord.X = texCoordBR.X;
+				item.VertexTR.TexCoord.Y = texCoordTL.Y;
+
+				RotateAbout(pPosition, pRotation, item.VertexTR.Position);
+				FlipAbout(pPosition, pOrientation, item.VertexTR.Position);
+
+				item.VertexBL.Position.X = pPosition.X + origin.X + offset.X;
+				item.VertexBL.Position.Y = pPosition.Y + origin.Y + size.Y + offset.Y;
+				item.VertexBL.Color.R = pColor.GetRed();
+				item.VertexBL.Color.G = pColor.GetGreen();
+				item.VertexBL.Color.B = pColor.GetBlue();
+				item.VertexBL.Color.A = pColor.GetAlpha();
+				item.VertexBL.TexCoord.X = texCoordTL.X;
+				item.VertexBL.TexCoord.Y = texCoordBR.Y;
+
+				RotateAbout(pPosition, pRotation, item.VertexBL.Position);
+				FlipAbout(pPosition, pOrientation, item.VertexBL.Position);
+
+				item.VertexBR.Position.X = pPosition.X + origin.X + size.X + offset.X;
+				item.VertexBR.Position.Y = pPosition.Y + origin.Y + size.Y + offset.Y;
+				item.VertexBR.Color.R = pColor.GetRed();
+				item.VertexBR.Color.G = pColor.GetGreen();
+				item.VertexBR.Color.B = pColor.GetBlue();
+				item.VertexBR.Color.A = pColor.GetAlpha();
+				item.VertexBR.TexCoord.X = texCoordBR.X;
+				item.VertexBR.TexCoord.Y = texCoordBR.Y;
+
+				RotateAbout(pPosition, pRotation, item.VertexBR.Position);
+				FlipAbout(pPosition, pOrientation, item.VertexBR.Position);
+
+				offset.X += spacing * pScale.X;
+			}
+		}
+
+		return false;
 	}
 
 	bool SpriteBatch::End()
@@ -204,34 +294,34 @@ namespace SAGE
 
 		switch (mSortMode)
 		{
-		case SortMode::Texture:
-			std::sort(std::begin(mBatchItemList), std::end(mBatchItemList), [](const SpriteBatchItem& pItemA, const SpriteBatchItem& pItemB) { return pItemA.TextureID > pItemB.TextureID; });
-			break;
-		case SortMode::FrontToBack:
-			std::sort(std::begin(mBatchItemList), std::end(mBatchItemList), [](const SpriteBatchItem& pItemA, const SpriteBatchItem& pItemB) { return pItemA.Depth > pItemB.Depth; });
-			break;
-		case SortMode::BackToFront:
-			std::sort(std::begin(mBatchItemList), std::end(mBatchItemList), [](const SpriteBatchItem& pItemA, const SpriteBatchItem& pItemB) { return pItemA.Depth < pItemB.Depth; });
-			break;
+			case SortMode::Texture:
+				std::sort(std::begin(mBatchItemList), std::end(mBatchItemList), [](const SpriteBatchItem& pItemA, const SpriteBatchItem& pItemB) { return pItemA.TextureID > pItemB.TextureID; });
+				break;
+			case SortMode::FrontToBack:
+				std::sort(std::begin(mBatchItemList), std::end(mBatchItemList), [](const SpriteBatchItem& pItemA, const SpriteBatchItem& pItemB) { return pItemA.Depth > pItemB.Depth; });
+				break;
+			case SortMode::BackToFront:
+				std::sort(std::begin(mBatchItemList), std::end(mBatchItemList), [](const SpriteBatchItem& pItemA, const SpriteBatchItem& pItemB) { return pItemA.Depth < pItemB.Depth; });
+				break;
 		}
 
 		switch (mBlendMode)
 		{
-		case BlendMode::None:
-			glDisable(GL_BLEND);
-			break;
-		case BlendMode::Premultiplied:
-			glEnable(GL_BLEND);
-			glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
-			break;
-		case BlendMode::AlphaBlended:
-			glEnable(GL_BLEND);
-			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-			break;
-		case BlendMode::Additive:
-			glEnable(GL_BLEND);
-			glBlendFunc(GL_SRC_ALPHA, GL_ONE);
-			break;
+			case BlendMode::None:
+				glDisable(GL_BLEND);
+				break;
+			case BlendMode::Premultiplied:
+				glEnable(GL_BLEND);
+				glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+				break;
+			case BlendMode::AlphaBlended:
+				glEnable(GL_BLEND);
+				glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+				break;
+			case BlendMode::Additive:
+				glEnable(GL_BLEND);
+				glBlendFunc(GL_SRC_ALPHA, GL_ONE);
+				break;
 		}
 
 		if (mItemCount > 0)
@@ -323,5 +413,29 @@ namespace SAGE
 		glDisable(GL_TEXTURE_2D);
 
 		mFlushCount++;
+	}
+
+	void SpriteBatch::RotateAbout(const HGF::Vector2& pPosition, float pRotation, VertexVector2& pVertex)
+	{
+		float cos = cosf(pRotation);
+		float sin = sinf(pRotation);
+
+		pVertex.X -= pPosition.X;
+		pVertex.Y -= pPosition.Y;
+
+		float rotX = pVertex.X * cos - pVertex.Y * sin;
+		float rotY = pVertex.X * sin + pVertex.Y * cos;
+
+		pVertex.X = rotX + pPosition.X;
+		pVertex.Y = rotY + pPosition.Y;
+	}
+
+	void SpriteBatch::FlipAbout(const HGF::Vector2& pPosition, Orientation pOrientation, VertexVector2& pVertex)
+	{
+		// Flip texture coordinates for orientation.
+		if ((pOrientation & Orientation::FlipHorizontal) == Orientation::FlipHorizontal)
+			pVertex.X = pPosition.X - (pVertex.X - pPosition.X);
+		if ((pOrientation & Orientation::FlipVertical) == Orientation::FlipVertical)
+			pVertex.Y = pPosition.Y - (pVertex.Y - pPosition.Y);
 	}
 }

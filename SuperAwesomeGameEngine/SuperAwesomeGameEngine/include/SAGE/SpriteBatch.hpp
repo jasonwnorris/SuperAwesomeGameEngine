@@ -5,6 +5,7 @@
 
 // SAGE Includes
 #include <SAGE\Orientation.hpp>
+#include <SAGE\SpriteFont.hpp>
 #include <SAGE\VertexDefinitions.hpp>
 // HGF Includes
 #include <HGF\Color.hpp>
@@ -75,6 +76,7 @@ namespace SAGE
 			int GetDrawCallCount() const;
 			bool Begin(SortMode pSortMode = SortMode::None, BlendMode pBlendMode = BlendMode::None, SamplerState pSamplerState = SamplerState::LinearClamp, DepthStencilState pDepthStencilState = DepthStencilState::Default, RasterizerState pRasterizerState = RasterizerState::CullCounterClockwise);
 			bool Draw(const HGF::Texture& pTexture, const HGF::Vector2& pPosition, const HGF::Rectangle& pSource, const HGF::Color& pColor, const HGF::Vector2& pOrigin, float pRotation, const HGF::Vector2& pScale, Orientation pOrientation, float pDepth = 0.0f);
+			bool DrawString(const SAGE::SpriteFont& pSpriteFont, const std::string& pString, const HGF::Vector2& pPosition, const HGF::Color& pColor, const HGF::Vector2& pOrigin, float pRotation, const HGF::Vector2& pScale, Orientation pOrientation, float pDepth = 0.0f);
 			bool End();
 
 		private:
@@ -90,6 +92,9 @@ namespace SAGE
 
 			void Render();
 			void Flush(int pTextureID, int pLength);
+
+			void RotateAbout(const HGF::Vector2& pPosition, float pRotation, VertexVector2& pVertex);
+			void FlipAbout(const HGF::Vector2& pPosition, Orientation pOrientation, VertexVector2& pVertex);
 
 			bool mWithinDrawPair;
 			int mItemCount;
