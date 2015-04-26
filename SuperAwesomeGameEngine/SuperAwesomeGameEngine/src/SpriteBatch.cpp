@@ -21,6 +21,11 @@ namespace SAGE
 		Finalize();
 	}
 
+	int SpriteBatch::GetDrawCallCount() const
+	{
+		return mFlushCount;
+	}
+
 	bool SpriteBatch::Initialize()
 	{
 		GLsizei sizeUShort = sizeof(GLushort);
@@ -87,12 +92,7 @@ namespace SAGE
 		return true;
 	}
 
-	int SpriteBatch::GetDrawCallCount() const
-	{
-		return mFlushCount;
-	}
-
-	bool SpriteBatch::Begin(SortMode pSortMode, BlendMode pBlendMode, SamplerState pSamplerState, DepthStencilState pDepthStencilState, RasterizerState pRasterizerState)
+	bool SpriteBatch::Begin(HGF::Effect& pEffect, const Camera2D& pCamera, SortMode pSortMode, BlendMode pBlendMode, RasterizerState pRasterizerState)
 	{
 		if (mWithinDrawPair)
 		{
@@ -100,15 +100,17 @@ namespace SAGE
 			return false;
 		}
 
-		mSortMode = pSortMode;
-		mBlendMode = pBlendMode;
-		mSamplerState = pSamplerState;
-		mDepthStencilState = pDepthStencilState;
-		mRasterizerState = pRasterizerState;
-
 		mWithinDrawPair = true;
 		mItemCount = 0;
 		mFlushCount = 0;
+
+		mSortMode = pSortMode;
+		mBlendMode = pBlendMode;
+		mRasterizerState = pRasterizerState;
+
+		pEffect.SetProjection(pCamera.GetProjectionMatrix());
+		pEffect.SetModelView(pCamera.GetModelViewMatrix());
+		pEffect.Use();
 
 		return true;
 	}
@@ -321,6 +323,21 @@ namespace SAGE
 			case BlendMode::Additive:
 				glEnable(GL_BLEND);
 				glBlendFunc(GL_SRC_ALPHA, GL_ONE);
+				break;
+		}
+
+		switch (mRasterizerState)
+		{
+			case RasterizerState::None:
+				glDisable(GL_CULL_FACE);
+				break;
+			case RasterizerState::CullClockwise:
+				glEnable(GL_CULL_FACE);
+				glCullFace(GL_FRONT);
+				break;
+			case RasterizerState::CullCounterClockwise:
+				glEnable(GL_CULL_FACE);
+				glCullFace(GL_BACK);
 				break;
 		}
 

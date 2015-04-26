@@ -84,7 +84,7 @@ namespace SAGE
 		return mFlushCount;
 	}
 
-	bool GeometryBatch::Begin()
+	bool GeometryBatch::Begin(HGF::Effect& pEffect, const Camera2D& pCamera)
 	{
 		if (mWithinDrawPair)
 		{
@@ -95,6 +95,10 @@ namespace SAGE
 		mWithinDrawPair = true;
 		mItemCount = 0;
 		mFlushCount = 0;
+
+		pEffect.SetProjection(pCamera.GetProjectionMatrix());
+		pEffect.SetModelView(pCamera.GetModelViewMatrix());
+		pEffect.Use();
 
 		return true;
 	}

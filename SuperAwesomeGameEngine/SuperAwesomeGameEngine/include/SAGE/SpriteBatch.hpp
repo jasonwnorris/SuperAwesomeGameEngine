@@ -4,11 +4,13 @@
 #define __SAGE_SPRITEBATCH_HPP__
 
 // SAGE Includes
+#include <SAGE\Camera2D.hpp>
 #include <SAGE\Orientation.hpp>
 #include <SAGE\SpriteFont.hpp>
 #include <SAGE\VertexDefinitions.hpp>
 // HGF Includes
 #include <HGF\Color.hpp>
+#include <HGF\Effect.hpp>
 #include <HGF\Rectangle.hpp>
 #include <HGF\Texture.hpp>
 #include <HGF\Vector2.hpp>
@@ -34,23 +36,6 @@ namespace SAGE
 		AlphaBlended,
 	};
 
-	enum class SamplerState
-	{
-		PointClamp,
-		PointWrap,
-		LinearClamp,
-		LinearWrap,
-		AnisotropicClamp,
-		AnisotropicWrap,
-	};
-
-	enum class DepthStencilState
-	{
-		None,
-		Default,
-		DepthRead,
-	};
-
 	enum class RasterizerState
 	{
 		None,
@@ -70,13 +55,16 @@ namespace SAGE
 			SpriteBatch();
 			~SpriteBatch();
 
+			int GetDrawCallCount() const;
+
 			bool Initialize();
 			bool Finalize();
 
-			int GetDrawCallCount() const;
-			bool Begin(SortMode pSortMode = SortMode::None, BlendMode pBlendMode = BlendMode::None, SamplerState pSamplerState = SamplerState::LinearClamp, DepthStencilState pDepthStencilState = DepthStencilState::Default, RasterizerState pRasterizerState = RasterizerState::CullCounterClockwise);
+			bool Begin(HGF::Effect& pEffect, const Camera2D& pCamera = Camera2D::DefaultCamera, SortMode pSortMode = SortMode::None, BlendMode pBlendMode = BlendMode::None, RasterizerState pRasterizerState = RasterizerState::CullCounterClockwise);
+			
 			bool Draw(const HGF::Texture& pTexture, const HGF::Vector2& pPosition, const HGF::Rectangle& pSource, const HGF::Color& pColor, const HGF::Vector2& pOrigin, float pRotation, const HGF::Vector2& pScale, Orientation pOrientation, float pDepth = 0.0f);
 			bool DrawString(const SAGE::SpriteFont& pSpriteFont, const std::string& pString, const HGF::Vector2& pPosition, const HGF::Color& pColor, const HGF::Vector2& pOrigin, float pRotation, const HGF::Vector2& pScale, Orientation pOrientation, float pDepth = 0.0f);
+			
 			bool End();
 
 		private:
@@ -101,8 +89,6 @@ namespace SAGE
 			int mFlushCount;
 			SortMode mSortMode;
 			BlendMode mBlendMode;
-			SamplerState mSamplerState;
-			DepthStencilState mDepthStencilState;
 			RasterizerState mRasterizerState;
 			GLuint mVertexArrayObject;
 			GLuint mVertexBufferObject;
