@@ -5,6 +5,9 @@
 
 // Project Includes
 #include <SAGE\Screen.hpp>
+// STL Includes
+#include <string>
+#include <vector>
 
 namespace SAGE
 {
@@ -14,8 +17,11 @@ namespace SAGE
 			MenuScreen();
 			virtual ~MenuScreen();
 
-			virtual int Update(float pDeltaTime) = 0;
-			virtual int Render() = 0;
+			virtual int Update(float pDeltaTime) override;
+			virtual int Render(SpriteBatch& pSpriteBatch) override;
+
+		private:
+			std::vector<std::string> mItems;
 	};
 }
 
