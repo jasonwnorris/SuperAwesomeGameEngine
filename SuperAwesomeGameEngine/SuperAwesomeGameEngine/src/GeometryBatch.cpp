@@ -21,6 +21,11 @@ namespace SAGE
 		Finalize();
 	}
 
+	int GeometryBatch::GetDrawCallCount() const
+	{
+		return mFlushCount;
+	}
+
 	bool GeometryBatch::Initialize()
 	{
 		GLsizei sizeUShort = sizeof(GLushort);
@@ -79,11 +84,6 @@ namespace SAGE
 		return true;
 	}
 
-	int GeometryBatch::GetDrawCallCount() const
-	{
-		return mFlushCount;
-	}
-
 	bool GeometryBatch::Begin(HGF::Effect& pEffect, const Camera2D& pCamera)
 	{
 		if (mWithinDrawPair)
@@ -103,11 +103,11 @@ namespace SAGE
 		return true;
 	}
 
-	bool GeometryBatch::Draw(const HGF::Vector2& pPositionA, const HGF::Vector2& pPositionB, const HGF::Color& pColor)
+	bool GeometryBatch::DrawLine(const HGF::Vector2& pPositionA, const HGF::Vector2& pPositionB, const HGF::Color& pColor)
 	{
 		if (!mWithinDrawPair)
 		{
-			SDL_Log("[GeometryBatch::Draw] Must start a draw pair first.");
+			SDL_Log("[GeometryBatch::DrawLine] Must start a draw pair first.");
 			return false;
 		}
 
@@ -126,6 +126,149 @@ namespace SAGE
 		item.VertexB.Color.G = pColor.GetGreen();
 		item.VertexB.Color.B = pColor.GetBlue();
 		item.VertexB.Color.A = pColor.GetAlpha();
+
+		return true;
+	}
+
+	bool GeometryBatch::DrawLines(const std::vector<HGF::Vector2>& pPositions, const HGF::Color& pColor)
+	{
+		if (!mWithinDrawPair)
+		{
+			SDL_Log("[GeometryBatch::DrawLines] Must start a draw pair first.");
+			return false;
+		}
+
+		if (pPositions.size() < 2)
+		{
+			SDL_Log("[GeometryBatch::DrawLines] Must supply two or more positions to draw.");
+			return false;
+		}
+
+		for (int i = 1; i < (int)pPositions.size(); ++i)
+		{
+			if (!DrawLine(pPositions[i - 1], pPositions[i], pColor))
+			{
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	bool GeometryBatch::DrawRectangle(const HGF::Vector2& pTopLeft, const HGF::Vector2& pBottomRight, const HGF::Color& pColor)
+	{
+		if (!mWithinDrawPair)
+		{
+			SDL_Log("[GeometryBatch::DrawRectangle] Must start a draw pair first.");
+			return false;
+		}
+
+		HGF::Vector2 TL(pTopLeft.X, pTopLeft.Y);
+		HGF::Vector2 TR(pBottomRight.X, pTopLeft.Y);
+		HGF::Vector2 BR(pBottomRight.X, pBottomRight.Y);
+		HGF::Vector2 BL(pTopLeft.X, pBottomRight.Y);
+
+		return DrawLine(TL, TR, pColor) && DrawLine(TR, BR, pColor) && DrawLine(BR, BL, pColor) && DrawLine(BL, TL, pColor);
+	}
+
+	bool GeometryBatch::DrawRectangle(const HGF::Rectangle& pRectangle, const HGF::Color& pColor)
+	{
+		if (!mWithinDrawPair)
+		{
+			SDL_Log("[GeometryBatch::DrawRectangle] Must start a draw pair first.");
+			return false;
+		}
+
+		return DrawRectangle(HGF::Vector2(pRectangle.X, pRectangle.Y), HGF::Vector2(pRectangle.X + pRectangle.Width, pRectangle.Y + pRectangle.Height), pColor);
+	}
+
+	bool GeometryBatch::DrawCircle(const HGF::Vector2& pPosition, float pRadius, const HGF::Color& pColor, int pCount)
+	{
+		if (!mWithinDrawPair)
+		{
+			SDL_Log("[GeometryBatch::DrawCircle] Must start a draw pair first.");
+			return false;
+		}
+
+		float step = (float)(2.0f * M_PI) / (float)pCount;
+		std::vector<float> cosList(pCount + 1);
+		std::vector<float> sinList(pCount + 1);
+
+		// Pre-calculate multi-use trigonometry. 
+		for (int i = 0; i < pCount + 1; ++i)
+		{
+			cosList[i] = cosf(i * step) * pRadius;
+			sinList[i] = sinf(i * step) * pRadius;
+		}
+
+		for (int i = 0; i < pCount; ++i)
+		{
+			HGF::Vector2 positionA(pPosition.X + cosList[i], pPosition.Y + sinList[i]);
+			HGF::Vector2 positionB(pPosition.X + cosList[i + 1], pPosition.Y + sinList[i + 1]);
+
+			if (!DrawLine(positionA, positionB, pColor))
+			{
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	bool GeometryBatch::DrawBezier(const HGF::Vector2& pStartPosition, const HGF::Vector2& pEndPosition, const HGF::Vector2& pControlPoint, const HGF::Color& pColor, int pCount)
+	{
+		if (!mWithinDrawPair)
+		{
+			SDL_Log("[GeometryBatch::DrawBezier] Must start a draw pair first.");
+			return false;
+		}
+
+		float step = 1.0f / (float)pCount;
+
+		for (int i = 0; i < pCount; ++i)
+		{
+			float tA = i * step;
+			float tB = (i + 1) * step;
+			float invtA = 1.0f - tA;
+			float invtB = 1.0f - tB;
+
+			HGF::Vector2 positionA = pStartPosition * invtA * invtA + pControlPoint * 2.0f * invtA * tA + pEndPosition * tA * tA;
+			HGF::Vector2 positionB = pStartPosition * invtB * invtB + pControlPoint * 2.0f * invtB * tB + pEndPosition * tB * tB;
+
+			if (!DrawLine(positionA, positionB, pColor))
+			{
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	bool GeometryBatch::DrawBezier(const HGF::Vector2& pStartPosition, const HGF::Vector2& pEndPosition, const HGF::Vector2& pControlPointA, const HGF::Vector2& pControlPointB, const HGF::Color& pColor, int pCount)
+	{
+		if (!mWithinDrawPair)
+		{
+			SDL_Log("[GeometryBatch::DrawBezier] Must start a draw pair first.");
+			return false;
+		}
+
+		float step = 1.0f / (float)pCount;
+
+		for (int i = 0; i < pCount; ++i)
+		{
+			float tA = i * step;
+			float tB = (i + 1) * step;
+			float invtA = 1.0f - tA;
+			float invtB = 1.0f - tB;
+
+			HGF::Vector2 positionA = pStartPosition * invtA * invtA * invtA + pControlPointA * 3.0f * invtA * invtA * tA + pControlPointB * 3.0f * invtA * tA * tA + pEndPosition * tA * tA * tA;
+			HGF::Vector2 positionB = pStartPosition * invtB * invtB * invtB + pControlPointA * 3.0f * invtB * invtB * tB + pControlPointB * 3.0f * invtB * tB * tB + pEndPosition * tB * tB * tB;
+
+			if (!DrawLine(positionA, positionB, pColor))
+			{
+				return false;
+			}
+		}
 
 		return true;
 	}
