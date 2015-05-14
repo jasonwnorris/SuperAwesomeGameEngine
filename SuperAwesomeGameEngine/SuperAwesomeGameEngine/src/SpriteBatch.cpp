@@ -41,6 +41,7 @@ namespace SAGE
 			return false;
 		}
 
+		// Generate data for index buffer.
 		GLushort indexData[MaxIndexCount];
 		for (int i = 0; i < MaxIndexCount / 6; i++)
 		{
@@ -52,30 +53,34 @@ namespace SAGE
 			indexData[i * 6 + 5] = i * 4 + 3;
 		}
 
+		// Create the index buffer object.
 		mIndexBufferObject = -1;
 		glGenBuffers(1, &mIndexBufferObject);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mIndexBufferObject);
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, MaxIndexCount * sizeUShort, indexData, GL_STATIC_DRAW);
 
+		// Create the vertex array object.
 		mVertexArrayObject = -1;
 		glGenVertexArrays(1, &mVertexArrayObject);
 		glBindVertexArray(mVertexArrayObject);
 
+		// Create the vertex buffer object.
 		mVertexBufferObject = -1;
 		glGenBuffers(1, &mVertexBufferObject);
 		glBindBuffer(GL_ARRAY_BUFFER, mVertexBufferObject);
 		glBufferData(GL_ARRAY_BUFFER, MaxVertexCount * sizeVPCT, nullptr, GL_DYNAMIC_DRAW);
 
-		// Position
+		// Position attribute
 		glEnableVertexAttribArray(0);
 		glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeVPCT, (GLvoid*)(sizeFloat * 0));
-		// Color
+		// Color attribute
 		glEnableVertexAttribArray(1);
 		glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeVPCT, (GLvoid*)(sizeFloat * 2));
-		// Texcoord
+		// Texcoord attribute
 		glEnableVertexAttribArray(2);
 		glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeVPCT, (GLvoid*)(sizeFloat * 6));
 
+		// Clear bindings.
 		glBindVertexArray(0);
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
@@ -85,6 +90,7 @@ namespace SAGE
 
 	bool SpriteBatch::Finalize()
 	{
+		// Destroy objects.
 		glDeleteVertexArrays(1, &mVertexArrayObject);
 		glDeleteBuffers(1, &mVertexBufferObject);
 		glDeleteBuffers(1, &mIndexBufferObject);
@@ -115,7 +121,25 @@ namespace SAGE
 		return true;
 	}
 
-	bool SpriteBatch::Draw(const HGF::Texture& pTexture, const HGF::Vector2& pPosition, const HGF::Rectangle& pSource, const HGF::Color& pColor, const HGF::Vector2& pOrigin, float pRotation, const HGF::Vector2& pScale, Orientation pOrientation, float pDepth)
+	bool SpriteBatch::Draw(const HGF::Texture& pTexture, const HGF::Vector2& pPosition, const HGF::Vector2& pDimensions, const HGF::Rectangle& pSourceRectangle, const HGF::Color& pColor, const HGF::Vector2& pOrigin, float pRotation, const HGF::Vector2& pScale, Orientation pOrientation, float pDepth)
+	{
+		// TODO: Factor in pDimensions.
+		return Draw(pTexture, pPosition, pSourceRectangle, pColor, pOrigin, pRotation, pScale, pOrientation, pDepth);
+	}
+	
+	bool SpriteBatch::Draw(const HGF::Texture& pTexture, const HGF::Vector2& pPosition, const HGF::Rectangle& pDestinationRectangle, const HGF::Rectangle& pSourceRectangle, const HGF::Color& pColor, const HGF::Vector2& pOrigin, float pRotation, const HGF::Vector2& pScale, Orientation pOrientation, float pDepth)
+	{
+		// TODO: Factor in pDestinationRectangle.
+		return Draw(pTexture, pPosition, pSourceRectangle, pColor, pOrigin, pRotation, pScale, pOrientation, pDepth);
+	}
+	
+	bool SpriteBatch::Draw(const HGF::Texture& pTexture, const HGF::Rectangle& pDestinationRectangle, const HGF::Rectangle& pSourceRectangle, const HGF::Color& pColor, const HGF::Vector2& pOrigin, float pRotation, const HGF::Vector2& pScale, Orientation pOrientation, float pDepth)
+	{
+		// TODO: Factor in pDestinationRectangle BETTERLY.
+		return Draw(pTexture, HGF::Vector2(pDestinationRectangle.X, pDestinationRectangle.Y), pSourceRectangle, pColor, pOrigin, pRotation, pScale, pOrientation, pDepth);
+	}
+
+	bool SpriteBatch::Draw(const HGF::Texture& pTexture, const HGF::Vector2& pPosition, const HGF::Rectangle& pSourceRectangle, const HGF::Color& pColor, const HGF::Vector2& pOrigin, float pRotation, const HGF::Vector2& pScale, Orientation pOrientation, float pDepth)
 	{
 		if (!mWithinDrawPair)
 		{
@@ -128,8 +152,8 @@ namespace SAGE
 		HGF::Vector2 correction(1.0f / (float)texWidth, 1.0f / (float)texHeight);
 
 		HGF::Rectangle rect;
-		if (pSource != HGF::Rectangle::Empty)
-			rect = pSource;
+		if (pSourceRectangle != HGF::Rectangle::Empty)
+			rect = pSourceRectangle;
 		else
 			rect = HGF::Rectangle(0, 0, texWidth, texHeight);
 
@@ -189,6 +213,11 @@ namespace SAGE
 		item.VertexBR.TexCoord.Y = texCoordBR.Y;
 
 		return true;
+	}
+
+	bool SpriteBatch::DrawString(const SAGE::SpriteFont& pSpriteFont, const std::string& pString, const HGF::Vector2& pPosition, const HGF::Color& pColor, float pDepth)
+	{
+		return DrawString(pSpriteFont, pString, pPosition, pColor, HGF::Vector2::Zero, 0.0f, HGF::Vector2::One, SAGE::Orientation::None, pDepth);
 	}
 
 	bool SpriteBatch::DrawString(const SAGE::SpriteFont& pSpriteFont, const std::string& pString, const HGF::Vector2& pPosition, const HGF::Color& pColor, const HGF::Vector2& pOrigin, float pRotation, const HGF::Vector2& pScale, Orientation pOrientation, float pDepth)
