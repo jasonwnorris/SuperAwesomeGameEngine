@@ -5,7 +5,7 @@
 
 namespace SAGE
 {
-	MenuScreen::MenuScreen()
+	MenuScreen::MenuScreen(ScreenManager* pManager) : Screen(pManager)
 	{
 	}
 

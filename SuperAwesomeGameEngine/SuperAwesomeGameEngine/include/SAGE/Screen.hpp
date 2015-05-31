@@ -9,10 +9,11 @@
 
 namespace SAGE
 {
+	class ScreenManager;
 	class Screen
 	{
 		public:
-			Screen();
+			Screen(ScreenManager* pManager);
 			virtual ~Screen();
 
 			bool IsActive() const;
@@ -26,9 +27,19 @@ namespace SAGE
 
 			virtual int Update(float pDeltaTime) = 0;
 			virtual int Render(SpriteBatch& pSpriteBatch) = 0;
-			virtual int Render(GeometryBatch& pGeometryBatch) = 0;
+			virtual int Render(GeometryBatch& pGeometryBatch);
 
 		protected:
+			enum TransitionState
+			{
+				Off,
+				On,
+				In,
+				Out,
+			};
+
+			ScreenManager* mManager;
+			TransitionState mTransitionState;
 			bool mIsActive;
 			bool mIsVisible;
 	};

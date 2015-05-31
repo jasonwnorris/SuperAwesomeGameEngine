@@ -36,6 +36,9 @@
     <ClCompile Include="src\SpriteFont.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\ScreenManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\SAGE\Game.hpp">
@@ -63,6 +66,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\SAGE\SpriteFont.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\SAGE\ScreenManager.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

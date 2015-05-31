@@ -5,12 +5,17 @@
 
 namespace SAGE
 {
-	Screen::Screen()
+	Screen::Screen(ScreenManager* pManager)
 	{
+		mManager = pManager;
+		mTransitionState = TransitionState::On;
+		mIsActive = true;
+		mIsVisible = true;
 	}
 
 	Screen::~Screen()
 	{
+		mManager = nullptr;
 	}
 
 	bool Screen::IsActive() const
@@ -39,6 +44,11 @@ namespace SAGE
 	}
 
 	int Screen::Finalize()
+	{
+		return 0;
+	}
+
+	int Screen::Render(GeometryBatch& pGeometryBatch)
 	{
 		return 0;
 	}

@@ -14,7 +14,7 @@ namespace SAGE
 	class MenuScreen : public Screen
 	{
 		public:
-			MenuScreen();
+			MenuScreen(ScreenManager* pManager);
 			virtual ~MenuScreen();
 
 			virtual int Update(float pDeltaTime) override;
