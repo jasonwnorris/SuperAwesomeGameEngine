@@ -48,6 +48,16 @@ namespace SAGE
 		return 0;
 	}
 
+	int Screen::Pause()
+	{
+		return 0;
+	}
+
+	int Screen::Resume()
+	{
+		return 0;
+	}
+
 	int Screen::Render(GeometryBatch& pGeometryBatch)
 	{
 		return 0;

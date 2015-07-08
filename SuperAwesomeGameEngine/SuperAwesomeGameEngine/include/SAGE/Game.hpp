@@ -6,6 +6,7 @@
 // SAGE Includes
 #include <SAGE\GeometryBatch.hpp>
 #include <SAGE\SpriteBatch.hpp>
+#include <SAGE\ScreenManager.hpp>
 // HGF Includes
 #include <HGF\Timer.hpp>
 #include <HGF\Window.hpp>
@@ -30,6 +31,7 @@ namespace SAGE
 			virtual int Render(GeometryBatch& pGeometryBatch);
 
 			HGF::Window mWindow;
+			ScreenManager mScreenManager;
 
 		private:
 			HGF::Timer mTimer;

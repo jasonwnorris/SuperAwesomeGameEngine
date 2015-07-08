@@ -7,6 +7,10 @@ namespace SAGE
 {
 	ScreenManager::ScreenManager()
 	{
+		mScreenToPush = nullptr;
+		mPushPause = true;
+		mPushHide = true;
+		mPopCount = 0;
 	}
 
 	ScreenManager::~ScreenManager()
@@ -14,72 +18,118 @@ namespace SAGE
 		for (int i = (int)mScreens.size() - 1; i >= 0; --i)
 		{
 			mScreens[i]->Finalize();
-			
+
 			delete mScreens[i];
 		}
 
 		mScreens.clear();
+
+		if (mScreenToPush != nullptr)
+		{
+			mScreenToPush->Finalize();
+
+			delete mScreenToPush;
+		}
 	}
 
-	int ScreenManager::Push(Screen* pScreen)
+	bool ScreenManager::IsEmpty() const
 	{
-		if (pScreen->Initialize() < 0)
+		return mScreens.size() == 0 && mScreenToPush == nullptr;
+	}
+
+	int ScreenManager::Push(Screen* pScreen, bool pPause, bool pHide)
+	{
+		if (mScreenToPush != nullptr)
 		{
-			pScreen->Finalize();
-
-			delete pScreen;
-
 			return -1;
 		}
 
-		if (mScreens.size() > 0)
-		{
-			// mScreen.Hide()?
-			mScreens.back()->SetActive(false);
-			mScreens.back()->SetVisible(false);
-		}
-
-		mScreens.push_back(pScreen);
+		mScreenToPush = pScreen;
+		mPushPause = pPause;
+		mPushHide = pHide;
 
 		return 0;
 	}
 
 	int ScreenManager::Pop()
 	{
-		if (mScreens.size() == 0)
-		{
-			return -1;
-		}
-
-		// Remove top.
-		Screen* screen = mScreens.back();
-		screen->Finalize();
-		delete screen;
-		mScreens.pop_back();
-
-		// Alter new top.
-		// mScreen.Restore()?
-		mScreens.back()->SetActive(true);
-		mScreens.back()->SetVisible(true);
+		++mPopCount;
 
 		return 0;
 	}
 
 	int ScreenManager::PopAll()
 	{
-		while (mScreens.size() > 0)
-		{
-			if (Pop() < 0)
-			{
-				return -1;
-			}
-		}
+		mPopCount = (int)mScreens.size();
 
 		return 0;
 	}
 
 	int ScreenManager::Update(float pDeltaTime)
 	{
+		// Pop requested screens.
+		while (mPopCount > 0 && (int)mScreens.size() != 0)
+		{
+			Screen* screen = mScreens.back();
+			screen->Finalize();
+
+			mScreens.pop_back();
+
+			delete screen;
+
+			--mPopCount;
+		}
+
+		mPopCount = 0;
+
+		// Alter new top of stack if one exists.
+		if (mScreens.size() > 0)
+		{
+			if (mScreens.back()->Resume() < 0)
+			{
+				return -1;
+			}
+
+			mScreens.back()->SetActive(true);
+			mScreens.back()->SetVisible(true);
+		}
+
+		// Push new screen.
+		if (mScreenToPush != nullptr)
+		{
+			// Alter previous top of stack.
+			if (mScreens.size() > 0)
+			{
+				if (mPushPause && mPushHide)
+				{
+					if (mScreens.back()->Pause() < 0)
+					{
+						return -1;
+					}
+				}
+
+				mScreens.back()->SetActive(!mPushPause);
+				mScreens.back()->SetVisible(!mPushHide);
+			}
+
+			// Add to stack.
+			if (mScreenToPush->Initialize() < 0)
+			{
+				mScreenToPush->Finalize();
+
+				delete mScreenToPush;
+
+				return -1;
+			}
+			else
+			{
+				mScreens.push_back(mScreenToPush);
+			}
+
+			mScreenToPush = nullptr;
+		}
+
+		// Update
 		for (int i = 0; i < (int)mScreens.size(); ++i)
 		{
 			if (mScreens[i]->IsActive())
@@ -94,6 +144,7 @@ namespace SAGE
 
 	int ScreenManager::Render(SpriteBatch& pSpriteBatch)
 	{
+		// Render
 		for (int i = 0; i < (int)mScreens.size(); ++i)
 		{
 			if (mScreens[i]->IsVisible())
@@ -108,6 +159,7 @@ namespace SAGE
 
 	int ScreenManager::Render(GeometryBatch& pGeometryBatch)
 	{
+		// Render
 		for (int i = 0; i < (int)mScreens.size(); ++i)
 		{
 			if (mScreens[i]->IsVisible())

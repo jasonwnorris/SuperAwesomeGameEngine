@@ -25,6 +25,9 @@ namespace SAGE
 			virtual int Initialize();
 			virtual int Finalize();
 
+			virtual int Pause();
+			virtual int Resume();
+
 			virtual int Update(float pDeltaTime) = 0;
 			virtual int Render(SpriteBatch& pSpriteBatch) = 0;
 			virtual int Render(GeometryBatch& pGeometryBatch);

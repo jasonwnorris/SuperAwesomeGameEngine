@@ -16,7 +16,8 @@ namespace SAGE
 			ScreenManager();
 			~ScreenManager();
 
-			int Push(Screen* pScreen);
+			bool IsEmpty() const;
+			int Push(Screen* pScreen, bool pPause = true, bool pHide = true);
 			int Pop();
 			int PopAll();
 
@@ -26,6 +27,10 @@ namespace SAGE
 
 		private:
 			std::vector<Screen*> mScreens;
+			Screen* mScreenToPush;
+			bool mPushPause;
+			bool mPushHide;
+			int mPopCount;
 	};
 }
 
