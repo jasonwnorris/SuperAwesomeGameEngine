@@ -41,11 +41,17 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>F:\Documents\GitHub\HybridGameFramework\HybridGameFramework\HybridGameFramework\include;C:\Libraries\SDL2_2_0_3\include;C:\Libraries\OpenAL_1_16_1\include;C:\Libraries\GLEW_1_11_0\include;C:\Libraries\GLM_0_9_5_4\include;$(IncludePath)</IncludePath>
-    <LibraryPath>F:\Documents\GitHub\HybridGameFramework\HybridGameFramework\Debug;C:\Libraries\SDL2_2_0_3\lib\x86;C:\Libraries\OpenAL_1_16_1\libs\Win32;C:\Libraries\GLEW_1_11_0\lib\Release\Win32;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\Libraries\SDL2_2_0_3\include;C:\Libraries\OpenAL_1_16_1\include;C:\Libraries\GLEW_1_11_0\include;C:\Libraries\GLM_0_9_5_4\include;$(SolutionDir)\..\HybridGameFramework\include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Libraries\SDL2_2_0_3\lib\x86;C:\Libraries\OpenAL_1_16_1\libs\Win32;C:\Libraries\GLEW_1_11_0\lib\Release\Win32;$(SolutionDir)\..\HybridGameFramework\lib\Debug;$(LibraryPath)</LibraryPath>
+    <OutDir>$(SolutionDir)lib\$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)bin\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
+    <IncludePath>C:\Libraries\SDL2_2_0_3\include;C:\Libraries\OpenAL_1_16_1\include;C:\Libraries\GLEW_1_11_0\include;C:\Libraries\GLM_0_9_5_4\include;$(SolutionDir)\..\HybridGameFramework\include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Libraries\SDL2_2_0_3\lib\x86;C:\Libraries\OpenAL_1_16_1\libs\Win32;C:\Libraries\GLEW_1_11_0\lib\Release\Win32;$(SolutionDir)\..\HybridGameFramework\lib\Release;$(LibraryPath)</LibraryPath>
+    <OutDir>$(SolutionDir)lib\$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)bin\$(Configuration)\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
