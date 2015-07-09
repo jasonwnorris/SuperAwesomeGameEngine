@@ -14,32 +14,32 @@ namespace SAGE
 	{
 		public:
 			AudioSource();
-			AudioSource(ALuint pBufferID);
+			AudioSource(ALuint p_BufferID);
 			~AudioSource();
 
-			void SetBuffer(ALuint pBufferID);
-			void SetPosition(ALfloat pPositionX, ALfloat pPositionY);
-			void SetPosition(const Vector2& pPosition);
-			void SetVelocity(ALfloat pVelocityX, ALfloat pVelocityY);
-			void SetVelocity(const Vector2& pVelocity);
-			void SetPitch(ALfloat pPitch);
-			void SetGain(ALfloat pGain);
-			void SetLooping(ALboolean pIsLooping);
+			void SetBuffer(ALuint p_BufferID);
+			void SetPosition(ALfloat p_PositionX, ALfloat p_PositionY);
+			void SetPosition(const Vector2& p_Position);
+			void SetVelocity(ALfloat p_VelocityX, ALfloat p_VelocityY);
+			void SetVelocity(const Vector2& p_Velocity);
+			void SetPitch(ALfloat p_Pitch);
+			void SetGain(ALfloat p_Gain);
+			void SetLooping(ALboolean p_IsLooping);
 
 			void Play();
 			void Pause();
 			void Stop();
 
 		private:
-			ALuint mID;
-			ALuint mBufferID;
-			ALfloat mPositionX;
-			ALfloat mPositionY;
-			ALfloat mVelocityX;
-			ALfloat mVelocityY;
-			ALfloat mPitch;
-			ALfloat mGain;
-			ALboolean mIsLooping;
+			ALuint m_ID;
+			ALuint m_BufferID;
+			ALfloat m_PositionX;
+			ALfloat m_PositionY;
+			ALfloat m_VelocityX;
+			ALfloat m_VelocityY;
+			ALfloat m_Pitch;
+			ALfloat m_Gain;
+			ALboolean m_IsLooping;
 	};
 }
 

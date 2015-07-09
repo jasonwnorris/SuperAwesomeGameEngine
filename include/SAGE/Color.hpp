@@ -28,43 +28,43 @@ namespace SAGE
 			static const Color TransparentBlack;
 
 			Color();
-			Color(float pRed, float pGreen, float pBlue, float pAlpha = 1.0f);
-			Color(const char* pHex, float pAlpha = 1.0f);
+			Color(float p_Red, float p_Green, float p_Blue, float p_Alpha = 1.0f);
+			Color(const char* p_Hex, float p_Alpha = 1.0f);
 			~Color() = default;
 
-			bool operator==(const Color& pColor) const;
-			bool operator!=(const Color& pColor) const;
-			Color& operator=(const Color& pColor);
-			Color operator+(const Color& pColor) const;
-			Color operator-(const Color& pColor) const;
-			Color operator*(float pScalar) const;
-			Color operator/(float pScalar) const;
-			Color& operator+=(const Color& pColor);
-			Color& operator-=(const Color& pColor);
-			Color& operator*=(float pScalar);
-			Color& operator/=(float pScalar);
+			bool operator==(const Color& p_Color) const;
+			bool operator!=(const Color& p_Color) const;
+			Color& operator=(const Color& p_Color);
+			Color operator+(const Color& p_Color) const;
+			Color operator-(const Color& p_Color) const;
+			Color operator*(float p_Scalar) const;
+			Color operator/(float p_Scalar) const;
+			Color& operator+=(const Color& p_Color);
+			Color& operator-=(const Color& p_Color);
+			Color& operator*=(float p_Scalar);
+			Color& operator/=(float p_Scalar);
 
 			float GetRed() const;
 			float GetGreen() const;
 			float GetBlue() const;
 			float GetAlpha() const;
 
-			void SetRed(float pRed);
-			void SetGreen(float pGreen);
-			void SetBlue(float pBlue);
-			void SetAlpha(float pAlpha);
+			void SetRed(float p_Red);
+			void SetGreen(float p_Green);
+			void SetBlue(float p_Blue);
+			void SetAlpha(float p_Alpha);
 			void SetOpenGL() const;
 
-			Color& Invert(bool pInvertAlpha = false);
-			Color Inverse(bool pInvertAlpha = false) const;
+			Color& Invert(bool p_InvertAlpha = false);
+			Color Inverse(bool p_InvertAlpha = false) const;
 
-			static Color Lerp(const Color& pColorA, const Color& pColorB, float pAmount);
+			static Color Lerp(const Color& p_ColorA, const Color& p_ColorB, float p_Amount);
 
 		private:
-			float mRed;
-			float mGreen;
-			float mBlue;
-			float mAlpha;
+			float m_Red;
+			float m_Green;
+			float m_Blue;
+			float m_Alpha;
 	};
 }
 

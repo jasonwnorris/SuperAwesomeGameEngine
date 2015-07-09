@@ -15,17 +15,17 @@ namespace SAGE
 	bool Mouse::sScrollDown;
 
 	// static
-	void Mouse::GetPosition(int& pX, int& pY)
+	void Mouse::GetPosition(int& p_X, int& p_Y)
 	{
-		pX = sCurrentX;
-		pY = sCurrentY;
+		p_X = sCurrentX;
+		p_Y = sCurrentY;
 	}
 
 	// static
-	void Mouse::GetPosition(Vector2& pPosition)
+	void Mouse::GetPosition(Vector2& p_Position)
 	{
-		pPosition.X = (float)sCurrentX;
-		pPosition.Y = (float)sCurrentY;
+		p_Position.X = (float)sCurrentX;
+		p_Position.Y = (float)sCurrentY;
 	}
 
 	// static
@@ -35,17 +35,17 @@ namespace SAGE
 	}
 
 	// static
-	void Mouse::GetMovement(int& pX, int& pY)
+	void Mouse::GetMovement(int& p_X, int& p_Y)
 	{
-		pX = sCurrentX - sPreviousX;
-		pY = sCurrentY - sPreviousY;
+		p_X = sCurrentX - sPreviousX;
+		p_Y = sCurrentY - sPreviousY;
 	}
 
 	// static
-	void Mouse::GetMovement(Vector2& pMovement)
+	void Mouse::GetMovement(Vector2& p_Movement)
 	{
-		pMovement.X = (float)(sCurrentX - sPreviousX);
-		pMovement.Y = (float)(sCurrentY - sPreviousY);
+		p_Movement.X = (float)(sCurrentX - sPreviousX);
+		p_Movement.Y = (float)(sCurrentY - sPreviousY);
 	}
 
 	// static
@@ -55,27 +55,27 @@ namespace SAGE
 	}
 
 	// static
-	bool Mouse::IsButtonDown(MouseButton pButton)
+	bool Mouse::IsButtonDown(MouseButton p_Button)
 	{
-		return (sCurrentState & ButtonMask(pButton)) != 0;
+		return (sCurrentState & ButtonMask(p_Button)) != 0;
 	}
 
 	// static
-	bool Mouse::IsButtonUp(MouseButton pButton)
+	bool Mouse::IsButtonUp(MouseButton p_Button)
 	{
-		return (sCurrentState & ButtonMask(pButton)) == 0;
+		return (sCurrentState & ButtonMask(p_Button)) == 0;
 	}
 
 	// static
-	bool Mouse::IsButtonClicked(MouseButton pButton)
+	bool Mouse::IsButtonClicked(MouseButton p_Button)
 	{
-		return (sCurrentState & ButtonMask(pButton)) != 0 && (sPreviousState & ButtonMask(pButton)) == 0;
+		return (sCurrentState & ButtonMask(p_Button)) != 0 && (sPreviousState & ButtonMask(p_Button)) == 0;
 	}
 
 	// static
-	bool Mouse::IsButtonReleased(MouseButton pButton)
+	bool Mouse::IsButtonReleased(MouseButton p_Button)
 	{
-		return (sCurrentState & ButtonMask(pButton)) == 0 && (sPreviousState & ButtonMask(pButton)) != 0;
+		return (sCurrentState & ButtonMask(p_Button)) == 0 && (sPreviousState & ButtonMask(p_Button)) != 0;
 	}
 
 	// static
@@ -102,29 +102,29 @@ namespace SAGE
 	}
 
 	// static
-	void Mouse::SetPosition(int pX, int pY)
+	void Mouse::SetPosition(int p_X, int p_Y)
 	{
-		sCurrentX = pX;
-		sCurrentY = pY;
+		sCurrentX = p_X;
+		sCurrentY = p_Y;
 	}
 
 	// static
-	void Mouse::SetScroll(int pX, int pY)
+	void Mouse::SetScroll(int p_X, int p_Y)
 	{
-		if (pY > 0)
+		if (p_Y > 0)
 		{
 			sScrollUp = true;
 			sScrollDown = false;
 		}
-		else if (pY < 0)
+		else if (p_Y < 0)
 		{
 			sScrollUp = false;
 			sScrollDown = true;
 		}
 	}
 
-	int Mouse::ButtonMask(MouseButton pButton)
+	int Mouse::ButtonMask(MouseButton p_Button)
 	{
-		return 1 << (static_cast<int>(pButton) - 1);
+		return 1 << (static_cast<int>(p_Button) - 1);
 	}
 }

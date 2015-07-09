@@ -32,14 +32,14 @@ namespace SAGE
 			bool Initialize();
 			bool Finalize();
 
-			bool Begin(Effect& pEffect, const Camera2D& pCamera = Camera2D::DefaultCamera);
-			bool DrawLine(const Vector2& pPositionA, const Vector2& pPositionB, const Color& pColor);
-			bool DrawLines(const std::vector<Vector2>& pPositions, const Color& pColor);
-			bool DrawRectangle(const Vector2& pTopLeft, const Vector2& pBottomRight, const Color& pColor);
-			bool DrawRectangle(const Rectangle& pRectangle, const Color& pColor);
-			bool DrawCircle(const Vector2& pPosition, float pRadius, const Color& pColor, int pCount = 25);
-			bool DrawBezier(const Vector2& pStartPosition, const Vector2& pEndPosition, const Vector2& pControlPoint, const Color& pColor, int pCount = 25);
-			bool DrawBezier(const Vector2& pStartPosition, const Vector2& pEndPosition, const Vector2& pControlPointA, const Vector2& pControlPointB, const Color& pColor, int pCount = 25);
+			bool Begin(Effect& p_Effect, const Camera2D& p_Camera = Camera2D::DefaultCamera);
+			bool DrawLine(const Vector2& p_PositionA, const Vector2& p_PositionB, const Color& p_Color);
+			bool DrawLines(const std::vector<Vector2>& p_Positions, const Color& p_Color);
+			bool DrawRectangle(const Vector2& p_TopLeft, const Vector2& p_BottomRight, const Color& p_Color);
+			bool DrawRectangle(const Rectangle& p_Rectangle, const Color& p_Color);
+			bool DrawCircle(const Vector2& p_Position, float p_Radius, const Color& p_Color, int p_Count = 25);
+			bool DrawBezier(const Vector2& p_StartPosition, const Vector2& p_EndPosition, const Vector2& p_ControlPoint, const Color& p_Color, int p_Count = 25);
+			bool DrawBezier(const Vector2& p_StartPosition, const Vector2& p_EndPosition, const Vector2& p_ControlPointA, const Vector2& p_ControlPointB, const Color& p_Color, int p_Count = 25);
 			bool End();
 
 		private:
@@ -50,16 +50,16 @@ namespace SAGE
 			};
 
 			void Render();
-			void Flush(int pLength);
+			void Flush(int p_Length);
 
-			bool mWithinDrawPair;
-			int mItemCount;
-			int mFlushCount;
-			GLuint mVertexArrayObject;
-			GLuint mVertexBufferObject;
-			GLuint mIndexBufferObject;
-			GeometryBatchItem mBatchItemList[MaxBatchSize];
-			VertexPositionColor mVertexBuffer[MaxVertexCount];
+			bool m_WithinDrawPair;
+			int m_ItemCount;
+			int m_FlushCount;
+			GLuint m_VertexArrayObject;
+			GLuint m_VertexBufferObject;
+			GLuint m_IndexBufferObject;
+			GeometryBatchItem m_BatchItemList[MaxBatchSize];
+			VertexPositionColor m_VertexBuffer[MaxVertexCount];
 	};
 }
 

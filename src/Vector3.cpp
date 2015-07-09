@@ -22,11 +22,11 @@ namespace SAGE
 		Z = 0.0f;
 	}
 
-	Vector3::Vector3(float pX, float pY, float pZ)
+	Vector3::Vector3(float p_X, float p_Y, float p_Z)
 	{
-		X = pX;
-		Y = pY;
-		Z = pZ;
+		X = p_X;
+		Y = p_Y;
+		Z = p_Z;
 	}
 
 	float Vector3::Length() const
@@ -39,9 +39,9 @@ namespace SAGE
 		return X * X + Y * Y + Z * Z;
 	}
 
-	float Vector3::Dot(const Vector3& pOther)
+	float Vector3::Dot(const Vector3& p_Other)
 	{
-		return X * pOther.X + Y * pOther.Y + Z * pOther.Z;
+		return X * p_Other.X + Y * p_Other.Y + Z * p_Other.Z;
 	}
 
 	const Vector3& Vector3::Normalize()
@@ -57,33 +57,33 @@ namespace SAGE
 		return *this;
 	}
 
-	const Vector3 Vector3::Cross(const Vector3& pOther)
+	const Vector3 Vector3::Cross(const Vector3& p_Other)
 	{
-		return Vector3(Y * pOther.Z - Z * pOther.Y, Z * pOther.X - X * pOther.Z, X * pOther.Y - Y * pOther.X);
+		return Vector3(Y * p_Other.Z - Z * p_Other.Y, Z * p_Other.X - X * p_Other.Z, X * p_Other.Y - Y * p_Other.X);
 	}
 
-	void Vector3::operator()(const float pX, const float pY, const float pZ)
+	void Vector3::operator()(const float p_X, const float p_Y, const float p_Z)
 	{
-		X = pX;
-		Y = pY;
-		Z = pZ;
+		X = p_X;
+		Y = p_Y;
+		Z = p_Z;
 	}
 
-	bool Vector3::operator==(const Vector3& pOther) const
+	bool Vector3::operator==(const Vector3& p_Other) const
 	{
-		return X == pOther.X && Y == pOther.Y && Z == pOther.Z;
+		return X == p_Other.X && Y == p_Other.Y && Z == p_Other.Z;
 	}
 
-	bool Vector3::operator!=(const Vector3& pOther) const
+	bool Vector3::operator!=(const Vector3& p_Other) const
 	{
-		return X != pOther.X || Y != pOther.Y || Z != pOther.Z;
+		return X != p_Other.X || Y != p_Other.Y || Z != p_Other.Z;
 	}
 
-	Vector3& Vector3::operator=(const Vector3& pOther)
+	Vector3& Vector3::operator=(const Vector3& p_Other)
 	{
-		X = pOther.X;
-		Y = pOther.Y;
-		Z = pOther.Z;
+		X = p_Other.X;
+		Y = p_Other.Y;
+		Z = p_Other.Z;
 
 		return *this;
 	}
@@ -93,77 +93,77 @@ namespace SAGE
 		return Vector3(-X, -Y, -Z);
 	}
 
-	Vector3 Vector3::operator-(const Vector3& pOther) const
+	Vector3 Vector3::operator-(const Vector3& p_Other) const
 	{
-		return Vector3(X - pOther.X, Y - pOther.Y, Z - pOther.Z);
+		return Vector3(X - p_Other.X, Y - p_Other.Y, Z - p_Other.Z);
 	}
 
-	Vector3 Vector3::operator+(const Vector3& pOther) const
+	Vector3 Vector3::operator+(const Vector3& p_Other) const
 	{
-		return Vector3(X + pOther.X, Y + pOther.Y, Z + pOther.Z);
+		return Vector3(X + p_Other.X, Y + p_Other.Y, Z + p_Other.Z);
 	}
 
-	Vector3 Vector3::operator*(float pScalar) const
+	Vector3 Vector3::operator*(float p_Scalar) const
 	{
-		return Vector3(X * pScalar, Y * pScalar, Z * pScalar);
+		return Vector3(X * p_Scalar, Y * p_Scalar, Z * p_Scalar);
 	}
 
-	Vector3 Vector3::operator/(float pScalar) const
+	Vector3 Vector3::operator/(float p_Scalar) const
 	{
-		return Vector3(X / pScalar, Y / pScalar, Z / pScalar);
+		return Vector3(X / p_Scalar, Y / p_Scalar, Z / p_Scalar);
 	}
 
-	Vector3& Vector3::operator+=(const Vector3& pOther)
+	Vector3& Vector3::operator+=(const Vector3& p_Other)
 	{
-		X += pOther.X;
-		Y += pOther.Y;
-		Z += pOther.Z;
+		X += p_Other.X;
+		Y += p_Other.Y;
+		Z += p_Other.Z;
 
 		return *this;
 	}
 
-	Vector3& Vector3::operator-=(const Vector3& pOther)
+	Vector3& Vector3::operator-=(const Vector3& p_Other)
 	{
-		X -= pOther.X;
-		Y -= pOther.Y;
-		Z -= pOther.Z;
+		X -= p_Other.X;
+		Y -= p_Other.Y;
+		Z -= p_Other.Z;
 
 		return *this;
 	}
 
-	Vector3& Vector3::operator*=(float pScalar)
+	Vector3& Vector3::operator*=(float p_Scalar)
 	{
-		X *= pScalar;
-		Y *= pScalar;
-		Z *= pScalar;
+		X *= p_Scalar;
+		Y *= p_Scalar;
+		Z *= p_Scalar;
 
 		return *this;
 	}
 
-	Vector3& Vector3::operator/=(float pScalar)
+	Vector3& Vector3::operator/=(float p_Scalar)
 	{
-		X /= pScalar;
-		Y /= pScalar;
-		Z /= pScalar;
+		X /= p_Scalar;
+		Y /= p_Scalar;
+		Z /= p_Scalar;
 
 		return *this;
 	}
 
 	// static
-	float Vector3::Dot(const Vector3& pVecA, const Vector3& pVecB)
+	float Vector3::Dot(const Vector3& p_VecA, const Vector3& p_VecB)
 	{
-		return pVecA.X * pVecB.X + pVecA.Y * pVecB.Y + pVecA.Z * pVecB.Z;
+		return p_VecA.X * p_VecB.X + p_VecA.Y * p_VecB.Y + p_VecA.Z * p_VecB.Z;
 	}
 
 	// static 
-	const Vector3 Vector3::Cross(const Vector3& pVecA, const Vector3& pVecB)
+	const Vector3 Vector3::Cross(const Vector3& p_VecA, const Vector3& p_VecB)
 	{
-		return Vector3(pVecA.Y * pVecB.Z - pVecA.Z * pVecB.Y, pVecA.Z * pVecB.X - pVecA.X * pVecB.Z, pVecA.X * pVecB.Y - pVecA.Y * pVecB.X);
+		return Vector3(p_VecA.Y * p_VecB.Z - p_VecA.Z * p_VecB.Y, p_VecA.Z * p_VecB.X - p_VecA.X * p_VecB.Z, p_VecA.X * p_VecB.Y - p_VecA.Y * p_VecB.X);
 	}
 
 	// static
-	float Vector3::Distance(const Vector3& pVecA, const Vector3& pVecB)
+	float Vector3::Distance(const Vector3& p_VecA, const Vector3& p_VecB)
 	{
-		return (pVecA - pVecB).Length();
+		return (p_VecA - p_VecB).Length();
 	}
 }

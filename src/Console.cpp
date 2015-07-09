@@ -10,34 +10,34 @@
 namespace SAGE
 {
 	// static
-	void Console::Write(const char* pText, ...)
+	void Console::Write(const char* p_Text, ...)
 	{
 		va_list args;
-		va_start(args, pText);
-		vprintf(pText, args);
+		va_start(args, p_Text);
+		vprintf(p_Text, args);
 		va_end(args);
 	}
 
 	// static
-	void Console::WriteLine(const char* pText, ...)
+	void Console::WriteLine(const char* p_Text, ...)
 	{
 		va_list args;
-		va_start(args, pText);
-		vprintf(pText, args);
+		va_start(args, p_Text);
+		vprintf(p_Text, args);
 		va_end(args);
 		printf("\n");
 	}
 
 	// static
-	void Console::Write(const std::string& pText)
+	void Console::Write(const std::string& p_Text)
 	{
-		std::cout << pText;
+		std::cout << p_Text;
 	}
 
 	// static
-	void Console::WriteLine(const std::string& pText)
+	void Console::WriteLine(const std::string& p_Text)
 	{
-		std::cout << pText << std::endl;
+		std::cout << p_Text << std::endl;
 	}
 
 	// static

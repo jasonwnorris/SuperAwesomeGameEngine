@@ -30,8 +30,8 @@ namespace SAGE
 
 		static const WindowOptions DefaultOptions;
 
-		static bool LoadFromFile(const std::string& pFilename, WindowOptions& pWindowOptions);
-		static bool SaveToFile(const std::string& pFilename, const WindowOptions& pWindowOptions);
+		static bool LoadFromFile(const std::string& p_Filename, WindowOptions& p_WindowOptions);
+		static bool SaveToFile(const std::string& p_Filename, const WindowOptions& p_WindowOptions);
 
 		std::string Title;
 		int Width;
@@ -59,14 +59,14 @@ namespace SAGE
 
 			SDL_Window* GetC() const;
 
-			bool Initialize(const WindowOptions& pOptions = WindowOptions::DefaultOptions);
-			bool Reinitialize(const WindowOptions& pOptions = WindowOptions::DefaultOptions);
+			bool Initialize(const WindowOptions& p_Options = WindowOptions::DefaultOptions);
+			bool Reinitialize(const WindowOptions& p_Options = WindowOptions::DefaultOptions);
 			bool Finalize();
-			void SetTitle(const std::string& pTitle);
-			void SetIcon(const Surface& pSurface);
-			void SetClearColor(const Color& pColor);
-			void Resize(int pWidth, int pHeight);
-			bool SetVerticalSync(bool pEnabled);
+			void SetTitle(const std::string& p_Title);
+			void SetIcon(const Surface& p_Surface);
+			void SetClearColor(const Color& p_Color);
+			void Resize(int p_Width, int p_Height);
+			bool SetVerticalSync(bool p_Enabled);
 			void Show();
 			void Hide();
 			void Focus();
@@ -78,9 +78,9 @@ namespace SAGE
 			void PrintInfo();
 
 		private:
-			SDL_Window* mWindow;
-			SDL_GLContext mContext;
-			bool mIsInitialized;
+			SDL_Window* m_Window;
+			SDL_GLContext m_Context;
+			bool m_IsInitialized;
 	};
 }
 

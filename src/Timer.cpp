@@ -16,69 +16,69 @@ namespace SAGE
 
 	float Timer::GetDeltaTime()
 	{
-		if (!mStarted || mPaused)
+		if (!m_Started || m_Paused)
 			return 0.0f;
 
 		Uint32 current = SDL_GetTicks();
-		Uint32 difference = current - mLastTicks;
-		mLastTicks = current;
+		Uint32 difference = current - m_LastTicks;
+		m_LastTicks = current;
 
 		return (float)(difference / 1000.0f);
 	}
 
 	float Timer::GetElapsedTime() const
 	{
-		if (!mStarted)
+		if (!m_Started)
 			return 0.0f;
 
-		if (mPaused)
-			return (float)mPausedTicks;
+		if (m_Paused)
+			return (float)m_PausedTicks;
 		else
-			return (float)((SDL_GetTicks() - mStartTicks) / 1000.0f);
+			return (float)((SDL_GetTicks() - m_StartTicks) / 1000.0f);
 	}
 
 	int Timer::GetTicks() const
 	{
-		if (!mStarted)
+		if (!m_Started)
 			return 0;
 
-		if (mPaused)
-			return mPausedTicks;
+		if (m_Paused)
+			return m_PausedTicks;
 		else
-			return (SDL_GetTicks() - mStartTicks);
+			return (SDL_GetTicks() - m_StartTicks);
 	}
 
 	void Timer::Start()
 	{
-		mStartTicks = SDL_GetTicks();
-		mLastTicks = mStartTicks;
-		mPausedTicks = 0;
-		mStarted = true;
-		mPaused = false;
+		m_StartTicks = SDL_GetTicks();
+		m_LastTicks = m_StartTicks;
+		m_PausedTicks = 0;
+		m_Started = true;
+		m_Paused = false;
 	}
 
 	void Timer::Stop()
 	{
-		mStarted = false;
-		mPaused = false;
+		m_Started = false;
+		m_Paused = false;
 	}
 
 	void Timer::Pause()
 	{
-		if (mStarted && !mPaused)
+		if (m_Started && !m_Paused)
 		{
-			mPausedTicks = SDL_GetTicks() - mStartTicks;
-			mPaused = true;
+			m_PausedTicks = SDL_GetTicks() - m_StartTicks;
+			m_Paused = true;
 		}
 	}
 
 	void Timer::Resume()
 	{
-		if (mPaused)
+		if (m_Paused)
 		{
-			mStartTicks = SDL_GetTicks() - mPausedTicks;
-			mPausedTicks = 0;
-			mPaused = false;
+			m_StartTicks = SDL_GetTicks() - m_PausedTicks;
+			m_PausedTicks = 0;
+			m_Paused = false;
 		}
 	}
 }

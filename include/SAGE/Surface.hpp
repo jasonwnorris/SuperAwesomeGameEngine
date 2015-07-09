@@ -13,17 +13,17 @@ namespace SAGE
 	class Surface
 	{
 		public:
-			Surface(Uint32 pFlags, int pWidth, int pHeight, int pDepth, Uint32 pRedMask, Uint32 pGreenMask, Uint32 pBlueMask, Uint32 pAlphaMask);
-			Surface(void* pPixels, int pWidth, int pHeight, int pDepth, int pPitch, Uint32 pRedMask, Uint32 pGreenMask, Uint32 pBlueMask, Uint32 pAlphaMask);
-			Surface(const std::string& pFilename);
+			Surface(Uint32 p_Flags, int p_Width, int p_Height, int p_Depth, Uint32 p_RedMask, Uint32 p_GreenMask, Uint32 p_BlueMask, Uint32 p_AlphaMask);
+			Surface(void* p_Pixels, int p_Width, int p_Height, int p_Depth, int p_Pitch, Uint32 p_RedMask, Uint32 p_GreenMask, Uint32 p_BlueMask, Uint32 p_AlphaMask);
+			Surface(const std::string& p_Filename);
 			~Surface();
 
 			SDL_Surface* GetC() const;
 
-			int SetColorKey(Uint32 pKey);
+			int SetColorKey(Uint32 p_Key);
 
 		private:
-			SDL_Surface* mSurface;
+			SDL_Surface* m_Surface;
 	};
 }
 

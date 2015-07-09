@@ -10,22 +10,22 @@ namespace SAGE
 {
 	AudioBuffer::AudioBuffer()
 	{
-		mID = 0;
+		m_ID = 0;
 	}
 
 	AudioBuffer::~AudioBuffer()
 	{
-		alDeleteBuffers(1, &mID);
+		alDeleteBuffers(1, &m_ID);
 	}
 
 	ALuint AudioBuffer::GetID() const
 	{
-		return mID;
+		return m_ID;
 	}
 
-	bool AudioBuffer::Load(const std::string& pFilename)
+	bool AudioBuffer::Load(const std::string& p_Filename)
 	{
-		Mix_Chunk* chunk = Mix_LoadWAV(pFilename.c_str());
+		Mix_Chunk* chunk = Mix_LoadWAV(p_Filename.c_str());
 
 		if (chunk == NULL)
 		{
@@ -33,8 +33,8 @@ namespace SAGE
 			return false;
 		}
 
-		alGenBuffers(1, &mID);
-		alBufferData(mID, AL_FORMAT_MONO16, chunk->abuf, chunk->alen, 44100);
+		alGenBuffers(1, &m_ID);
+		alBufferData(m_ID, AL_FORMAT_MONO16, chunk->abuf, chunk->alen, 44100);
 
 		Mix_FreeChunk(chunk);
 

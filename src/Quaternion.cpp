@@ -9,141 +9,141 @@ namespace SAGE
 {
 	Quaternion::Quaternion()
 	{
-		mReal = 0.0f;
-		mImaginary = Vector3::Zero;
+		m_Real = 0.0f;
+		m_Imaginary = Vector3::Zero;
 	}
 
-	Quaternion::Quaternion(float pReal, float pI, float pJ, float pK)
+	Quaternion::Quaternion(float p_Real, float p_I, float p_J, float p_K)
 	{
-		mReal = pReal;
-		mImaginary = Vector3(pI, pJ, pK);
+		m_Real = p_Real;
+		m_Imaginary = Vector3(p_I, p_J, p_K);
 	}
 
-	Quaternion::Quaternion(float pReal, const Vector3& pImaginary)
+	Quaternion::Quaternion(float p_Real, const Vector3& p_Imaginary)
 	{
-		mReal = pReal;
-		mImaginary = pImaginary;
+		m_Real = p_Real;
+		m_Imaginary = p_Imaginary;
 	}
 
-	Quaternion::Quaternion(float pX, float pY, float pZ)
+	Quaternion::Quaternion(float p_X, float p_Y, float p_Z)
 	{
-		float cosHalfX = cosf(pX * 0.5f);
-		float cosHalfY = cosf(pY * 0.5f);
-		float cosHalfZ = cosf(pZ * 0.5f);
+		float cosHalfX = cosf(p_X * 0.5f);
+		float cosHalfY = cosf(p_Y * 0.5f);
+		float cosHalfZ = cosf(p_Z * 0.5f);
 
-		float sinHalfX = sinf(pX * 0.5f);
-		float sinHalfY = sinf(pY * 0.5f);
-		float sinHalfZ = sinf(pZ * 0.5f);
+		float sinHalfX = sinf(p_X * 0.5f);
+		float sinHalfY = sinf(p_Y * 0.5f);
+		float sinHalfZ = sinf(p_Z * 0.5f);
 
-		mReal = cosHalfZ * cosHalfY * cosHalfX + sinHalfZ * sinHalfY * sinHalfX;
-		mImaginary.X = cosHalfZ * cosHalfY * sinHalfX - sinHalfZ * sinHalfY * cosHalfX;
-		mImaginary.Y = cosHalfZ * sinHalfY * cosHalfX + sinHalfZ * cosHalfY * sinHalfX;
-		mImaginary.Z = sinHalfZ * cosHalfY * cosHalfX - cosHalfZ * sinHalfY * sinHalfX;
+		m_Real = cosHalfZ * cosHalfY * cosHalfX + sinHalfZ * sinHalfY * sinHalfX;
+		m_Imaginary.X = cosHalfZ * cosHalfY * sinHalfX - sinHalfZ * sinHalfY * cosHalfX;
+		m_Imaginary.Y = cosHalfZ * sinHalfY * cosHalfX + sinHalfZ * cosHalfY * sinHalfX;
+		m_Imaginary.Z = sinHalfZ * cosHalfY * cosHalfX - cosHalfZ * sinHalfY * sinHalfX;
 	}
 
-	Quaternion::Quaternion(const Vector3& pAngles)
+	Quaternion::Quaternion(const Vector3& p_Angles)
 	{
-		float cosHalfX = cosf(pAngles.X * 0.5f);
-		float cosHalfY = cosf(pAngles.Y * 0.5f);
-		float cosHalfZ = cosf(pAngles.Z * 0.5f);
+		float cosHalfX = cosf(p_Angles.X * 0.5f);
+		float cosHalfY = cosf(p_Angles.Y * 0.5f);
+		float cosHalfZ = cosf(p_Angles.Z * 0.5f);
 
-		float sinHalfX = sinf(pAngles.X * 0.5f);
-		float sinHalfY = sinf(pAngles.Y * 0.5f);
-		float sinHalfZ = sinf(pAngles.Z * 0.5f);
+		float sinHalfX = sinf(p_Angles.X * 0.5f);
+		float sinHalfY = sinf(p_Angles.Y * 0.5f);
+		float sinHalfZ = sinf(p_Angles.Z * 0.5f);
 
-		mReal = cosHalfZ * cosHalfY * cosHalfX + sinHalfZ * sinHalfY * sinHalfX;
-		mImaginary.X = cosHalfZ * cosHalfY * sinHalfX - sinHalfZ * sinHalfY * cosHalfX;
-		mImaginary.Y = cosHalfZ * sinHalfY * cosHalfX + sinHalfZ * cosHalfY * sinHalfX;
-		mImaginary.Z = sinHalfZ * cosHalfY * cosHalfX - cosHalfZ * sinHalfY * sinHalfX;
+		m_Real = cosHalfZ * cosHalfY * cosHalfX + sinHalfZ * sinHalfY * sinHalfX;
+		m_Imaginary.X = cosHalfZ * cosHalfY * sinHalfX - sinHalfZ * sinHalfY * cosHalfX;
+		m_Imaginary.Y = cosHalfZ * sinHalfY * cosHalfX + sinHalfZ * cosHalfY * sinHalfX;
+		m_Imaginary.Z = sinHalfZ * cosHalfY * cosHalfX - cosHalfZ * sinHalfY * sinHalfX;
 	}
 
 	float Quaternion::GetReal() const
 	{
-		return mReal;
+		return m_Real;
 	}
 
 	Vector3 Quaternion::GetImaginary() const
 	{
-		return mImaginary;
+		return m_Imaginary;
 	}
 
-	Quaternion& Quaternion::operator=(const Quaternion& pOther)
+	Quaternion& Quaternion::operator=(const Quaternion& p_Other)
 	{
-		mReal = pOther.GetReal();
-		mImaginary = pOther.GetImaginary();
+		m_Real = p_Other.GetReal();
+		m_Imaginary = p_Other.GetImaginary();
 
 		return *this;
 	}
 
-	const Quaternion Quaternion::operator+(const Quaternion& pOther) const
+	const Quaternion Quaternion::operator+(const Quaternion& p_Other) const
 	{
-		return Quaternion(mReal + pOther.GetReal(), mImaginary + pOther.GetImaginary());
+		return Quaternion(m_Real + p_Other.GetReal(), m_Imaginary + p_Other.GetImaginary());
 	}
 
-	const Quaternion Quaternion::operator-(const Quaternion& pOther) const
+	const Quaternion Quaternion::operator-(const Quaternion& p_Other) const
 	{
-		return Quaternion(mReal - pOther.GetReal(), mImaginary - pOther.GetImaginary());
+		return Quaternion(m_Real - p_Other.GetReal(), m_Imaginary - p_Other.GetImaginary());
 	}
 
-	const Quaternion Quaternion::operator*(const Quaternion& pOther) const
+	const Quaternion Quaternion::operator*(const Quaternion& p_Other) const
 	{
-		return Quaternion(mReal * pOther.GetReal() - Vector3::Dot(mImaginary, pOther.GetImaginary()),
-			              mImaginary.Y * pOther.GetImaginary().Z - mImaginary.Z * pOther.GetImaginary().Y + mReal * pOther.GetImaginary().X + mImaginary.X * pOther.GetReal(),
-			              mImaginary.Z * pOther.GetImaginary().X - mImaginary.X * pOther.GetImaginary().Z + mReal * pOther.GetImaginary().Y + mImaginary.Y * pOther.GetReal(),
-			              mImaginary.X * pOther.GetImaginary().Y - mImaginary.Y * pOther.GetImaginary().X + mReal * pOther.GetImaginary().Z + mImaginary.Z * pOther.GetReal());
+		return Quaternion(m_Real * p_Other.GetReal() - Vector3::Dot(m_Imaginary, p_Other.GetImaginary()),
+			              m_Imaginary.Y * p_Other.GetImaginary().Z - m_Imaginary.Z * p_Other.GetImaginary().Y + m_Real * p_Other.GetImaginary().X + m_Imaginary.X * p_Other.GetReal(),
+			              m_Imaginary.Z * p_Other.GetImaginary().X - m_Imaginary.X * p_Other.GetImaginary().Z + m_Real * p_Other.GetImaginary().Y + m_Imaginary.Y * p_Other.GetReal(),
+			              m_Imaginary.X * p_Other.GetImaginary().Y - m_Imaginary.Y * p_Other.GetImaginary().X + m_Real * p_Other.GetImaginary().Z + m_Imaginary.Z * p_Other.GetReal());
 	}
 
-	const Quaternion Quaternion::operator/(const Quaternion& pOther) const
+	const Quaternion Quaternion::operator/(const Quaternion& p_Other) const
 	{
-		Quaternion temp(pOther);
+		Quaternion temp(p_Other);
 		temp.Invert();
 
 		return *this * temp;
 	}
 
-	const Quaternion Quaternion::operator*(float pScale) const
+	const Quaternion Quaternion::operator*(float p_Scale) const
 	{
-		return Quaternion(mReal * pScale, mImaginary * pScale);
+		return Quaternion(m_Real * p_Scale, m_Imaginary * p_Scale);
 	}
 
-	const Quaternion Quaternion::operator/(float pScale) const
+	const Quaternion Quaternion::operator/(float p_Scale) const
 	{
-		return Quaternion(mReal / pScale, mImaginary / pScale);
+		return Quaternion(m_Real / p_Scale, m_Imaginary / p_Scale);
 	}
 
 	const Quaternion Quaternion::operator-() const
 	{
-		return Quaternion(-mReal, -mImaginary);
+		return Quaternion(-m_Real, -m_Imaginary);
 	}
 
-	const Quaternion& Quaternion::operator+=(const Quaternion& pOther)
+	const Quaternion& Quaternion::operator+=(const Quaternion& p_Other)
 	{
-		mReal += pOther.GetReal();
-		mImaginary += pOther.GetImaginary();
+		m_Real += p_Other.GetReal();
+		m_Imaginary += p_Other.GetImaginary();
 
 		return *this;
 	}
 
-	const Quaternion& Quaternion::operator-=(const Quaternion& pOther)
+	const Quaternion& Quaternion::operator-=(const Quaternion& p_Other)
 	{
-		mReal -= pOther.GetReal();
-		mImaginary -= pOther.GetImaginary();
+		m_Real -= p_Other.GetReal();
+		m_Imaginary -= p_Other.GetImaginary();
 
 		return *this;
 	}
 
-	const Quaternion& Quaternion::operator*=(float pScale)
+	const Quaternion& Quaternion::operator*=(float p_Scale)
 	{
-		mReal *= pScale;
-		mImaginary *= pScale;
+		m_Real *= p_Scale;
+		m_Imaginary *= p_Scale;
 
 		return *this;
 	}
 
-	const Quaternion& Quaternion::operator/=(float pScale)
+	const Quaternion& Quaternion::operator/=(float p_Scale)
 	{
-		mReal /= pScale;
-		mImaginary /= pScale;
+		m_Real /= p_Scale;
+		m_Imaginary /= p_Scale;
 
 		return *this;
 	}
@@ -155,7 +155,7 @@ namespace SAGE
 
 	float Quaternion::LengthSquared() const
 	{
-		return mReal * mReal + Vector3::Dot(mImaginary, mImaginary);
+		return m_Real * m_Real + Vector3::Dot(m_Imaginary, m_Imaginary);
 	}
 
 	void Quaternion::Normalize()
@@ -170,7 +170,7 @@ namespace SAGE
 
 	void Quaternion::Conjugate()
 	{
-		mImaginary = -mImaginary;
+		m_Imaginary = -m_Imaginary;
 	}
 
 	void Quaternion::Invert()
@@ -181,16 +181,16 @@ namespace SAGE
 
 	Quaternion Quaternion::Log() const
 	{
-		float acosR = acosf(mReal);
+		float acosR = acosf(m_Real);
 		float sinA = sinf(acosR);
 
 		Vector3 ret;
 
 		if (sinA > 0.0f)
 		{
-			ret.X = acosR * mImaginary.X / sinA;
-			ret.Y = acosR * mImaginary.Y / sinA;
-			ret.Z = acosR * mImaginary.Z / sinA;
+			ret.X = acosR * m_Imaginary.X / sinA;
+			ret.Y = acosR * m_Imaginary.Y / sinA;
+			ret.Z = acosR * m_Imaginary.Z / sinA;
 		}
 
 		return Quaternion(0, ret);
@@ -198,7 +198,7 @@ namespace SAGE
 
 	Quaternion Quaternion::Exp() const
 	{
-		float iLen = mImaginary.Length();
+		float iLen = m_Imaginary.Length();
 		float cosL = cosf(iLen);
 		float sinL = sinf(iLen);
 
@@ -206,9 +206,9 @@ namespace SAGE
 
 		if (iLen > 0.0f)
 		{
-			ret.X = sinL * mImaginary.X / iLen;
-			ret.Y = sinL * mImaginary.Y / iLen;
-			ret.Z = sinL * mImaginary.Z / iLen;
+			ret.X = sinL * m_Imaginary.X / iLen;
+			ret.Y = sinL * m_Imaginary.Y / iLen;
+			ret.Z = sinL * m_Imaginary.Z / iLen;
 		}
 
 		return Quaternion(cosL, ret);
@@ -217,9 +217,9 @@ namespace SAGE
 	Matrix3 Quaternion::ToMatrix3() const
 	{
 		float m[9] = {
-			1.0f - 2.0f * (mImaginary.Y * mImaginary.Y + mImaginary.Z * mImaginary.Z), 2.0f * (mImaginary.X * mImaginary.Y - mReal * mImaginary.Z), 2.0f * (mImaginary.X * mImaginary.Z + mReal * mImaginary.Y),
-			2.0f * (mImaginary.X * mImaginary.Y + mReal * mImaginary.Z), 1.0f - 2.0f * (mImaginary.X * mImaginary.X + mImaginary.Z * mImaginary.Z), 2.0f * (mImaginary.Y * mImaginary.Z - mReal * mImaginary.X),
-			2.0f * (mImaginary.X * mImaginary.Z - mReal * mImaginary.Y), 2.0f * (mImaginary.Y * mImaginary.Z + mReal * mImaginary.X), 1.0f - 2.0f * (mImaginary.X * mImaginary.X + mImaginary.Y * mImaginary.Y)
+			1.0f - 2.0f * (m_Imaginary.Y * m_Imaginary.Y + m_Imaginary.Z * m_Imaginary.Z), 2.0f * (m_Imaginary.X * m_Imaginary.Y - m_Real * m_Imaginary.Z), 2.0f * (m_Imaginary.X * m_Imaginary.Z + m_Real * m_Imaginary.Y),
+			2.0f * (m_Imaginary.X * m_Imaginary.Y + m_Real * m_Imaginary.Z), 1.0f - 2.0f * (m_Imaginary.X * m_Imaginary.X + m_Imaginary.Z * m_Imaginary.Z), 2.0f * (m_Imaginary.Y * m_Imaginary.Z - m_Real * m_Imaginary.X),
+			2.0f * (m_Imaginary.X * m_Imaginary.Z - m_Real * m_Imaginary.Y), 2.0f * (m_Imaginary.Y * m_Imaginary.Z + m_Real * m_Imaginary.X), 1.0f - 2.0f * (m_Imaginary.X * m_Imaginary.X + m_Imaginary.Y * m_Imaginary.Y)
 		};
 
 		return Matrix3(m);
@@ -228,147 +228,147 @@ namespace SAGE
 	Matrix4 Quaternion::ToMatrix4() const
 	{
 		float m[16] = {
-			mReal,        -mImaginary.X, -mImaginary.Y, -mImaginary.Z,
-			mImaginary.X, mReal,         -mImaginary.Z, mImaginary.Y,
-			mImaginary.Y, mImaginary.Z,  mReal,         -mImaginary.X,
-			mImaginary.Z, -mImaginary.Y, mImaginary.X,  mReal
+			m_Real,        -m_Imaginary.X, -m_Imaginary.Y, -m_Imaginary.Z,
+			m_Imaginary.X, m_Real,         -m_Imaginary.Z, m_Imaginary.Y,
+			m_Imaginary.Y, m_Imaginary.Z,  m_Real,         -m_Imaginary.X,
+			m_Imaginary.Z, -m_Imaginary.Y, m_Imaginary.X,  m_Real
 		};
 
 		return Matrix4(m);
 	}
 
-	void Quaternion::ToAxisAngle(Vector3& pAxis, float& pAngle) const
+	void Quaternion::ToAxisAngle(Vector3& p_Axis, float& p_Angle) const
 	{
-		float acosReal = acos(mReal);
+		float acosReal = acos(m_Real);
 		float sinInv = 1.0f / sinf(acosReal);
 
-		pAngle = acosReal * 2.0f;
-		pAxis.X = mImaginary.X * sinInv;
-		pAxis.Y = mImaginary.Y * sinInv;
-		pAxis.Z = mImaginary.Z * sinInv;
+		p_Angle = acosReal * 2.0f;
+		p_Axis.X = m_Imaginary.X * sinInv;
+		p_Axis.Y = m_Imaginary.Y * sinInv;
+		p_Axis.Z = m_Imaginary.Z * sinInv;
 	}
 
-	Vector3 Quaternion::Rotate(const Vector3& pRotation)
+	Vector3 Quaternion::Rotate(const Vector3& p_Rotation)
 	{
-		Quaternion temp(0.0f, pRotation);
+		Quaternion temp(0.0f, p_Rotation);
 		Quaternion conj(*this);
 		conj.Conjugate();
 
-		return (*this * temp * conj).mImaginary;
+		return (*this * temp * conj).m_Imaginary;
 	}
 
-	Vector3 Quaternion::EulerAngles(bool pHomogenous) const
+	Vector3 Quaternion::EulerAngles(bool p_Homogenous) const
 	{
-		float sqReal = mReal * mReal;
-		float sqI = mImaginary.X * mImaginary.X;
-		float sqJ = mImaginary.Y * mImaginary.Y;
-		float sqK = mImaginary.Z * mImaginary.Z;
+		float sqReal = m_Real * m_Real;
+		float sqI = m_Imaginary.X * m_Imaginary.X;
+		float sqJ = m_Imaginary.Y * m_Imaginary.Y;
+		float sqK = m_Imaginary.Z * m_Imaginary.Z;
 
 		Vector3 euler;
 
-		if (pHomogenous)
+		if (p_Homogenous)
 		{
-			euler.X = atan2f(2.0f * (mImaginary.X * mImaginary.Y + mImaginary.Z * mReal), sqI - sqJ - sqK + sqReal);
-			euler.Y = asinf(-2.0f * (mImaginary.X * mImaginary.Z - mImaginary.Y * mReal));
-			euler.Z = atan2f(2.0f * (mImaginary.Y * mImaginary.Z + mImaginary.X * mReal), -sqI - sqJ + sqK + sqReal);
+			euler.X = atan2f(2.0f * (m_Imaginary.X * m_Imaginary.Y + m_Imaginary.Z * m_Real), sqI - sqJ - sqK + sqReal);
+			euler.Y = asinf(-2.0f * (m_Imaginary.X * m_Imaginary.Z - m_Imaginary.Y * m_Real));
+			euler.Z = atan2f(2.0f * (m_Imaginary.Y * m_Imaginary.Z + m_Imaginary.X * m_Real), -sqI - sqJ + sqK + sqReal);
 		}
 		else
 		{
-			euler.X = atan2f(2.0f * (mImaginary.Z * mImaginary.Y + mImaginary.X * mReal), 1.0f - 2.0f * (sqI + sqJ));
-			euler.Y = asinf(-2.0f * (mImaginary.X * mImaginary.Z - mImaginary.Y * mReal));
-			euler.Z = atan2f(2.0f * (mImaginary.X * mImaginary.Y + mImaginary.Z * mReal), 1.0f - 2.0f * (sqJ + sqK));
+			euler.X = atan2f(2.0f * (m_Imaginary.Z * m_Imaginary.Y + m_Imaginary.X * m_Real), 1.0f - 2.0f * (sqI + sqJ));
+			euler.Y = asinf(-2.0f * (m_Imaginary.X * m_Imaginary.Z - m_Imaginary.Y * m_Real));
+			euler.Z = atan2f(2.0f * (m_Imaginary.X * m_Imaginary.Y + m_Imaginary.Z * m_Real), 1.0f - 2.0f * (sqJ + sqK));
 		}
 
 		return euler;
 	}
 
 	// static
-	float Quaternion::Dot(const Quaternion& pQuaternionA, const Quaternion& pQuaternionB)
+	float Quaternion::Dot(const Quaternion& p_QuaternionA, const Quaternion& p_QuaternionB)
 	{
-		return pQuaternionA.GetReal() * pQuaternionB.GetReal() + Vector3::Dot(pQuaternionA.GetImaginary(), pQuaternionB.GetImaginary());
+		return p_QuaternionA.GetReal() * p_QuaternionB.GetReal() + Vector3::Dot(p_QuaternionA.GetImaginary(), p_QuaternionB.GetImaginary());
 	}
 
 	// static
-	Quaternion Quaternion::FromAxisAngle(const Vector3& pAxis, float pAngle)
+	Quaternion Quaternion::FromAxisAngle(const Vector3& p_Axis, float p_Angle)
 	{
-		return Quaternion(cosf(pAngle / 2.0f), pAxis * sinf(pAngle / 2.0f));
+		return Quaternion(cosf(p_Angle / 2.0f), p_Axis * sinf(p_Angle / 2.0f));
 	}
 
 	// static
-	Quaternion Quaternion::Lerp(const Quaternion& pQuaternionA, const Quaternion& pQuaternionB, float pT)
+	Quaternion Quaternion::Lerp(const Quaternion& p_QuaternionA, const Quaternion& p_QuaternionB, float p_T)
 	{
-		Quaternion ret = pQuaternionA * (1.0f - pT) + pQuaternionB * pT;
+		Quaternion ret = p_QuaternionA * (1.0f - p_T) + p_QuaternionB * p_T;
 		ret.Normalize();
 
 		return ret;
 	}
 
 	// static
-	Quaternion Quaternion::Slerp(const Quaternion& pQuaternionA, const Quaternion& pQuaternionB, float pT)
+	Quaternion Quaternion::Slerp(const Quaternion& p_QuaternionA, const Quaternion& p_QuaternionB, float p_T)
 	{
-		float dot = Quaternion::Dot(pQuaternionA, pQuaternionB);
+		float dot = Quaternion::Dot(p_QuaternionA, p_QuaternionB);
 
 		Quaternion ret;
 
 		if (dot < 0.0f)
 		{
 			dot = -dot;
-			ret = -pQuaternionB;
+			ret = -p_QuaternionB;
 		}
 		else
 		{
-			ret = pQuaternionB;
+			ret = p_QuaternionB;
 		}
 
 		if (dot < 0.95f)
 		{
 			float angle = acosf(dot);
 
-			return (pQuaternionA * sinf(angle * (1.0f - pT)) + ret * sinf(angle * pT)) / sinf(angle);
+			return (p_QuaternionA * sinf(angle * (1.0f - p_T)) + ret * sinf(angle * p_T)) / sinf(angle);
 		}
 
-		return Quaternion::Lerp(pQuaternionA, ret, pT);
+		return Quaternion::Lerp(p_QuaternionA, ret, p_T);
 	}
 
 	// static
-	Quaternion Quaternion::SlerpNoInvert(const Quaternion& pQuaternionA, const Quaternion& pQuaternionB, float pT)
+	Quaternion Quaternion::SlerpNoInvert(const Quaternion& p_QuaternionA, const Quaternion& p_QuaternionB, float p_T)
 	{
-		float dot = Quaternion::Dot(pQuaternionA, pQuaternionB);
+		float dot = Quaternion::Dot(p_QuaternionA, p_QuaternionB);
 
 		if (dot > -0.95f && dot < 0.95f)
 		{
 			float angle = acosf(dot);
 
-			return (pQuaternionA * sinf(angle * (1.0f - pT)) + pQuaternionB * sinf(angle * pT)) / sinf(angle);
+			return (p_QuaternionA * sinf(angle * (1.0f - p_T)) + p_QuaternionB * sinf(angle * p_T)) / sinf(angle);
 		}
 
-		return Quaternion::Lerp(pQuaternionA, pQuaternionB, pT);
+		return Quaternion::Lerp(p_QuaternionA, p_QuaternionB, p_T);
 	}
 
 	// static
-	Quaternion Quaternion::Squad(const Quaternion& pQuaternion1, const Quaternion& pQuaternion2, const Quaternion& pQuaternionA, const Quaternion& pQuaternionB, float pT)
+	Quaternion Quaternion::Squad(const Quaternion& p_Quaternion1, const Quaternion& p_Quaternion2, const Quaternion& p_QuaternionA, const Quaternion& p_QuaternionB, float p_T)
 	{
-		Quaternion c = Quaternion::SlerpNoInvert(pQuaternion1, pQuaternion2, pT);
-		Quaternion d = Quaternion::SlerpNoInvert(pQuaternionA, pQuaternionB, pT);
+		Quaternion c = Quaternion::SlerpNoInvert(p_Quaternion1, p_Quaternion2, p_T);
+		Quaternion d = Quaternion::SlerpNoInvert(p_QuaternionA, p_QuaternionB, p_T);
 
-		return Quaternion::SlerpNoInvert(c, d, 2.0f * pT * (1.0f - pT));
+		return Quaternion::SlerpNoInvert(c, d, 2.0f * p_T * (1.0f - p_T));
 	}
 
 	// static
-	Quaternion Quaternion::Bezier(const Quaternion& pQuaternion1, const Quaternion& pQuaternion2, const Quaternion& pQuaternionA, const Quaternion& pQuaternionB, float pT)
+	Quaternion Quaternion::Bezier(const Quaternion& p_Quaternion1, const Quaternion& p_Quaternion2, const Quaternion& p_QuaternionA, const Quaternion& p_QuaternionB, float p_T)
 	{
-		Quaternion q1 = Quaternion::SlerpNoInvert(pQuaternion1, pQuaternionA, pT);
-		Quaternion q2 = Quaternion::SlerpNoInvert(pQuaternionA, pQuaternionB, pT);
-		Quaternion q3 = Quaternion::SlerpNoInvert(pQuaternionB, pQuaternion2, pT);
+		Quaternion q1 = Quaternion::SlerpNoInvert(p_Quaternion1, p_QuaternionA, p_T);
+		Quaternion q2 = Quaternion::SlerpNoInvert(p_QuaternionA, p_QuaternionB, p_T);
+		Quaternion q3 = Quaternion::SlerpNoInvert(p_QuaternionB, p_Quaternion2, p_T);
 
-		return Quaternion::SlerpNoInvert(Quaternion::SlerpNoInvert(q1, q2, pT), Quaternion::SlerpNoInvert(q2, q3, pT), pT);
+		return Quaternion::SlerpNoInvert(Quaternion::SlerpNoInvert(q1, q2, p_T), Quaternion::SlerpNoInvert(q2, q3, p_T), p_T);
 	}
 
 	// static
-	Quaternion Quaternion::Spline(const Quaternion& pQuaternionM, const Quaternion& pQuaternionN, const Quaternion& pQuaternionP)
+	Quaternion Quaternion::Spline(const Quaternion& p_QuaternionM, const Quaternion& p_QuaternionN, const Quaternion& p_QuaternionP)
 	{
-		Quaternion q(pQuaternionN.GetReal(), -pQuaternionN.GetImaginary());
+		Quaternion q(p_QuaternionN.GetReal(), -p_QuaternionN.GetImaginary());
 
-		return pQuaternionN * (((q * pQuaternionM).Log() + (q * pQuaternionP).Log()) / -4.0f).Exp();
+		return p_QuaternionN * (((q * p_QuaternionM).Log() + (q * p_QuaternionP).Log()) / -4.0f).Exp();
 	}
 }

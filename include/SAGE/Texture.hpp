@@ -39,15 +39,15 @@ namespace SAGE
 			Uint32* GetPixels() const;
 			SDL_PixelFormat* GetFormat() const;
 
-			bool Load(const std::string& pFilename, Interpolation pInterpolation = Interpolation::Linear, Wrapping pWrapping = Wrapping::Repeat);
-			void GetColor(int pX, int pY, Uint8& pRed, Uint8& pGreen, Uint8& pBlue, Uint8& pAlpha);
+			bool Load(const std::string& p_Filename, Interpolation p_Interpolation = Interpolation::Linear, Wrapping p_Wrapping = Wrapping::Repeat);
+			void GetColor(int p_X, int p_Y, Uint8& p_Red, Uint8& p_Green, Uint8& p_Blue, Uint8& p_Alpha);
 
 		private:
-			SDL_Surface* mSurface;
-			unsigned int mWidth;
-			unsigned int mHeight;
-			unsigned int mBPP;
-			unsigned int mID;
+			SDL_Surface* m_Surface;
+			unsigned int m_Width;
+			unsigned int m_Height;
+			unsigned int m_BPP;
+			unsigned int m_ID;
 	};
 }
 

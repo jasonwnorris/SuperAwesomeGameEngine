@@ -37,24 +37,24 @@ namespace SAGE
 		Elements[15] = 1.0f;
 	}
 
-	Matrix4::Matrix4(float pElement0, float pElement1, float pElement2, float pElement3, float pElement4, float pElement5, float pElement6, float pElement7, float pElement8, float pElement9, float pElement10, float pElement11, float pElement12, float pElement13, float pElement14, float pElement15)
+	Matrix4::Matrix4(float p_Element0, float p_Element1, float p_Element2, float p_Element3, float p_Element4, float p_Element5, float p_Element6, float p_Element7, float p_Element8, float p_Element9, float p_Element10, float p_Element11, float p_Element12, float p_Element13, float p_Element14, float p_Element15)
 	{
-		Elements[0] = pElement0;
-		Elements[1] = pElement1;
-		Elements[2] = pElement2;
-		Elements[3] = pElement3;
-		Elements[4] = pElement4;
-		Elements[5] = pElement5;
-		Elements[6] = pElement6;
-		Elements[7] = pElement7;
-		Elements[8] = pElement8;
-		Elements[9] = pElement9;
-		Elements[10] = pElement10;
-		Elements[11] = pElement11;
-		Elements[12] = pElement12;
-		Elements[13] = pElement13;
-		Elements[14] = pElement14;
-		Elements[15] = pElement15;
+		Elements[0] = p_Element0;
+		Elements[1] = p_Element1;
+		Elements[2] = p_Element2;
+		Elements[3] = p_Element3;
+		Elements[4] = p_Element4;
+		Elements[5] = p_Element5;
+		Elements[6] = p_Element6;
+		Elements[7] = p_Element7;
+		Elements[8] = p_Element8;
+		Elements[9] = p_Element9;
+		Elements[10] = p_Element10;
+		Elements[11] = p_Element11;
+		Elements[12] = p_Element12;
+		Elements[13] = p_Element13;
+		Elements[14] = p_Element14;
+		Elements[15] = p_Element15;
 	}
 
 	Matrix4::Matrix4(const float(&M)[16])
@@ -69,9 +69,9 @@ namespace SAGE
 			Elements[i] = M[i];
 	}
 
-	float Matrix4::operator()(const int pRow, const int pColumn)
+	float Matrix4::operator()(const int p_Row, const int p_Column)
 	{
-		return Elements[(pRow * 4) + pColumn];
+		return Elements[(p_Row * 4) + p_Column];
 	}
 
 	const Matrix4& Matrix4::operator=(const Matrix4& M)
@@ -117,46 +117,46 @@ namespace SAGE
 		return *this;
 	}
 
-	const Vector3 Matrix4::operator*(const Vector3& pVector)
+	const Vector3 Matrix4::operator*(const Vector3& p_Vector)
 	{
-		return Vector3(pVector.X * Elements[0] + pVector.Y * Elements[1] + pVector.Z * Elements[2] + Elements[3],
-			pVector.X * Elements[4] + pVector.Y * Elements[5] + pVector.Z * Elements[6] + Elements[7],
-			pVector.X * Elements[8] + pVector.Y * Elements[9] + pVector.Z * Elements[10] + Elements[11]);
+		return Vector3(p_Vector.X * Elements[0] + p_Vector.Y * Elements[1] + p_Vector.Z * Elements[2] + Elements[3],
+			p_Vector.X * Elements[4] + p_Vector.Y * Elements[5] + p_Vector.Z * Elements[6] + Elements[7],
+			p_Vector.X * Elements[8] + p_Vector.Y * Elements[9] + p_Vector.Z * Elements[10] + Elements[11]);
 	}
 
-	void Matrix4::Translate(const float pX, const float pY, const float pZ)
+	void Matrix4::Translate(const float p_X, const float p_Y, const float p_Z)
 	{
-		Elements[3] += pX;
-		Elements[7] += pY;
-		Elements[11] += pZ;
+		Elements[3] += p_X;
+		Elements[7] += p_Y;
+		Elements[11] += p_Z;
 	}
 
-	void Matrix4::Translate(const Vector3& pVector)
+	void Matrix4::Translate(const Vector3& p_Vector)
 	{
-		Translate(pVector.X, pVector.Y, pVector.Z);
+		Translate(p_Vector.X, p_Vector.Y, p_Vector.Z);
 	}
 
-	void Matrix4::Rotate(const float pX, const float pY, const float pZ)
+	void Matrix4::Rotate(const float p_X, const float p_Y, const float p_Z)
 	{
 		Matrix4 _matrixX;
-		_matrixX.RotateX(pX);
+		_matrixX.RotateX(p_X);
 		(*this) *= _matrixX;
 
 		Matrix4 _matrixY;
-		_matrixY.RotateY(pY);
+		_matrixY.RotateY(p_Y);
 		(*this) *= _matrixY;
 
 		Matrix4 _matrixZ;
-		_matrixZ.RotateZ(pZ);
+		_matrixZ.RotateZ(p_Z);
 		(*this) *= _matrixZ;
 	}
 
-	void Matrix4::Rotate(const float pAngle, const Vector3& pAxis)
+	void Matrix4::Rotate(const float p_Angle, const Vector3& p_Axis)
 	{
-		float sinTheta = sinf(pAngle);
-		float cosTheta = cosf(pAngle);
+		float sinTheta = sinf(p_Angle);
+		float cosTheta = cosf(p_Angle);
 		float tanTheta = 1.0f - cosTheta;
-		Vector3 unitAxis = pAxis / pAxis.Length();
+		Vector3 unitAxis = p_Axis / p_Axis.Length();
 
 		Elements[0] += tanTheta * unitAxis.X * unitAxis.X + cosTheta;
 		Elements[4] += tanTheta * unitAxis.Y * unitAxis.X + sinTheta * unitAxis.Z;
@@ -171,10 +171,10 @@ namespace SAGE
 		Elements[11] += tanTheta * unitAxis.Z * unitAxis.Z + cosTheta;
 	}
 
-	void Matrix4::RotateX(const float pAngle)
+	void Matrix4::RotateX(const float p_Angle)
 	{
-		float sinTheta = sinf(pAngle);
-		float cosTheta = cosf(pAngle);
+		float sinTheta = sinf(p_Angle);
+		float cosTheta = cosf(p_Angle);
 
 		Elements[5] += cosTheta;
 		Elements[6] += sinTheta;
@@ -182,10 +182,10 @@ namespace SAGE
 		Elements[10] += cosTheta;
 	}
 
-	void Matrix4::RotateY(const float pAngle)
+	void Matrix4::RotateY(const float p_Angle)
 	{
-		float sinTheta = sinf(pAngle);
-		float cosTheta = cosf(pAngle);
+		float sinTheta = sinf(p_Angle);
+		float cosTheta = cosf(p_Angle);
 
 		Elements[0] += cosTheta;
 		Elements[2] += -sinTheta;
@@ -193,10 +193,10 @@ namespace SAGE
 		Elements[10] += cosTheta;
 	}
 
-	void Matrix4::RotateZ(const float pAngle)
+	void Matrix4::RotateZ(const float p_Angle)
 	{
-		float sinTheta = sinf(pAngle);
-		float cosTheta = cosf(pAngle);
+		float sinTheta = sinf(p_Angle);
+		float cosTheta = cosf(p_Angle);
 
 		Elements[0] += cosTheta;
 		Elements[1] += sinTheta;
@@ -204,23 +204,23 @@ namespace SAGE
 		Elements[5] += cosTheta;
 	}
 
-	void Matrix4::Scale(const float pX, const float pY, const float pZ)
+	void Matrix4::Scale(const float p_X, const float p_Y, const float p_Z)
 	{
-		Elements[0] *= pX;
-		Elements[5] *= pY;
-		Elements[10] *= pZ;
+		Elements[0] *= p_X;
+		Elements[5] *= p_Y;
+		Elements[10] *= p_Z;
 	}
 
-	void Matrix4::Scale(const float pScalar)
+	void Matrix4::Scale(const float p_Scalar)
 	{
-		Elements[0] *= pScalar;
-		Elements[5] *= pScalar;
-		Elements[10] *= pScalar;
+		Elements[0] *= p_Scalar;
+		Elements[5] *= p_Scalar;
+		Elements[10] *= p_Scalar;
 	}
 
-	void Matrix4::Scale(const Vector3& pVector)
+	void Matrix4::Scale(const Vector3& p_Vector)
 	{
-		Scale(pVector.X, pVector.Y, pVector.Z);
+		Scale(p_Vector.X, p_Vector.Y, p_Vector.Z);
 	}
 
 	float Matrix4::Determinant()
@@ -295,21 +295,21 @@ namespace SAGE
 	}
 
 	// static
-	Matrix4 Matrix4::FromTranslation(float pX, float pY, float pZ)
+	Matrix4 Matrix4::FromTranslation(float p_X, float p_Y, float p_Z)
 	{
 		Matrix4 matrix;
 		matrix.Elements[0] = 1.0f;
 		matrix.Elements[1] = 0.0f;
 		matrix.Elements[2] = 0.0f;
-		matrix.Elements[3] = pX;
+		matrix.Elements[3] = p_X;
 		matrix.Elements[4] = 0.0f;
 		matrix.Elements[5] = 1.0f;
 		matrix.Elements[6] = 0.0f;
-		matrix.Elements[7] = pY;
+		matrix.Elements[7] = p_Y;
 		matrix.Elements[8] = 0.0f;
 		matrix.Elements[9] = 0.0f;
 		matrix.Elements[10] = 1.0f;
-		matrix.Elements[11] = pZ;
+		matrix.Elements[11] = p_Z;
 		matrix.Elements[12] = 0.0f;
 		matrix.Elements[13] = 0.0f;
 		matrix.Elements[14] = 0.0f;
@@ -319,14 +319,14 @@ namespace SAGE
 	}
 
 	// static
-	Matrix4 Matrix4::FromPitchYawRoll(float pPitch, float pYaw, float pRoll)
+	Matrix4 Matrix4::FromPitchYawRoll(float p_Pitch, float p_Yaw, float p_Roll)
 	{
-		float cosX = cosf(pPitch);
-		float sinX = sinf(pPitch);
-		float cosY = cosf(pYaw);
-		float sinY = sinf(pYaw);
-		float cosZ = cosf(pRoll);
-		float sinZ = sinf(pRoll);
+		float cosX = cosf(p_Pitch);
+		float sinX = sinf(p_Pitch);
+		float cosY = cosf(p_Yaw);
+		float sinY = sinf(p_Yaw);
+		float cosZ = cosf(p_Roll);
+		float sinZ = sinf(p_Roll);
 
 		// phi φ = X
 		// theta θ = Y
@@ -354,20 +354,20 @@ namespace SAGE
 	}
 
 	// static
-	Matrix4 Matrix4::FromScale(float pX, float pY, float pZ)
+	Matrix4 Matrix4::FromScale(float p_X, float p_Y, float p_Z)
 	{
 		Matrix4 matrix;
-		matrix.Elements[0] = pX;
+		matrix.Elements[0] = p_X;
 		matrix.Elements[1] = 0.0f;
 		matrix.Elements[2] = 0.0f;
 		matrix.Elements[3] = 1.0f;
 		matrix.Elements[4] = 0.0f;
-		matrix.Elements[5] = pY;
+		matrix.Elements[5] = p_Y;
 		matrix.Elements[6] = 0.0f;
 		matrix.Elements[7] = 1.0f;
 		matrix.Elements[8] = 0.0f;
 		matrix.Elements[9] = 0.0f;
-		matrix.Elements[10] = pZ;
+		matrix.Elements[10] = p_Z;
 		matrix.Elements[11] = 1.0f;
 		matrix.Elements[12] = 0.0f;
 		matrix.Elements[13] = 0.0f;
@@ -378,7 +378,7 @@ namespace SAGE
 	}
 
 	// static
-	bool Matrix4::Inverse(const Matrix4& pIn, Matrix4& pOut)
+	bool Matrix4::Inverse(const Matrix4& p_In, Matrix4& p_Out)
 	{
 		return false;
 	}

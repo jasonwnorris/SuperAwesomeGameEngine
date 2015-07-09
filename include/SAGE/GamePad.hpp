@@ -53,44 +53,44 @@ namespace SAGE
 		friend class Events;
 
 		public:
-			static bool IsButtonDown(PlayerIndex pIndex, GamePadButton pButton);
-			static bool IsButtonUp(PlayerIndex pIndex, GamePadButton pButton);
-			static bool IsButtonPressed(PlayerIndex pIndex, GamePadButton pButton);
-			static bool IsButtonReleased(PlayerIndex pIndex, GamePadButton pButton);
-			static Sint16 GetAxis(PlayerIndex pIndex, GamePadAxis pAxis);
+			static bool IsButtonDown(PlayerIndex p_Index, GamePadButton p_Button);
+			static bool IsButtonUp(PlayerIndex p_Index, GamePadButton p_Button);
+			static bool IsButtonPressed(PlayerIndex p_Index, GamePadButton p_Button);
+			static bool IsButtonReleased(PlayerIndex p_Index, GamePadButton p_Button);
+			static Sint16 GetAxis(PlayerIndex p_Index, GamePadAxis p_Axis);
 
 		private:
-			GamePad(PlayerIndex pIndex, SDL_GameController* pMapping);
+			GamePad(PlayerIndex p_Index, SDL_GameController* p_Mapping);
 			~GamePad();
 
 			void Clear();
 			PlayerIndex GetIndex() const;
 			SDL_GameController* GetMapping() const;
-			bool IsButtonDown(GamePadButton pButton);
-			bool IsButtonUp(GamePadButton pButton);
-			bool IsButtonPressed(GamePadButton pButton);
-			bool IsButtonReleased(GamePadButton pButton);
-			Sint16 GetAxis(GamePadAxis pAxis);
+			bool IsButtonDown(GamePadButton p_Button);
+			bool IsButtonUp(GamePadButton p_Button);
+			bool IsButtonPressed(GamePadButton p_Button);
+			bool IsButtonReleased(GamePadButton p_Button);
+			Sint16 GetAxis(GamePadAxis p_Axis);
 
-			void SetButton(GamePadButton pButton, bool pState);
-			void SetAxis(GamePadAxis pAxis, Sint16 pValue);
+			void SetButton(GamePadButton p_Button, bool p_State);
+			void SetAxis(GamePadAxis p_Axis, Sint16 p_Value);
 
 			static void ClearAll();
-			static void Open(PlayerIndex pIndex);
-			static void Close(PlayerIndex pIndex);
-			static void Remap(PlayerIndex pIndex);
-			static void SetButton(PlayerIndex pIndex, GamePadButton pButton, bool pState);
-			static void SetAxis(PlayerIndex pIndex, GamePadAxis pAxis, Sint16 pValue);
+			static void Open(PlayerIndex p_Index);
+			static void Close(PlayerIndex p_Index);
+			static void Remap(PlayerIndex p_Index);
+			static void SetButton(PlayerIndex p_Index, GamePadButton p_Button, bool p_State);
+			static void SetAxis(PlayerIndex p_Index, GamePadAxis p_Axis, Sint16 p_Value);
 
 			static std::map<PlayerIndex, GamePad*> sGamePads;
 			static const Sint16 MaxAxisRange;
 			
-			PlayerIndex mIndex;
-			SDL_GameController* mMapping;
-			std::map<GamePadButton, bool> mCurrentButtons;
-			std::map<GamePadButton, bool> mPreviousButtons;
-			std::map<GamePadAxis, Sint16> mCurrentAxes;
-			std::map<GamePadAxis, Sint16> mPreviousAxes;
+			PlayerIndex m_Index;
+			SDL_GameController* m_Mapping;
+			std::map<GamePadButton, bool> m_CurrentButtons;
+			std::map<GamePadButton, bool> m_PreviousButtons;
+			std::map<GamePadAxis, Sint16> m_CurrentAxes;
+			std::map<GamePadAxis, Sint16> m_PreviousAxes;
 
 	};
 }

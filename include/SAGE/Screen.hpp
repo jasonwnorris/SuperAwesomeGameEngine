@@ -13,14 +13,14 @@ namespace SAGE
 	class Screen
 	{
 		public:
-			Screen(ScreenManager* pManager);
+			Screen(ScreenManager* p_Manager);
 			virtual ~Screen();
 
 			bool IsActive() const;
 			bool IsVisible() const;
 
-			void SetActive(bool pActive);
-			void SetVisible(bool pVisible);
+			void SetActive(bool p_Active);
+			void SetVisible(bool p_Visible);
 
 			virtual int Initialize();
 			virtual int Finalize();
@@ -28,9 +28,9 @@ namespace SAGE
 			virtual int Pause();
 			virtual int Resume();
 
-			virtual int Update(float pDeltaTime) = 0;
-			virtual int Render(SpriteBatch& pSpriteBatch) = 0;
-			virtual int Render(GeometryBatch& pGeometryBatch);
+			virtual int Update(float p_DeltaTime) = 0;
+			virtual int Render(SpriteBatch& p_SpriteBatch) = 0;
+			virtual int Render(GeometryBatch& p_GeometryBatch);
 
 		protected:
 			enum TransitionState
@@ -41,10 +41,10 @@ namespace SAGE
 				Out,
 			};
 
-			ScreenManager* mManager;
-			TransitionState mTransitionState;
-			bool mIsActive;
-			bool mIsVisible;
+			ScreenManager* m_Manager;
+			TransitionState m_TransitionState;
+			bool m_IsActive;
+			bool m_IsVisible;
 	};
 }
 

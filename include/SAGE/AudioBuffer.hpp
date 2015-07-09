@@ -18,10 +18,10 @@ namespace SAGE
 
 			ALuint GetID() const;
 
-			bool Load(const std::string& pFilename);
+			bool Load(const std::string& p_Filename);
 
 		private:
-			ALuint mID;
+			ALuint m_ID;
 	};
 }
 

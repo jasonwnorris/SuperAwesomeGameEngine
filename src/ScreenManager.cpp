@@ -7,134 +7,134 @@ namespace SAGE
 {
 	ScreenManager::ScreenManager()
 	{
-		mScreenToPush = nullptr;
-		mPushPause = true;
-		mPushHide = true;
-		mPopCount = 0;
+		m_ScreenToPush = nullptr;
+		m_PushPause = true;
+		m_PushHide = true;
+		m_PopCount = 0;
 	}
 
 	ScreenManager::~ScreenManager()
 	{
-		for (int i = (int)mScreens.size() - 1; i >= 0; --i)
+		for (int i = (int)m_Screens.size() - 1; i >= 0; --i)
 		{
-			mScreens[i]->Finalize();
+			m_Screens[i]->Finalize();
 
-			delete mScreens[i];
+			delete m_Screens[i];
 		}
 
-		mScreens.clear();
+		m_Screens.clear();
 
-		if (mScreenToPush != nullptr)
+		if (m_ScreenToPush != nullptr)
 		{
-			mScreenToPush->Finalize();
+			m_ScreenToPush->Finalize();
 
-			delete mScreenToPush;
+			delete m_ScreenToPush;
 		}
 	}
 
 	bool ScreenManager::IsEmpty() const
 	{
-		return mScreens.size() == 0 && mScreenToPush == nullptr;
+		return m_Screens.size() == 0 && m_ScreenToPush == nullptr;
 	}
 
-	int ScreenManager::Push(Screen* pScreen, bool pPause, bool pHide)
+	int ScreenManager::Push(Screen* p_Screen, bool p_Pause, bool p_Hide)
 	{
-		if (mScreenToPush != nullptr)
+		if (m_ScreenToPush != nullptr)
 		{
 			return -1;
 		}
 
-		mScreenToPush = pScreen;
-		mPushPause = pPause;
-		mPushHide = pHide;
+		m_ScreenToPush = p_Screen;
+		m_PushPause = p_Pause;
+		m_PushHide = p_Hide;
 
 		return 0;
 	}
 
 	int ScreenManager::Pop()
 	{
-		++mPopCount;
+		++m_PopCount;
 
 		return 0;
 	}
 
 	int ScreenManager::PopAll()
 	{
-		mPopCount = (int)mScreens.size();
+		m_PopCount = (int)m_Screens.size();
 
 		return 0;
 	}
 
-	int ScreenManager::Update(float pDeltaTime)
+	int ScreenManager::Update(float p_DeltaTime)
 	{
 		// Pop requested screens.
-		while (mPopCount > 0 && (int)mScreens.size() != 0)
+		while (m_PopCount > 0 && (int)m_Screens.size() != 0)
 		{
-			Screen* screen = mScreens.back();
+			Screen* screen = m_Screens.back();
 			screen->Finalize();
 
-			mScreens.pop_back();
+			m_Screens.pop_back();
 
 			delete screen;
 
-			--mPopCount;
+			--m_PopCount;
 		}
 
-		mPopCount = 0;
+		m_PopCount = 0;
 
 		// Alter new top of stack if one exists.
-		if (mScreens.size() > 0)
+		if (m_Screens.size() > 0)
 		{
-			if (mScreens.back()->Resume() < 0)
+			if (m_Screens.back()->Resume() < 0)
 			{
 				return -1;
 			}
 
-			mScreens.back()->SetActive(true);
-			mScreens.back()->SetVisible(true);
+			m_Screens.back()->SetActive(true);
+			m_Screens.back()->SetVisible(true);
 		}
 
 		// Push new screen.
-		if (mScreenToPush != nullptr)
+		if (m_ScreenToPush != nullptr)
 		{
 			// Alter previous top of stack.
-			if (mScreens.size() > 0)
+			if (m_Screens.size() > 0)
 			{
-				if (mPushPause && mPushHide)
+				if (m_PushPause && m_PushHide)
 				{
-					if (mScreens.back()->Pause() < 0)
+					if (m_Screens.back()->Pause() < 0)
 					{
 						return -1;
 					}
 				}
 
-				mScreens.back()->SetActive(!mPushPause);
-				mScreens.back()->SetVisible(!mPushHide);
+				m_Screens.back()->SetActive(!m_PushPause);
+				m_Screens.back()->SetVisible(!m_PushHide);
 			}
 
 			// Add to stack.
-			if (mScreenToPush->Initialize() < 0)
+			if (m_ScreenToPush->Initialize() < 0)
 			{
-				mScreenToPush->Finalize();
+				m_ScreenToPush->Finalize();
 
-				delete mScreenToPush;
+				delete m_ScreenToPush;
 
 				return -1;
 			}
 			else
 			{
-				mScreens.push_back(mScreenToPush);
+				m_Screens.push_back(m_ScreenToPush);
 			}
 
-			mScreenToPush = nullptr;
+			m_ScreenToPush = nullptr;
 		}
 
 		// Update
-		for (int i = 0; i < (int)mScreens.size(); ++i)
+		for (int i = 0; i < (int)m_Screens.size(); ++i)
 		{
-			if (mScreens[i]->IsActive())
+			if (m_Screens[i]->IsActive())
 			{
-				if (mScreens[i]->Update(pDeltaTime) < 0)
+				if (m_Screens[i]->Update(p_DeltaTime) < 0)
 					return -1;
 			}
 		}
@@ -142,14 +142,14 @@ namespace SAGE
 		return 0;
 	}
 
-	int ScreenManager::Render(SpriteBatch& pSpriteBatch)
+	int ScreenManager::Render(SpriteBatch& p_SpriteBatch)
 	{
 		// Render
-		for (int i = 0; i < (int)mScreens.size(); ++i)
+		for (int i = 0; i < (int)m_Screens.size(); ++i)
 		{
-			if (mScreens[i]->IsVisible())
+			if (m_Screens[i]->IsVisible())
 			{
-				if (mScreens[i]->Render(pSpriteBatch) < 0)
+				if (m_Screens[i]->Render(p_SpriteBatch) < 0)
 					return -1;
 			}
 		}
@@ -157,14 +157,14 @@ namespace SAGE
 		return 0;
 	}
 
-	int ScreenManager::Render(GeometryBatch& pGeometryBatch)
+	int ScreenManager::Render(GeometryBatch& p_GeometryBatch)
 	{
 		// Render
-		for (int i = 0; i < (int)mScreens.size(); ++i)
+		for (int i = 0; i < (int)m_Screens.size(); ++i)
 		{
-			if (mScreens[i]->IsVisible())
+			if (m_Screens[i]->IsVisible())
 			{
-				if (mScreens[i]->Render(pGeometryBatch) < 0)
+				if (m_Screens[i]->Render(p_GeometryBatch) < 0)
 					return -1;
 			}
 		}

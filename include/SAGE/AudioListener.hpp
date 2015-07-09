@@ -16,16 +16,16 @@ namespace SAGE
 			AudioListener();
 			~AudioListener();
 
-			void SetPosition(ALfloat pPositionX, ALfloat pPositionY);
-			void SetPosition(const Vector2& pPosition);
-			void SetVelocity(ALfloat pPositionX, ALfloat pPositionY);
-			void SetVelocity(const Vector2& pVelocity);
+			void SetPosition(ALfloat p_PositionX, ALfloat p_PositionY);
+			void SetPosition(const Vector2& p_Position);
+			void SetVelocity(ALfloat p_PositionX, ALfloat p_PositionY);
+			void SetVelocity(const Vector2& p_Velocity);
 
 		private:
-			ALfloat mPositionX;
-			ALfloat mPositionY;
-			ALfloat mVelocityX;
-			ALfloat mVelocityY;
+			ALfloat m_PositionX;
+			ALfloat m_PositionY;
+			ALfloat m_VelocityX;
+			ALfloat m_VelocityY;
 	};
 }
 

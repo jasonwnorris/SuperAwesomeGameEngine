@@ -60,15 +60,15 @@ namespace SAGE
 			bool Initialize();
 			bool Finalize();
 
-			bool Begin(Effect& pEffect, const Camera2D& pCamera = Camera2D::DefaultCamera, SortMode pSortMode = SortMode::None, BlendMode pBlendMode = BlendMode::None, RasterizerState pRasterizerState = RasterizerState::CullCounterClockwise);
+			bool Begin(Effect& p_Effect, const Camera2D& p_Camera = Camera2D::DefaultCamera, SortMode p_SortMode = SortMode::None, BlendMode p_BlendMode = BlendMode::None, RasterizerState p_RasterizerState = RasterizerState::CullCounterClockwise);
 
-			bool Draw(const Texture& pTexture, const Vector2& pPosition, const Vector2& pDimensions, const Rectangle& pSourceRectangle, const Color& pColor, const Vector2& pOrigin, float pRotation, const Vector2& pScale, Orientation pOrientation, float pDepth = 0.0f);
-			bool Draw(const Texture& pTexture, const Vector2& pPosition, const Rectangle& pDestinationRectangle, const Rectangle& pSourceRectangle, const Color& pColor, const Vector2& pOrigin, float pRotation, const Vector2& pScale, Orientation pOrientation, float pDepth = 0.0f);
-			bool Draw(const Texture& pTexture, const Rectangle& pDestinationRectangle, const Rectangle& pSourceRectangle, const Color& pColor, const Vector2& pOrigin, float pRotation, const Vector2& pScale, Orientation pOrientation, float pDepth = 0.0f);
-			bool Draw(const Texture& pTexture, const Vector2& pPosition, const Rectangle& pSourceRectangle, const Color& pColor, const Vector2& pOrigin, float pRotation, const Vector2& pScale, Orientation pOrientation, float pDepth = 0.0f);
+			bool Draw(const Texture& p_Texture, const Vector2& p_Position, const Vector2& p_Dimensions, const Rectangle& p_SourceRectangle, const Color& p_Color, const Vector2& p_Origin, float p_Rotation, const Vector2& p_Scale, Orientation p_Orientation, float p_Depth = 0.0f);
+			bool Draw(const Texture& p_Texture, const Vector2& p_Position, const Rectangle& p_DestinationRectangle, const Rectangle& p_SourceRectangle, const Color& p_Color, const Vector2& p_Origin, float p_Rotation, const Vector2& p_Scale, Orientation p_Orientation, float p_Depth = 0.0f);
+			bool Draw(const Texture& p_Texture, const Rectangle& p_DestinationRectangle, const Rectangle& p_SourceRectangle, const Color& p_Color, const Vector2& p_Origin, float p_Rotation, const Vector2& p_Scale, Orientation p_Orientation, float p_Depth = 0.0f);
+			bool Draw(const Texture& p_Texture, const Vector2& p_Position, const Rectangle& p_SourceRectangle, const Color& p_Color, const Vector2& p_Origin, float p_Rotation, const Vector2& p_Scale, Orientation p_Orientation, float p_Depth = 0.0f);
 			
-			bool DrawString(const SAGE::SpriteFont& pSpriteFont, const std::string& pString, const Vector2& pPosition, const Color& pColor, float pDepth = 0.0f);
-			bool DrawString(const SAGE::SpriteFont& pSpriteFont, const std::string& pString, const Vector2& pPosition, const Color& pColor, const Vector2& pOrigin, float pRotation, const Vector2& pScale, Orientation pOrientation, float pDepth = 0.0f);
+			bool DrawString(const SAGE::SpriteFont& p_SpriteFont, const std::string& p_String, const Vector2& p_Position, const Color& p_Color, float p_Depth = 0.0f);
+			bool DrawString(const SAGE::SpriteFont& p_SpriteFont, const std::string& p_String, const Vector2& p_Position, const Color& p_Color, const Vector2& p_Origin, float p_Rotation, const Vector2& p_Scale, Orientation p_Orientation, float p_Depth = 0.0f);
 			
 			bool End();
 
@@ -84,22 +84,22 @@ namespace SAGE
 			};
 
 			void Render();
-			void Flush(int pTextureID, int pLength);
+			void Flush(int p_TextureID, int p_Length);
 
-			void RotateAbout(const Vector2& pPosition, float pRotation, VertexVector2& pVertex);
-			void FlipAbout(const Vector2& pPosition, Orientation pOrientation, VertexVector2& pVertex);
+			void RotateAbout(const Vector2& p_Position, float p_Rotation, VertexVector2& p_Vertex);
+			void FlipAbout(const Vector2& p_Position, Orientation p_Orientation, VertexVector2& p_Vertex);
 
-			bool mWithinDrawPair;
-			int mItemCount;
-			int mFlushCount;
-			SortMode mSortMode;
-			BlendMode mBlendMode;
-			RasterizerState mRasterizerState;
-			GLuint mVertexArrayObject;
-			GLuint mVertexBufferObject;
-			GLuint mIndexBufferObject;
-			SpriteBatchItem mBatchItemList[MaxBatchSize];
-			VertexPositionColorTexture mVertexBuffer[MaxVertexCount];
+			bool m_WithinDrawPair;
+			int m_ItemCount;
+			int m_FlushCount;
+			SortMode m_SortMode;
+			BlendMode m_BlendMode;
+			RasterizerState m_RasterizerState;
+			GLuint m_VertexArrayObject;
+			GLuint m_VertexBufferObject;
+			GLuint m_IndexBufferObject;
+			SpriteBatchItem m_BatchItemList[MaxBatchSize];
+			VertexPositionColorTexture m_VertexBuffer[MaxVertexCount];
 	};
 }
 

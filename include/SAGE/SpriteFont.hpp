@@ -21,18 +21,18 @@ namespace SAGE
 			const Texture& GetTexture() const;
 			float GetSize() const;
 			float GetSpacing() const;
-			Rectangle GetGlyphBounds(char pGlyph) const;
+			Rectangle GetGlyphBounds(char p_Glyph) const;
 
-			void SetSize(float pSize);
-			void SetSpacing(float pSpacing);
+			void SetSize(float p_Size);
+			void SetSpacing(float p_Spacing);
 
-			bool Load(const std::string& pFilename, float pSize, float pSpacing, Interpolation pInterpolation = Interpolation::Linear, Wrapping pWrapping = Wrapping::Repeat);
-			void MeasureString(const std::string& pString, Vector2& pDimensions);
+			bool Load(const std::string& p_Filename, float p_Size, float p_Spacing, Interpolation p_Interpolation = Interpolation::Linear, Wrapping p_Wrapping = Wrapping::Repeat);
+			void MeasureString(const std::string& p_String, Vector2& p_Dimensions);
 
 		private:
-			Texture mTexture;
-			float mSize;
-			float mSpacing;
+			Texture m_Texture;
+			float m_Size;
+			float m_Spacing;
 	};
 }
 

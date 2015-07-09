@@ -28,17 +28,17 @@ namespace SAGE
 		Elements[8] = 1.0f;
 	}
 
-	Matrix3::Matrix3(float pElement0, float pElement1, float pElement2, float pElement3, float pElement4, float pElement5, float pElement6, float pElement7, float pElement8)
+	Matrix3::Matrix3(float p_Element0, float p_Element1, float p_Element2, float p_Element3, float p_Element4, float p_Element5, float p_Element6, float p_Element7, float p_Element8)
 	{
-		Elements[0] = pElement0;
-		Elements[1] = pElement1;
-		Elements[2] = pElement2;
-		Elements[3] = pElement3;
-		Elements[4] = pElement4;
-		Elements[5] = pElement5;
-		Elements[6] = pElement6;
-		Elements[7] = pElement7;
-		Elements[8] = pElement8;
+		Elements[0] = p_Element0;
+		Elements[1] = p_Element1;
+		Elements[2] = p_Element2;
+		Elements[3] = p_Element3;
+		Elements[4] = p_Element4;
+		Elements[5] = p_Element5;
+		Elements[6] = p_Element6;
+		Elements[7] = p_Element7;
+		Elements[8] = p_Element8;
 	}
 
 	Matrix3::Matrix3(const float(&M)[9])
@@ -47,61 +47,61 @@ namespace SAGE
 			Elements[i] = M[i];
 	}
 
-	Matrix3& Matrix3::operator=(const Matrix3& pOther)
+	Matrix3& Matrix3::operator=(const Matrix3& p_Other)
 	{
 		for (int i = 0; i < 9; i++)
-			Elements[i] = pOther.Elements[i];
+			Elements[i] = p_Other.Elements[i];
 
 		return *this;
 	}
 
-	Matrix3& Matrix3::operator+=(const Matrix3& pOther)
+	Matrix3& Matrix3::operator+=(const Matrix3& p_Other)
 	{
 		for (int i = 0; i < 9; i++)
-			Elements[i] += pOther.Elements[i];
+			Elements[i] += p_Other.Elements[i];
 
 		return *this;
 	}
 
-	Matrix3 Matrix3::operator+(const Matrix3& pOther) const
+	Matrix3 Matrix3::operator+(const Matrix3& p_Other) const
 	{
 		Matrix3 ret;
 
 		for (int i = 0; i < 9; i++)
-			ret.Elements[i] = Elements[i] + pOther.Elements[i];
+			ret.Elements[i] = Elements[i] + p_Other.Elements[i];
 
 		return ret;
 	}
 
-	Matrix3& Matrix3::operator-=(const Matrix3& pOther)
+	Matrix3& Matrix3::operator-=(const Matrix3& p_Other)
 	{
 		for (int i = 0; i < 9; i++)
-			Elements[i] -= pOther.Elements[i];
+			Elements[i] -= p_Other.Elements[i];
 
 		return *this;
 	}
 
-	Matrix3 Matrix3::operator-(const Matrix3& pOther) const
+	Matrix3 Matrix3::operator-(const Matrix3& p_Other) const
 	{
 		Matrix3 ret;
 
 		for (int i = 0; i < 9; i++)
-			ret.Elements[i] = Elements[i] - pOther.Elements[i];
+			ret.Elements[i] = Elements[i] - p_Other.Elements[i];
 
 		return ret;
 	}
 
-	Matrix3& Matrix3::operator*=(const Matrix3& pOther)
+	Matrix3& Matrix3::operator*=(const Matrix3& p_Other)
 	{
-		float m11 = Elements[0] * pOther.Elements[0] + Elements[1] * pOther.Elements[3] + Elements[2] * pOther.Elements[6];
-		float m12 = Elements[0] * pOther.Elements[1] + Elements[1] * pOther.Elements[4] + Elements[2] * pOther.Elements[7];
-		float m13 = Elements[0] * pOther.Elements[2] + Elements[1] * pOther.Elements[5] + Elements[2] * pOther.Elements[8];
-		float m21 = Elements[3] * pOther.Elements[0] + Elements[4] * pOther.Elements[3] + Elements[5] * pOther.Elements[6];
-		float m22 = Elements[3] * pOther.Elements[1] + Elements[4] * pOther.Elements[4] + Elements[5] * pOther.Elements[7];
-		float m23 = Elements[3] * pOther.Elements[2] + Elements[4] * pOther.Elements[5] + Elements[5] * pOther.Elements[8];
-		float m31 = Elements[6] * pOther.Elements[0] + Elements[7] * pOther.Elements[3] + Elements[8] * pOther.Elements[6];
-		float m32 = Elements[6] * pOther.Elements[1] + Elements[7] * pOther.Elements[4] + Elements[8] * pOther.Elements[7];
-		float m33 = Elements[6] * pOther.Elements[2] + Elements[7] * pOther.Elements[5] + Elements[8] * pOther.Elements[8];
+		float m11 = Elements[0] * p_Other.Elements[0] + Elements[1] * p_Other.Elements[3] + Elements[2] * p_Other.Elements[6];
+		float m12 = Elements[0] * p_Other.Elements[1] + Elements[1] * p_Other.Elements[4] + Elements[2] * p_Other.Elements[7];
+		float m13 = Elements[0] * p_Other.Elements[2] + Elements[1] * p_Other.Elements[5] + Elements[2] * p_Other.Elements[8];
+		float m21 = Elements[3] * p_Other.Elements[0] + Elements[4] * p_Other.Elements[3] + Elements[5] * p_Other.Elements[6];
+		float m22 = Elements[3] * p_Other.Elements[1] + Elements[4] * p_Other.Elements[4] + Elements[5] * p_Other.Elements[7];
+		float m23 = Elements[3] * p_Other.Elements[2] + Elements[4] * p_Other.Elements[5] + Elements[5] * p_Other.Elements[8];
+		float m31 = Elements[6] * p_Other.Elements[0] + Elements[7] * p_Other.Elements[3] + Elements[8] * p_Other.Elements[6];
+		float m32 = Elements[6] * p_Other.Elements[1] + Elements[7] * p_Other.Elements[4] + Elements[8] * p_Other.Elements[7];
+		float m33 = Elements[6] * p_Other.Elements[2] + Elements[7] * p_Other.Elements[5] + Elements[8] * p_Other.Elements[8];
 
 		Elements[0] = m11;
 		Elements[1] = m12;
@@ -116,69 +116,69 @@ namespace SAGE
 		return *this;
 	}
 
-	Matrix3 Matrix3::operator*(const Matrix3& pOther) const
+	Matrix3 Matrix3::operator*(const Matrix3& p_Other) const
 	{
-		float m11 = Elements[0] * pOther.Elements[0] + Elements[1] * pOther.Elements[3] + Elements[2] * pOther.Elements[6];
-		float m12 = Elements[0] * pOther.Elements[1] + Elements[1] * pOther.Elements[4] + Elements[2] * pOther.Elements[7];
-		float m13 = Elements[0] * pOther.Elements[2] + Elements[1] * pOther.Elements[5] + Elements[2] * pOther.Elements[8];
-		float m21 = Elements[3] * pOther.Elements[0] + Elements[4] * pOther.Elements[3] + Elements[5] * pOther.Elements[6];
-		float m22 = Elements[3] * pOther.Elements[1] + Elements[4] * pOther.Elements[4] + Elements[5] * pOther.Elements[7];
-		float m23 = Elements[3] * pOther.Elements[2] + Elements[4] * pOther.Elements[5] + Elements[5] * pOther.Elements[8];
-		float m31 = Elements[6] * pOther.Elements[0] + Elements[7] * pOther.Elements[3] + Elements[8] * pOther.Elements[6];
-		float m32 = Elements[6] * pOther.Elements[1] + Elements[7] * pOther.Elements[4] + Elements[8] * pOther.Elements[7];
-		float m33 = Elements[6] * pOther.Elements[2] + Elements[7] * pOther.Elements[5] + Elements[8] * pOther.Elements[8];
+		float m11 = Elements[0] * p_Other.Elements[0] + Elements[1] * p_Other.Elements[3] + Elements[2] * p_Other.Elements[6];
+		float m12 = Elements[0] * p_Other.Elements[1] + Elements[1] * p_Other.Elements[4] + Elements[2] * p_Other.Elements[7];
+		float m13 = Elements[0] * p_Other.Elements[2] + Elements[1] * p_Other.Elements[5] + Elements[2] * p_Other.Elements[8];
+		float m21 = Elements[3] * p_Other.Elements[0] + Elements[4] * p_Other.Elements[3] + Elements[5] * p_Other.Elements[6];
+		float m22 = Elements[3] * p_Other.Elements[1] + Elements[4] * p_Other.Elements[4] + Elements[5] * p_Other.Elements[7];
+		float m23 = Elements[3] * p_Other.Elements[2] + Elements[4] * p_Other.Elements[5] + Elements[5] * p_Other.Elements[8];
+		float m31 = Elements[6] * p_Other.Elements[0] + Elements[7] * p_Other.Elements[3] + Elements[8] * p_Other.Elements[6];
+		float m32 = Elements[6] * p_Other.Elements[1] + Elements[7] * p_Other.Elements[4] + Elements[8] * p_Other.Elements[7];
+		float m33 = Elements[6] * p_Other.Elements[2] + Elements[7] * p_Other.Elements[5] + Elements[8] * p_Other.Elements[8];
 
 		return Matrix3(m11, m12, m13, m21, m22, m23, m31, m32, m33);
 	}
 
-	Matrix3& Matrix3::operator*=(float pScalar)
+	Matrix3& Matrix3::operator*=(float p_Scalar)
 	{
 		for (int i = 0; i < 9; i++)
-			Elements[i] *= pScalar;
+			Elements[i] *= p_Scalar;
 
 		return *this;
 	}
 
-	Matrix3 Matrix3::operator*(float pScalar) const
+	Matrix3 Matrix3::operator*(float p_Scalar) const
 	{
 		Matrix3 ret;
 
 		for (int i = 0; i < 9; i++)
-			ret.Elements[i] = Elements[i] * pScalar;
+			ret.Elements[i] = Elements[i] * p_Scalar;
 
 		return ret;
 	}
 
-	Matrix3& Matrix3::operator/=(float pScalar)
+	Matrix3& Matrix3::operator/=(float p_Scalar)
 	{
 		for (int i = 0; i < 9; i++)
-			Elements[i] /= pScalar;
+			Elements[i] /= p_Scalar;
 
 		return *this;
 	}
 
-	Matrix3 Matrix3::operator/(float pScalar) const
+	Matrix3 Matrix3::operator/(float p_Scalar) const
 	{
 		Matrix3 ret;
 
 		for (int i = 0; i < 9; i++)
-			ret.Elements[i] = Elements[i] / pScalar;
+			ret.Elements[i] = Elements[i] / p_Scalar;
 
 		return ret;
 	}
 
-	bool Matrix3::operator==(const Matrix3& pOther) const
+	bool Matrix3::operator==(const Matrix3& p_Other) const
 	{
 		for (int i = 0; i < 9; i++)
-			if (Elements[i] != pOther.Elements[i])
+			if (Elements[i] != p_Other.Elements[i])
 				return false;
 
 		return true;
 	}
 
-	bool Matrix3::operator!=(const Matrix3& pOther) const
+	bool Matrix3::operator!=(const Matrix3& p_Other) const
 	{
-		return !(*this == pOther);
+		return !(*this == p_Other);
 	}
 
 	float Matrix3::Determinant() const
@@ -256,12 +256,12 @@ namespace SAGE
 		return *this;
 	}
 
-	Matrix3 operator*(float pScalar, const Matrix3& pMatrix)
+	Matrix3 operator*(float p_Scalar, const Matrix3& p_Matrix)
 	{
 		Matrix3 ret;
 
 		for (int i = 0; i < 9; i++)
-			ret.Elements[i] = pScalar * pMatrix.Elements[i];
+			ret.Elements[i] = p_Scalar * p_Matrix.Elements[i];
 
 		return ret;
 	}

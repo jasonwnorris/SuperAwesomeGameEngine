@@ -14,22 +14,22 @@ namespace SAGE
 			float Elements[9];
 
 			Matrix3();
-			Matrix3(float pElement0, float pElement1, float pElement2, float pElement3, float pElement4, float pElement5, float pElement6, float pElement7, float pElement8);
+			Matrix3(float p_Element0, float p_Element1, float p_Element2, float p_Element3, float p_Element4, float p_Element5, float p_Element6, float p_Element7, float p_Element8);
 			Matrix3(const float(&M)[9]);
 
-			Matrix3& operator=(const Matrix3& pOther);
-			Matrix3& operator+=(const Matrix3& pOther);
-			Matrix3 operator+(const Matrix3& pOther) const;
-			Matrix3& operator-=(const Matrix3& pOther);
-			Matrix3 operator-(const Matrix3& pOther) const;
-			Matrix3& operator*=(const Matrix3& pOther);
-			Matrix3 operator*(const Matrix3& pOther) const;
-			Matrix3& operator*=(float pScalar);
-			Matrix3 operator*(float pScalar) const;
-			Matrix3& operator/=(float pScalar);
-			Matrix3 operator/(float pScalar) const;
-			bool operator==(const Matrix3& pOther) const;
-			bool operator!=(const Matrix3& pOther) const;
+			Matrix3& operator=(const Matrix3& p_Other);
+			Matrix3& operator+=(const Matrix3& p_Other);
+			Matrix3 operator+(const Matrix3& p_Other) const;
+			Matrix3& operator-=(const Matrix3& p_Other);
+			Matrix3 operator-(const Matrix3& p_Other) const;
+			Matrix3& operator*=(const Matrix3& p_Other);
+			Matrix3 operator*(const Matrix3& p_Other) const;
+			Matrix3& operator*=(float p_Scalar);
+			Matrix3 operator*(float p_Scalar) const;
+			Matrix3& operator/=(float p_Scalar);
+			Matrix3 operator/(float p_Scalar) const;
+			bool operator==(const Matrix3& p_Other) const;
+			bool operator!=(const Matrix3& p_Other) const;
 
 			float Determinant() const;
 			bool IsInvertable() const;
@@ -38,7 +38,7 @@ namespace SAGE
 			Matrix3& Transpose();
 	};
 
-	Matrix3 operator*(float pScalar, const Matrix3& pMatrix);
+	Matrix3 operator*(float p_Scalar, const Matrix3& p_Matrix);
 }
 
 #endif

@@ -11,9 +11,9 @@ namespace SAGE
 {
 	SpriteBatch::SpriteBatch()
 	{
-		mWithinDrawPair = false;
-		mItemCount = 0;
-		mFlushCount = 0;
+		m_WithinDrawPair = false;
+		m_ItemCount = 0;
+		m_FlushCount = 0;
 	}
 
 	SpriteBatch::~SpriteBatch()
@@ -23,7 +23,7 @@ namespace SAGE
 
 	int SpriteBatch::GetDrawCallCount() const
 	{
-		return mFlushCount;
+		return m_FlushCount;
 	}
 
 	bool SpriteBatch::Initialize()
@@ -54,20 +54,20 @@ namespace SAGE
 		}
 
 		// Create the index buffer object.
-		mIndexBufferObject = -1;
-		glGenBuffers(1, &mIndexBufferObject);
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mIndexBufferObject);
+		m_IndexBufferObject = -1;
+		glGenBuffers(1, &m_IndexBufferObject);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_IndexBufferObject);
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, MaxIndexCount * sizeUShort, indexData, GL_STATIC_DRAW);
 
 		// Create the vertex array object.
-		mVertexArrayObject = -1;
-		glGenVertexArrays(1, &mVertexArrayObject);
-		glBindVertexArray(mVertexArrayObject);
+		m_VertexArrayObject = -1;
+		glGenVertexArrays(1, &m_VertexArrayObject);
+		glBindVertexArray(m_VertexArrayObject);
 
 		// Create the vertex buffer object.
-		mVertexBufferObject = -1;
-		glGenBuffers(1, &mVertexBufferObject);
-		glBindBuffer(GL_ARRAY_BUFFER, mVertexBufferObject);
+		m_VertexBufferObject = -1;
+		glGenBuffers(1, &m_VertexBufferObject);
+		glBindBuffer(GL_ARRAY_BUFFER, m_VertexBufferObject);
 		glBufferData(GL_ARRAY_BUFFER, MaxVertexCount * sizeVPCT, nullptr, GL_DYNAMIC_DRAW);
 
 		// Position attribute
@@ -91,224 +91,224 @@ namespace SAGE
 	bool SpriteBatch::Finalize()
 	{
 		// Destroy objects.
-		glDeleteVertexArrays(1, &mVertexArrayObject);
-		glDeleteBuffers(1, &mVertexBufferObject);
-		glDeleteBuffers(1, &mIndexBufferObject);
+		glDeleteVertexArrays(1, &m_VertexArrayObject);
+		glDeleteBuffers(1, &m_VertexBufferObject);
+		glDeleteBuffers(1, &m_IndexBufferObject);
 
 		return true;
 	}
 
-	bool SpriteBatch::Begin(Effect& pEffect, const Camera2D& pCamera, SortMode pSortMode, BlendMode pBlendMode, RasterizerState pRasterizerState)
+	bool SpriteBatch::Begin(Effect& p_Effect, const Camera2D& p_Camera, SortMode p_SortMode, BlendMode p_BlendMode, RasterizerState p_RasterizerState)
 	{
-		if (mWithinDrawPair)
+		if (m_WithinDrawPair)
 		{
 			SDL_Log("[SpriteBatch::Begin] Cannot nest draw pairs.");
 			return false;
 		}
 
-		mWithinDrawPair = true;
-		mItemCount = 0;
-		mFlushCount = 0;
+		m_WithinDrawPair = true;
+		m_ItemCount = 0;
+		m_FlushCount = 0;
 
-		mSortMode = pSortMode;
-		mBlendMode = pBlendMode;
-		mRasterizerState = pRasterizerState;
+		m_SortMode = p_SortMode;
+		m_BlendMode = p_BlendMode;
+		m_RasterizerState = p_RasterizerState;
 
-		pEffect.SetProjection(pCamera.GetProjectionMatrix());
-		pEffect.SetModelView(pCamera.GetModelViewMatrix());
-		pEffect.Use();
+		p_Effect.SetProjection(p_Camera.GetProjectionMatrix());
+		p_Effect.SetModelView(p_Camera.GetModelViewMatrix());
+		p_Effect.Use();
 
 		return true;
 	}
 
-	bool SpriteBatch::Draw(const Texture& pTexture, const Vector2& pPosition, const Vector2& pDimensions, const Rectangle& pSourceRectangle, const Color& pColor, const Vector2& pOrigin, float pRotation, const Vector2& pScale, Orientation pOrientation, float pDepth)
+	bool SpriteBatch::Draw(const Texture& p_Texture, const Vector2& p_Position, const Vector2& p_Dimensions, const Rectangle& p_SourceRectangle, const Color& p_Color, const Vector2& p_Origin, float p_Rotation, const Vector2& p_Scale, Orientation p_Orientation, float p_Depth)
 	{
-		// TODO: Factor in pDimensions.
-		return Draw(pTexture, pPosition, pSourceRectangle, pColor, pOrigin, pRotation, pScale, pOrientation, pDepth);
+		// TODO: Factor in p_Dimensions.
+		return Draw(p_Texture, p_Position, p_SourceRectangle, p_Color, p_Origin, p_Rotation, p_Scale, p_Orientation, p_Depth);
 	}
 	
-	bool SpriteBatch::Draw(const Texture& pTexture, const Vector2& pPosition, const Rectangle& pDestinationRectangle, const Rectangle& pSourceRectangle, const Color& pColor, const Vector2& pOrigin, float pRotation, const Vector2& pScale, Orientation pOrientation, float pDepth)
+	bool SpriteBatch::Draw(const Texture& p_Texture, const Vector2& p_Position, const Rectangle& p_DestinationRectangle, const Rectangle& p_SourceRectangle, const Color& p_Color, const Vector2& p_Origin, float p_Rotation, const Vector2& p_Scale, Orientation p_Orientation, float p_Depth)
 	{
-		// TODO: Factor in pDestinationRectangle.
-		return Draw(pTexture, pPosition, pSourceRectangle, pColor, pOrigin, pRotation, pScale, pOrientation, pDepth);
+		// TODO: Factor in p_DestinationRectangle.
+		return Draw(p_Texture, p_Position, p_SourceRectangle, p_Color, p_Origin, p_Rotation, p_Scale, p_Orientation, p_Depth);
 	}
 	
-	bool SpriteBatch::Draw(const Texture& pTexture, const Rectangle& pDestinationRectangle, const Rectangle& pSourceRectangle, const Color& pColor, const Vector2& pOrigin, float pRotation, const Vector2& pScale, Orientation pOrientation, float pDepth)
+	bool SpriteBatch::Draw(const Texture& p_Texture, const Rectangle& p_DestinationRectangle, const Rectangle& p_SourceRectangle, const Color& p_Color, const Vector2& p_Origin, float p_Rotation, const Vector2& p_Scale, Orientation p_Orientation, float p_Depth)
 	{
-		// TODO: Factor in pDestinationRectangle BETTERLY.
-		return Draw(pTexture, Vector2(pDestinationRectangle.X, pDestinationRectangle.Y), pSourceRectangle, pColor, pOrigin, pRotation, pScale, pOrientation, pDepth);
+		// TODO: Factor in p_DestinationRectangle BETTERLY.
+		return Draw(p_Texture, Vector2(p_DestinationRectangle.X, p_DestinationRectangle.Y), p_SourceRectangle, p_Color, p_Origin, p_Rotation, p_Scale, p_Orientation, p_Depth);
 	}
 
-	bool SpriteBatch::Draw(const Texture& pTexture, const Vector2& pPosition, const Rectangle& pSourceRectangle, const Color& pColor, const Vector2& pOrigin, float pRotation, const Vector2& pScale, Orientation pOrientation, float pDepth)
+	bool SpriteBatch::Draw(const Texture& p_Texture, const Vector2& p_Position, const Rectangle& p_SourceRectangle, const Color& p_Color, const Vector2& p_Origin, float p_Rotation, const Vector2& p_Scale, Orientation p_Orientation, float p_Depth)
 	{
-		if (!mWithinDrawPair)
+		if (!m_WithinDrawPair)
 		{
 			SDL_Log("[SpriteBatch::Draw] Must start a draw pair first.");
 			return false;
 		}
 
-		int texWidth = pTexture.GetWidth();
-		int texHeight = pTexture.GetHeight();
+		int texWidth = p_Texture.GetWidth();
+		int texHeight = p_Texture.GetHeight();
 		Vector2 correction(1.0f / (float)texWidth, 1.0f / (float)texHeight);
 
 		Rectangle rect;
-		if (pSourceRectangle != Rectangle::Empty)
-			rect = pSourceRectangle;
+		if (p_SourceRectangle != Rectangle::Empty)
+			rect = p_SourceRectangle;
 		else
 			rect = Rectangle(0, 0, texWidth, texHeight);
 
-		Vector2 size(rect.Width * pScale.X, rect.Height * pScale.Y);
-		Vector2 origin(-pOrigin.X * pScale.X, -pOrigin.Y * pScale.Y);
+		Vector2 size(rect.Width * p_Scale.X, rect.Height * p_Scale.Y);
+		Vector2 origin(-p_Origin.X * p_Scale.X, -p_Origin.Y * p_Scale.Y);
 		Vector2 texCoordTL(rect.X / (float)texWidth + correction.X, rect.Y / (float)texHeight + correction.X);
 		Vector2 texCoordBR((rect.X + rect.Width) / (float)texWidth - correction.X, (rect.Y + rect.Height) / (float)texHeight - correction.Y);
 
 		// Calculate cos/sin for rotation in radians.
-		float cos = cosf(pRotation * (float)M_PI / 180.0f);
-		float sin = sinf(pRotation * (float)M_PI / 180.0f);
+		float cos = cosf(p_Rotation * (float)M_PI / 180.0f);
+		float sin = sinf(p_Rotation * (float)M_PI / 180.0f);
 
 		// Flip texture coordinates for orientation.
-		if ((pOrientation & Orientation::FlipHorizontal) == Orientation::FlipHorizontal)
+		if ((p_Orientation & Orientation::FlipHorizontal) == Orientation::FlipHorizontal)
 			std::swap(texCoordTL.X, texCoordBR.X);
-		if ((pOrientation & Orientation::FlipVertical) == Orientation::FlipVertical)
+		if ((p_Orientation & Orientation::FlipVertical) == Orientation::FlipVertical)
 			std::swap(texCoordTL.Y, texCoordBR.Y);
 
-		SpriteBatchItem& item = mBatchItemList[mItemCount++];
-		item.TextureID = pTexture.GetID();
-		item.Depth = pDepth;
+		SpriteBatchItem& item = m_BatchItemList[m_ItemCount++];
+		item.TextureID = p_Texture.GetID();
+		item.Depth = p_Depth;
 
-		item.VertexTL.Position.X = pPosition.X + origin.X * cos - origin.Y * sin;
-		item.VertexTL.Position.Y = pPosition.Y + origin.X * sin + origin.Y * cos;
-		item.VertexTL.Color.R = pColor.GetRed();
-		item.VertexTL.Color.G = pColor.GetGreen();
-		item.VertexTL.Color.B = pColor.GetBlue();
-		item.VertexTL.Color.A = pColor.GetAlpha();
+		item.VertexTL.Position.X = p_Position.X + origin.X * cos - origin.Y * sin;
+		item.VertexTL.Position.Y = p_Position.Y + origin.X * sin + origin.Y * cos;
+		item.VertexTL.Color.R = p_Color.GetRed();
+		item.VertexTL.Color.G = p_Color.GetGreen();
+		item.VertexTL.Color.B = p_Color.GetBlue();
+		item.VertexTL.Color.A = p_Color.GetAlpha();
 		item.VertexTL.TexCoord.X = texCoordTL.X;
 		item.VertexTL.TexCoord.Y = texCoordTL.Y;
 
-		item.VertexTR.Position.X = pPosition.X + (origin.X + size.X) * cos - origin.Y * sin;
-		item.VertexTR.Position.Y = pPosition.Y + (origin.X + size.X) * sin + origin.Y * cos;
-		item.VertexTR.Color.R = pColor.GetRed();
-		item.VertexTR.Color.G = pColor.GetGreen();
-		item.VertexTR.Color.B = pColor.GetBlue();
-		item.VertexTR.Color.A = pColor.GetAlpha();
+		item.VertexTR.Position.X = p_Position.X + (origin.X + size.X) * cos - origin.Y * sin;
+		item.VertexTR.Position.Y = p_Position.Y + (origin.X + size.X) * sin + origin.Y * cos;
+		item.VertexTR.Color.R = p_Color.GetRed();
+		item.VertexTR.Color.G = p_Color.GetGreen();
+		item.VertexTR.Color.B = p_Color.GetBlue();
+		item.VertexTR.Color.A = p_Color.GetAlpha();
 		item.VertexTR.TexCoord.X = texCoordBR.X;
 		item.VertexTR.TexCoord.Y = texCoordTL.Y;
 
-		item.VertexBL.Position.X = pPosition.X + origin.X * cos - (origin.Y + size.Y) * sin;
-		item.VertexBL.Position.Y = pPosition.Y + origin.X * sin + (origin.Y + size.Y) * cos;
-		item.VertexBL.Color.R = pColor.GetRed();
-		item.VertexBL.Color.G = pColor.GetGreen();
-		item.VertexBL.Color.B = pColor.GetBlue();
-		item.VertexBL.Color.A = pColor.GetAlpha();
+		item.VertexBL.Position.X = p_Position.X + origin.X * cos - (origin.Y + size.Y) * sin;
+		item.VertexBL.Position.Y = p_Position.Y + origin.X * sin + (origin.Y + size.Y) * cos;
+		item.VertexBL.Color.R = p_Color.GetRed();
+		item.VertexBL.Color.G = p_Color.GetGreen();
+		item.VertexBL.Color.B = p_Color.GetBlue();
+		item.VertexBL.Color.A = p_Color.GetAlpha();
 		item.VertexBL.TexCoord.X = texCoordTL.X;
 		item.VertexBL.TexCoord.Y = texCoordBR.Y;
 
-		item.VertexBR.Position.X = pPosition.X + (origin.X + size.X) * cos - (origin.Y + size.Y) * sin;
-		item.VertexBR.Position.Y = pPosition.Y + (origin.X + size.X) * sin + (origin.Y + size.Y) * cos;
-		item.VertexBR.Color.R = pColor.GetRed();
-		item.VertexBR.Color.G = pColor.GetGreen();
-		item.VertexBR.Color.B = pColor.GetBlue();
-		item.VertexBR.Color.A = pColor.GetAlpha();
+		item.VertexBR.Position.X = p_Position.X + (origin.X + size.X) * cos - (origin.Y + size.Y) * sin;
+		item.VertexBR.Position.Y = p_Position.Y + (origin.X + size.X) * sin + (origin.Y + size.Y) * cos;
+		item.VertexBR.Color.R = p_Color.GetRed();
+		item.VertexBR.Color.G = p_Color.GetGreen();
+		item.VertexBR.Color.B = p_Color.GetBlue();
+		item.VertexBR.Color.A = p_Color.GetAlpha();
 		item.VertexBR.TexCoord.X = texCoordBR.X;
 		item.VertexBR.TexCoord.Y = texCoordBR.Y;
 
 		return true;
 	}
 
-	bool SpriteBatch::DrawString(const SAGE::SpriteFont& pSpriteFont, const std::string& pString, const Vector2& pPosition, const Color& pColor, float pDepth)
+	bool SpriteBatch::DrawString(const SAGE::SpriteFont& p_SpriteFont, const std::string& p_String, const Vector2& p_Position, const Color& p_Color, float p_Depth)
 	{
-		return DrawString(pSpriteFont, pString, pPosition, pColor, Vector2::Zero, 0.0f, Vector2::One, SAGE::Orientation::None, pDepth);
+		return DrawString(p_SpriteFont, p_String, p_Position, p_Color, Vector2::Zero, 0.0f, Vector2::One, SAGE::Orientation::None, p_Depth);
 	}
 
-	bool SpriteBatch::DrawString(const SAGE::SpriteFont& pSpriteFont, const std::string& pString, const Vector2& pPosition, const Color& pColor, const Vector2& pOrigin, float pRotation, const Vector2& pScale, Orientation pOrientation, float pDepth)
+	bool SpriteBatch::DrawString(const SAGE::SpriteFont& p_SpriteFont, const std::string& p_String, const Vector2& p_Position, const Color& p_Color, const Vector2& p_Origin, float p_Rotation, const Vector2& p_Scale, Orientation p_Orientation, float p_Depth)
 	{
-		if (!mWithinDrawPair)
+		if (!m_WithinDrawPair)
 		{
 			SDL_Log("[SpriteBatch::DrawString] Must start a draw pair first.");
 			return false;
 		}
 
-		const Texture& texture = pSpriteFont.GetTexture();
+		const Texture& texture = p_SpriteFont.GetTexture();
 
 		int texWidth = texture.GetWidth();
 		int texHeight = texture.GetHeight();
 
-		float size = pSpriteFont.GetSize();
-		float spacing = pSpriteFont.GetSpacing();
+		float size = p_SpriteFont.GetSize();
+		float spacing = p_SpriteFont.GetSpacing();
 
 		Vector2 correction(1.0f / (float)texWidth, 1.0f / (float)texHeight);
-		Vector2 origin(-pOrigin.X * pScale.X, -pOrigin.Y * pScale.Y);
+		Vector2 origin(-p_Origin.X * p_Scale.X, -p_Origin.Y * p_Scale.Y);
 
 		Vector2 offset = Vector2::Zero;
 
-		for (char glyph : pString)
+		for (char glyph : p_String)
 		{
 			if (glyph == '\n')
 			{
 				offset.X = 0.0f;
-				offset.Y += size * pScale.Y;
+				offset.Y += size * p_Scale.Y;
 			}
 			else
 			{
-				Rectangle rect = pSpriteFont.GetGlyphBounds(glyph);
+				Rectangle rect = p_SpriteFont.GetGlyphBounds(glyph);
 
-				Vector2 size(rect.Width * pScale.X, rect.Height * pScale.Y);
+				Vector2 size(rect.Width * p_Scale.X, rect.Height * p_Scale.Y);
 				Vector2 texCoordTL(rect.X / (float)texWidth + correction.X, rect.Y / (float)texHeight + correction.X);
 				Vector2 texCoordBR((rect.X + rect.Width) / (float)texWidth - correction.X, (rect.Y + rect.Height) / (float)texHeight - correction.Y);
 
-				SpriteBatchItem& item = mBatchItemList[mItemCount++];
+				SpriteBatchItem& item = m_BatchItemList[m_ItemCount++];
 				item.TextureID = texture.GetID();
-				item.Depth = pDepth;
+				item.Depth = p_Depth;
 
-				item.VertexTL.Position.X = pPosition.X + origin.X + offset.X;
-				item.VertexTL.Position.Y = pPosition.Y + origin.Y + offset.Y;
-				item.VertexTL.Color.R = pColor.GetRed();
-				item.VertexTL.Color.G = pColor.GetGreen();
-				item.VertexTL.Color.B = pColor.GetBlue();
-				item.VertexTL.Color.A = pColor.GetAlpha();
+				item.VertexTL.Position.X = p_Position.X + origin.X + offset.X;
+				item.VertexTL.Position.Y = p_Position.Y + origin.Y + offset.Y;
+				item.VertexTL.Color.R = p_Color.GetRed();
+				item.VertexTL.Color.G = p_Color.GetGreen();
+				item.VertexTL.Color.B = p_Color.GetBlue();
+				item.VertexTL.Color.A = p_Color.GetAlpha();
 				item.VertexTL.TexCoord.X = texCoordTL.X;
 				item.VertexTL.TexCoord.Y = texCoordTL.Y;
 
-				RotateAbout(pPosition, pRotation, item.VertexTL.Position);
-				FlipAbout(pPosition, pOrientation, item.VertexTL.Position);
+				RotateAbout(p_Position, p_Rotation, item.VertexTL.Position);
+				FlipAbout(p_Position, p_Orientation, item.VertexTL.Position);
 
-				item.VertexTR.Position.X = pPosition.X + origin.X + size.X + offset.X;
-				item.VertexTR.Position.Y = pPosition.Y + origin.Y + offset.Y;
-				item.VertexTR.Color.R = pColor.GetRed();
-				item.VertexTR.Color.G = pColor.GetGreen();
-				item.VertexTR.Color.B = pColor.GetBlue();
-				item.VertexTR.Color.A = pColor.GetAlpha();
+				item.VertexTR.Position.X = p_Position.X + origin.X + size.X + offset.X;
+				item.VertexTR.Position.Y = p_Position.Y + origin.Y + offset.Y;
+				item.VertexTR.Color.R = p_Color.GetRed();
+				item.VertexTR.Color.G = p_Color.GetGreen();
+				item.VertexTR.Color.B = p_Color.GetBlue();
+				item.VertexTR.Color.A = p_Color.GetAlpha();
 				item.VertexTR.TexCoord.X = texCoordBR.X;
 				item.VertexTR.TexCoord.Y = texCoordTL.Y;
 
-				RotateAbout(pPosition, pRotation, item.VertexTR.Position);
-				FlipAbout(pPosition, pOrientation, item.VertexTR.Position);
+				RotateAbout(p_Position, p_Rotation, item.VertexTR.Position);
+				FlipAbout(p_Position, p_Orientation, item.VertexTR.Position);
 
-				item.VertexBL.Position.X = pPosition.X + origin.X + offset.X;
-				item.VertexBL.Position.Y = pPosition.Y + origin.Y + size.Y + offset.Y;
-				item.VertexBL.Color.R = pColor.GetRed();
-				item.VertexBL.Color.G = pColor.GetGreen();
-				item.VertexBL.Color.B = pColor.GetBlue();
-				item.VertexBL.Color.A = pColor.GetAlpha();
+				item.VertexBL.Position.X = p_Position.X + origin.X + offset.X;
+				item.VertexBL.Position.Y = p_Position.Y + origin.Y + size.Y + offset.Y;
+				item.VertexBL.Color.R = p_Color.GetRed();
+				item.VertexBL.Color.G = p_Color.GetGreen();
+				item.VertexBL.Color.B = p_Color.GetBlue();
+				item.VertexBL.Color.A = p_Color.GetAlpha();
 				item.VertexBL.TexCoord.X = texCoordTL.X;
 				item.VertexBL.TexCoord.Y = texCoordBR.Y;
 
-				RotateAbout(pPosition, pRotation, item.VertexBL.Position);
-				FlipAbout(pPosition, pOrientation, item.VertexBL.Position);
+				RotateAbout(p_Position, p_Rotation, item.VertexBL.Position);
+				FlipAbout(p_Position, p_Orientation, item.VertexBL.Position);
 
-				item.VertexBR.Position.X = pPosition.X + origin.X + size.X + offset.X;
-				item.VertexBR.Position.Y = pPosition.Y + origin.Y + size.Y + offset.Y;
-				item.VertexBR.Color.R = pColor.GetRed();
-				item.VertexBR.Color.G = pColor.GetGreen();
-				item.VertexBR.Color.B = pColor.GetBlue();
-				item.VertexBR.Color.A = pColor.GetAlpha();
+				item.VertexBR.Position.X = p_Position.X + origin.X + size.X + offset.X;
+				item.VertexBR.Position.Y = p_Position.Y + origin.Y + size.Y + offset.Y;
+				item.VertexBR.Color.R = p_Color.GetRed();
+				item.VertexBR.Color.G = p_Color.GetGreen();
+				item.VertexBR.Color.B = p_Color.GetBlue();
+				item.VertexBR.Color.A = p_Color.GetAlpha();
 				item.VertexBR.TexCoord.X = texCoordBR.X;
 				item.VertexBR.TexCoord.Y = texCoordBR.Y;
 
-				RotateAbout(pPosition, pRotation, item.VertexBR.Position);
-				FlipAbout(pPosition, pOrientation, item.VertexBR.Position);
+				RotateAbout(p_Position, p_Rotation, item.VertexBR.Position);
+				FlipAbout(p_Position, p_Orientation, item.VertexBR.Position);
 
-				offset.X += spacing * pScale.X;
+				offset.X += spacing * p_Scale.X;
 			}
 		}
 
@@ -317,26 +317,26 @@ namespace SAGE
 
 	bool SpriteBatch::End()
 	{
-		if (!mWithinDrawPair)
+		if (!m_WithinDrawPair)
 		{
 			SDL_Log("[SpriteBatch::End] Cannot end a pair without starting.");
 			return false;
 		}
 
-		switch (mSortMode)
+		switch (m_SortMode)
 		{
 			case SortMode::Texture:
-				std::sort(std::begin(mBatchItemList), std::end(mBatchItemList), [](const SpriteBatchItem& pItemA, const SpriteBatchItem& pItemB) { return pItemA.TextureID > pItemB.TextureID; });
+				std::sort(std::begin(m_BatchItemList), std::end(m_BatchItemList), [](const SpriteBatchItem& p_ItemA, const SpriteBatchItem& p_ItemB) { return p_ItemA.TextureID > p_ItemB.TextureID; });
 				break;
 			case SortMode::FrontToBack:
-				std::sort(std::begin(mBatchItemList), std::end(mBatchItemList), [](const SpriteBatchItem& pItemA, const SpriteBatchItem& pItemB) { return pItemA.Depth > pItemB.Depth; });
+				std::sort(std::begin(m_BatchItemList), std::end(m_BatchItemList), [](const SpriteBatchItem& p_ItemA, const SpriteBatchItem& p_ItemB) { return p_ItemA.Depth > p_ItemB.Depth; });
 				break;
 			case SortMode::BackToFront:
-				std::sort(std::begin(mBatchItemList), std::end(mBatchItemList), [](const SpriteBatchItem& pItemA, const SpriteBatchItem& pItemB) { return pItemA.Depth < pItemB.Depth; });
+				std::sort(std::begin(m_BatchItemList), std::end(m_BatchItemList), [](const SpriteBatchItem& p_ItemA, const SpriteBatchItem& p_ItemB) { return p_ItemA.Depth < p_ItemB.Depth; });
 				break;
 		}
 
-		switch (mBlendMode)
+		switch (m_BlendMode)
 		{
 			case BlendMode::None:
 				glDisable(GL_BLEND);
@@ -355,7 +355,7 @@ namespace SAGE
 				break;
 		}
 
-		switch (mRasterizerState)
+		switch (m_RasterizerState)
 		{
 			case RasterizerState::None:
 				glDisable(GL_CULL_FACE);
@@ -370,10 +370,10 @@ namespace SAGE
 				break;
 		}
 
-		if (mItemCount > 0)
+		if (m_ItemCount > 0)
 			Render();
 
-		mWithinDrawPair = false;
+		m_WithinDrawPair = false;
 
 		return true;
 	}
@@ -383,9 +383,9 @@ namespace SAGE
 		int length = 0;
 		int texID = -1;
 
-		for (int i = 0; i < mItemCount; ++i)
+		for (int i = 0; i < m_ItemCount; ++i)
 		{
-			SpriteBatchItem& item = mBatchItemList[i];
+			SpriteBatchItem& item = m_BatchItemList[i];
 
 			if (item.TextureID != texID)
 			{
@@ -403,10 +403,10 @@ namespace SAGE
 				length = 0;
 			}
 
-			mVertexBuffer[length * 4 + 0] = item.VertexBL;
-			mVertexBuffer[length * 4 + 1] = item.VertexBR;
-			mVertexBuffer[length * 4 + 2] = item.VertexTR;
-			mVertexBuffer[length * 4 + 3] = item.VertexTL;
+			m_VertexBuffer[length * 4 + 0] = item.VertexBL;
+			m_VertexBuffer[length * 4 + 1] = item.VertexBR;
+			m_VertexBuffer[length * 4 + 2] = item.VertexTR;
+			m_VertexBuffer[length * 4 + 3] = item.VertexTL;
 
 			length++;
 		}
@@ -414,41 +414,41 @@ namespace SAGE
 		Flush(texID, length);
 	}
 
-	void SpriteBatch::Flush(int pTextureID, int pLength)
+	void SpriteBatch::Flush(int p_TextureID, int p_Length)
 	{
 		// Ensure there's something to draw.
-		if (pLength == 0)
+		if (p_Length == 0)
 			return;
 
 		// Enable textures and bind the current ID.
 		glEnable(GL_TEXTURE_2D);
-		glBindTexture(GL_TEXTURE_2D, pTextureID);
+		glBindTexture(GL_TEXTURE_2D, p_TextureID);
 
 		// Bind the vertex array.
-		glBindVertexArray(mVertexArrayObject);
+		glBindVertexArray(m_VertexArrayObject);
 
 		// Bind the vertex buffer.
-		glBindBuffer(GL_ARRAY_BUFFER, mVertexBufferObject);
+		glBindBuffer(GL_ARRAY_BUFFER, m_VertexBufferObject);
 
 		// Option 1: Insert subset into buffer.
-		glBufferSubData(GL_ARRAY_BUFFER, 0, pLength * 4 * sizeof(VertexPositionColorTexture), mVertexBuffer);
+		glBufferSubData(GL_ARRAY_BUFFER, 0, p_Length * 4 * sizeof(VertexPositionColorTexture), m_VertexBuffer);
 
 		// Option 2: Write to buffer mapping.
 		/*
-		glBufferData(GL_ARRAY_BUFFER, mVertexBuffer.size() * sizeof(VertexPositionColorTexture), nullptr, GL_DYNAMIC_DRAW);
+		glBufferData(GL_ARRAY_BUFFER, m_VertexBuffer.size() * sizeof(VertexPositionColorTexture), nullptr, GL_DYNAMIC_DRAW);
 		VertexPositionColorTexture* map = reinterpret_cast<VertexPositionColorTexture*>(
 		glMapBufferRange(GL_ARRAY_BUFFER,
 		0,
-		pLength * sizeof(VertexPositionColorTexture),
+		p_Length * sizeof(VertexPositionColorTexture),
 		GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_BUFFER_BIT)
 		);
-		std::copy(mVertexBuffer.begin(), mVertexBuffer.end(), map);
+		std::copy(m_VertexBuffer.begin(), m_VertexBuffer.end(), map);
 		glUnmapBuffer(GL_ARRAY_BUFFER);
 		*/
 
 		// Bind the element buffer and draw.
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mIndexBufferObject);
-		glDrawElements(GL_TRIANGLES, pLength * 6, GL_UNSIGNED_SHORT, nullptr);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_IndexBufferObject);
+		glDrawElements(GL_TRIANGLES, p_Length * 6, GL_UNSIGNED_SHORT, nullptr);
 
 		// Clear bindings.
 		glBindVertexArray(0);
@@ -458,30 +458,30 @@ namespace SAGE
 		// Disable textures.
 		glDisable(GL_TEXTURE_2D);
 
-		mFlushCount++;
+		m_FlushCount++;
 	}
 
-	void SpriteBatch::RotateAbout(const Vector2& pPosition, float pRotation, VertexVector2& pVertex)
+	void SpriteBatch::RotateAbout(const Vector2& p_Position, float p_Rotation, VertexVector2& p_Vertex)
 	{
-		float cos = cosf(pRotation);
-		float sin = sinf(pRotation);
+		float cos = cosf(p_Rotation);
+		float sin = sinf(p_Rotation);
 
-		pVertex.X -= pPosition.X;
-		pVertex.Y -= pPosition.Y;
+		p_Vertex.X -= p_Position.X;
+		p_Vertex.Y -= p_Position.Y;
 
-		float rotX = pVertex.X * cos - pVertex.Y * sin;
-		float rotY = pVertex.X * sin + pVertex.Y * cos;
+		float rotX = p_Vertex.X * cos - p_Vertex.Y * sin;
+		float rotY = p_Vertex.X * sin + p_Vertex.Y * cos;
 
-		pVertex.X = rotX + pPosition.X;
-		pVertex.Y = rotY + pPosition.Y;
+		p_Vertex.X = rotX + p_Position.X;
+		p_Vertex.Y = rotY + p_Position.Y;
 	}
 
-	void SpriteBatch::FlipAbout(const Vector2& pPosition, Orientation pOrientation, VertexVector2& pVertex)
+	void SpriteBatch::FlipAbout(const Vector2& p_Position, Orientation p_Orientation, VertexVector2& p_Vertex)
 	{
 		// Flip texture coordinates for orientation.
-		if ((pOrientation & Orientation::FlipHorizontal) == Orientation::FlipHorizontal)
-			pVertex.X = pPosition.X - (pVertex.X - pPosition.X);
-		if ((pOrientation & Orientation::FlipVertical) == Orientation::FlipVertical)
-			pVertex.Y = pPosition.Y - (pVertex.Y - pPosition.Y);
+		if ((p_Orientation & Orientation::FlipHorizontal) == Orientation::FlipHorizontal)
+			p_Vertex.X = p_Position.X - (p_Vertex.X - p_Position.X);
+		if ((p_Orientation & Orientation::FlipVertical) == Orientation::FlipVertical)
+			p_Vertex.Y = p_Position.Y - (p_Vertex.Y - p_Position.Y);
 	}
 }

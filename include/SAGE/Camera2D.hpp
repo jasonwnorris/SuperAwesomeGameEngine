@@ -32,33 +32,33 @@ namespace SAGE
 			Vector2 GetScale() const;
 			int GetWidth() const;
 			int GetHeight() const;
-			glm::mat4 GetProjectionMatrix(View pView = View::Orthographic) const;
+			glm::mat4 GetProjectionMatrix(View p_View = View::Orthographic) const;
 			glm::mat4 GetModelViewMatrix() const;
 
-			void SetPosition(const Vector2& pPosition);
-			void SetRotation(float pRotation);
-			void SetScale(const Vector2& pScale);
-			void SetTransformation(const Vector2& pPosition, float pRotation, const Vector2& pScale);
-			void SetWidth(int pWidth);
-			void SetHeight(int pHeight);
-			void SetDimensions(int pWidth, int pHeight);
+			void SetPosition(const Vector2& p_Position);
+			void SetRotation(float p_Rotation);
+			void SetScale(const Vector2& p_Scale);
+			void SetTransformation(const Vector2& p_Position, float p_Rotation, const Vector2& p_Scale);
+			void SetWidth(int p_Width);
+			void SetHeight(int p_Height);
+			void SetDimensions(int p_Width, int p_Height);
 
-			void Translate(const Vector2& pTranslation);
-			void Rotate(float pRotation);
-			void Scale(const Vector2& pScale);
+			void Translate(const Vector2& p_Translation);
+			void Rotate(float p_Rotation);
+			void Scale(const Vector2& p_Scale);
 
-			void ScreenToWorld(const Vector2& pScreenPosition, Vector2& pWorldPosition) const;
-			void WorldToScreen(const Vector2& pWorldPosition, Vector2& pScreenPosition) const;
+			void ScreenToWorld(const Vector2& p_ScreenPosition, Vector2& p_WorldPosition) const;
+			void WorldToScreen(const Vector2& p_WorldPosition, Vector2& p_ScreenPosition) const;
 
 		private:
 			static int DefaultWidth;
 			static int DefaultHeight;
 
-			Vector2 mPosition;
-			float mRotation;
-			Vector2 mScale;
-			int mWidth;
-			int mHeight;
+			Vector2 m_Position;
+			float m_Rotation;
+			Vector2 m_Scale;
+			int m_Width;
+			int m_Height;
 	};
 }
 

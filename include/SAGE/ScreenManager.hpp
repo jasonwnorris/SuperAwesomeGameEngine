@@ -17,20 +17,20 @@ namespace SAGE
 			~ScreenManager();
 
 			bool IsEmpty() const;
-			int Push(Screen* pScreen, bool pPause = true, bool pHide = true);
+			int Push(Screen* p_Screen, bool p_Pause = true, bool p_Hide = true);
 			int Pop();
 			int PopAll();
 
-			int Update(float pDeltaTime);
-			int Render(SpriteBatch& pSpriteBatch);
-			int Render(GeometryBatch& pGeometryBatch);
+			int Update(float p_DeltaTime);
+			int Render(SpriteBatch& p_SpriteBatch);
+			int Render(GeometryBatch& p_GeometryBatch);
 
 		private:
-			std::vector<Screen*> mScreens;
-			Screen* mScreenToPush;
-			bool mPushPause;
-			bool mPushHide;
-			int mPopCount;
+			std::vector<Screen*> m_Screens;
+			Screen* m_ScreenToPush;
+			bool m_PushPause;
+			bool m_PushHide;
+			int m_PopCount;
 	};
 }
 

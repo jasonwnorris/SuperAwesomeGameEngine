@@ -19,32 +19,32 @@ namespace SAGE
 			float Y;
 
 			Vector2();
-			Vector2(float pX, float pY);
-			Vector2(int pX, int pY);
+			Vector2(float p_X, float p_Y);
+			Vector2(int p_X, int p_Y);
 
 			float Length() const;
 			float LengthSquared() const;
-			float Dot(const Vector2& pOther);
+			float Dot(const Vector2& p_Other);
 			const Vector2& Normalize();
 
-			void operator()(const float pX, const float pY);
-			bool operator==(const Vector2& pOther) const;
-			bool operator!=(const Vector2& pOther) const;
-			Vector2& operator=(const Vector2& pOther);
+			void operator()(const float p_X, const float p_Y);
+			bool operator==(const Vector2& p_Other) const;
+			bool operator!=(const Vector2& p_Other) const;
+			Vector2& operator=(const Vector2& p_Other);
 			Vector2 operator-() const;
-			Vector2 operator-(const Vector2& pOther) const;
-			Vector2 operator+(const Vector2& pOther) const;
-			Vector2 operator*(float pScalar) const;
-			Vector2 operator/(float pScalar) const;
-			Vector2& operator+=(const Vector2& pOther);
-			Vector2& operator-=(const Vector2& pOther);
-			Vector2& operator*=(float pScalar);
-			Vector2& operator/=(float pScalar);
+			Vector2 operator-(const Vector2& p_Other) const;
+			Vector2 operator+(const Vector2& p_Other) const;
+			Vector2 operator*(float p_Scalar) const;
+			Vector2 operator/(float p_Scalar) const;
+			Vector2& operator+=(const Vector2& p_Other);
+			Vector2& operator-=(const Vector2& p_Other);
+			Vector2& operator*=(float p_Scalar);
+			Vector2& operator/=(float p_Scalar);
 
-			static float Length(const Vector2& pVector);
-			static float LengthSquared(const Vector2& pVector);
-			static float Dot(const Vector2& pVecA, const Vector2& pVecB);
-			static float Distance(const Vector2& pVecA, const Vector2& pVecB);
+			static float Length(const Vector2& p_Vector);
+			static float LengthSquared(const Vector2& p_Vector);
+			static float Dot(const Vector2& p_VecA, const Vector2& p_VecB);
+			static float Distance(const Vector2& p_VecA, const Vector2& p_VecB);
 	};
 }
 

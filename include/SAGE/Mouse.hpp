@@ -23,16 +23,16 @@ namespace SAGE
 		friend class Events;
 
 		public:
-			static void GetPosition(int& pX, int& pY);
-			static void GetPosition(Vector2& pPosition);
+			static void GetPosition(int& p_X, int& p_Y);
+			static void GetPosition(Vector2& p_Position);
 			static Vector2 GetPosition();
-			static void GetMovement(int& pX, int& pY);
-			static void GetMovement(Vector2& pMovement);
+			static void GetMovement(int& p_X, int& p_Y);
+			static void GetMovement(Vector2& p_Movement);
 			static Vector2 GetMovement();
-			static bool IsButtonDown(MouseButton pButton);
-			static bool IsButtonUp(MouseButton pButton);
-			static bool IsButtonClicked(MouseButton pButton);
-			static bool IsButtonReleased(MouseButton pButton);
+			static bool IsButtonDown(MouseButton p_Button);
+			static bool IsButtonUp(MouseButton p_Button);
+			static bool IsButtonClicked(MouseButton p_Button);
+			static bool IsButtonReleased(MouseButton p_Button);
 			static bool IsScrolledUp();
 			static bool IsScrolledDown();
 
@@ -41,9 +41,9 @@ namespace SAGE
 			~Mouse() = delete;
 
 			static void Clear();
-			static void SetPosition(int pX, int pY);
-			static void SetScroll(int pX, int pY);
-			static inline int ButtonMask(MouseButton pButton);
+			static void SetPosition(int p_X, int p_Y);
+			static void SetScroll(int p_X, int p_Y);
+			static inline int ButtonMask(MouseButton p_Button);
 
 			static int sPreviousX;
 			static int sCurrentX;

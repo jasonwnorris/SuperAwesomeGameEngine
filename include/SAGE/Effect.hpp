@@ -35,23 +35,23 @@ namespace SAGE
 				PositionColorTexture,
 			};
 
-			bool Create(BasicType pBasicType);
+			bool Create(BasicType p_BasicType);
 
 			bool Initialize();
 			bool Finalize();
 
-			bool Attach(const std::string& pSource, ShaderType pType);
-			bool AttachFromFile(const std::string& pFilename, ShaderType pType);
+			bool Attach(const std::string& p_Source, ShaderType p_Type);
+			bool AttachFromFile(const std::string& p_Filename, ShaderType p_Type);
 			bool Link();
 			void Use();
 			void PrintUniforms();
 
-			GLint GetUniform(const std::string& pName);
+			GLint GetUniform(const std::string& p_Name);
 
-			void SetProjection(const glm::mat4& pMatrix);
-			void SetModelView(const glm::mat4& pMatrix);
-			void SetUniform(const std::string& pName, int pValue);
-			void SetUniform(const std::string& pName, float pValue);
+			void SetProjection(const glm::mat4& p_Matrix);
+			void SetModelView(const glm::mat4& p_Matrix);
+			void SetUniform(const std::string& p_Name, int p_Value);
+			void SetUniform(const std::string& p_Name, float p_Value);
 
 		private:
 			static const std::string PositionColorVertexSource;
@@ -59,10 +59,10 @@ namespace SAGE
 			static const std::string PositionColorTextureVertexSource;
 			static const std::string PositionColorTextureFragmentSource;
 
-			GLuint mProgram;
-			GLint mProjectionMatrixLocation;
-			GLint mModelViewMatrixLocation;
-			std::map<std::string, GLint> mUniforms;
+			GLuint m_Program;
+			GLint m_ProjectionMatrixLocation;
+			GLint m_ModelViewMatrixLocation;
+			std::map<std::string, GLint> m_Uniforms;
 	};
 }
 

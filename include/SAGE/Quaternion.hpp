@@ -13,26 +13,26 @@ namespace SAGE
 	{
 		public:
 			Quaternion();
-			Quaternion(float pReal, float pI, float pJ, float pK);
-			Quaternion(float pReal, const Vector3& pImaginary);
-			Quaternion(float pX, float pY, float pZ);
-			Quaternion(const Vector3& pAngles);
+			Quaternion(float p_Real, float p_I, float p_J, float p_K);
+			Quaternion(float p_Real, const Vector3& p_Imaginary);
+			Quaternion(float p_X, float p_Y, float p_Z);
+			Quaternion(const Vector3& p_Angles);
 
 			float GetReal() const;
 			Vector3 GetImaginary() const;
 
-			Quaternion& operator=(const Quaternion& pOther);
-			const Quaternion operator+(const Quaternion& pOther) const;
-			const Quaternion operator-(const Quaternion& pOther) const;
-			const Quaternion operator*(const Quaternion& pOther) const;
-			const Quaternion operator/(const Quaternion& pOther) const;
-			const Quaternion operator*(float pScale) const;
-			const Quaternion operator/(float pScale) const;
+			Quaternion& operator=(const Quaternion& p_Other);
+			const Quaternion operator+(const Quaternion& p_Other) const;
+			const Quaternion operator-(const Quaternion& p_Other) const;
+			const Quaternion operator*(const Quaternion& p_Other) const;
+			const Quaternion operator/(const Quaternion& p_Other) const;
+			const Quaternion operator*(float p_Scale) const;
+			const Quaternion operator/(float p_Scale) const;
 			const Quaternion operator-() const;
-			const Quaternion& operator+=(const Quaternion& pOther);
-			const Quaternion& operator-=(const Quaternion& pOther);
-			const Quaternion& operator*=(float pScale);
-			const Quaternion& operator/=(float pScale);
+			const Quaternion& operator+=(const Quaternion& p_Other);
+			const Quaternion& operator-=(const Quaternion& p_Other);
+			const Quaternion& operator*=(float p_Scale);
+			const Quaternion& operator/=(float p_Scale);
 
 			float Length() const;
 			float LengthSquared() const;
@@ -47,22 +47,22 @@ namespace SAGE
 
 			Matrix3 ToMatrix3() const;
 			Matrix4 ToMatrix4() const;
-			void ToAxisAngle(Vector3& pAxis, float& pAngle) const;
-			Vector3 Rotate(const Vector3& pRotation);
-			Vector3 EulerAngles(bool pHomogenous = true) const;
+			void ToAxisAngle(Vector3& p_Axis, float& p_Angle) const;
+			Vector3 Rotate(const Vector3& p_Rotation);
+			Vector3 EulerAngles(bool p_Homogenous = true) const;
 
-			static inline float Dot(const Quaternion& pQuaternionA, const Quaternion& pQuaternionB);
-			static inline Quaternion FromAxisAngle(const Vector3& pAxis, float pAngle);
-			static Quaternion Lerp(const Quaternion& pQuaternionA, const Quaternion& pQuaternionB, float pT);
-			static Quaternion Slerp(const Quaternion& pQuaternionA, const Quaternion& pQuaternionB, float pT);
-			static Quaternion SlerpNoInvert(const Quaternion& pQuaternionA, const Quaternion& pQuaternionB, float pT);
-			static Quaternion Squad(const Quaternion& pQuaternion1, const Quaternion& pQuaternion2, const Quaternion& pQuaternionA, const Quaternion& pQuaternionB, float pT);
-			static Quaternion Bezier(const Quaternion& pQuaternion1, const Quaternion& pQuaternion2, const Quaternion& pQuaternionA, const Quaternion& pQuaternionB, float pT);
-			static Quaternion Spline(const Quaternion& pQuaternionM, const Quaternion& pQuaternionN, const Quaternion& pQuaternionP);
+			static inline float Dot(const Quaternion& p_QuaternionA, const Quaternion& p_QuaternionB);
+			static inline Quaternion FromAxisAngle(const Vector3& p_Axis, float p_Angle);
+			static Quaternion Lerp(const Quaternion& p_QuaternionA, const Quaternion& p_QuaternionB, float p_T);
+			static Quaternion Slerp(const Quaternion& p_QuaternionA, const Quaternion& p_QuaternionB, float p_T);
+			static Quaternion SlerpNoInvert(const Quaternion& p_QuaternionA, const Quaternion& p_QuaternionB, float p_T);
+			static Quaternion Squad(const Quaternion& p_Quaternion1, const Quaternion& p_Quaternion2, const Quaternion& p_QuaternionA, const Quaternion& p_QuaternionB, float p_T);
+			static Quaternion Bezier(const Quaternion& p_Quaternion1, const Quaternion& p_Quaternion2, const Quaternion& p_QuaternionA, const Quaternion& p_QuaternionB, float p_T);
+			static Quaternion Spline(const Quaternion& p_QuaternionM, const Quaternion& p_QuaternionN, const Quaternion& p_QuaternionP);
 	
 		private:
-			float mReal;
-			Vector3 mImaginary;
+			float m_Real;
+			Vector3 m_Imaginary;
 	};
 }
 

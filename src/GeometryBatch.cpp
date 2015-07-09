@@ -11,9 +11,9 @@ namespace SAGE
 {
 	GeometryBatch::GeometryBatch()
 	{
-		mWithinDrawPair = false;
-		mItemCount = 0;
-		mFlushCount = 0;
+		m_WithinDrawPair = false;
+		m_ItemCount = 0;
+		m_FlushCount = 0;
 	}
 
 	GeometryBatch::~GeometryBatch()
@@ -23,7 +23,7 @@ namespace SAGE
 
 	int GeometryBatch::GetDrawCallCount() const
 	{
-		return mFlushCount;
+		return m_FlushCount;
 	}
 
 	bool GeometryBatch::Initialize()
@@ -47,18 +47,18 @@ namespace SAGE
 			indexData[i] = i;
 		}
 
-		mIndexBufferObject = -1;
-		glGenBuffers(1, &mIndexBufferObject);
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mIndexBufferObject);
+		m_IndexBufferObject = -1;
+		glGenBuffers(1, &m_IndexBufferObject);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_IndexBufferObject);
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, MaxIndexCount * sizeUShort, indexData, GL_STATIC_DRAW);
 
-		mVertexArrayObject = -1;
-		glGenVertexArrays(1, &mVertexArrayObject);
-		glBindVertexArray(mVertexArrayObject);
+		m_VertexArrayObject = -1;
+		glGenVertexArrays(1, &m_VertexArrayObject);
+		glBindVertexArray(m_VertexArrayObject);
 
-		mVertexBufferObject = -1;
-		glGenBuffers(1, &mVertexBufferObject);
-		glBindBuffer(GL_ARRAY_BUFFER, mVertexBufferObject);
+		m_VertexBufferObject = -1;
+		glGenBuffers(1, &m_VertexBufferObject);
+		glBindBuffer(GL_ARRAY_BUFFER, m_VertexBufferObject);
 		glBufferData(GL_ARRAY_BUFFER, MaxVertexCount * sizeVPC, nullptr, GL_DYNAMIC_DRAW);
 
 		// Position
@@ -77,76 +77,76 @@ namespace SAGE
 
 	bool GeometryBatch::Finalize()
 	{
-		glDeleteVertexArrays(1, &mVertexArrayObject);
-		glDeleteBuffers(1, &mVertexBufferObject);
-		glDeleteBuffers(1, &mIndexBufferObject);
+		glDeleteVertexArrays(1, &m_VertexArrayObject);
+		glDeleteBuffers(1, &m_VertexBufferObject);
+		glDeleteBuffers(1, &m_IndexBufferObject);
 
 		return true;
 	}
 
-	bool GeometryBatch::Begin(Effect& pEffect, const Camera2D& pCamera)
+	bool GeometryBatch::Begin(Effect& p_Effect, const Camera2D& p_Camera)
 	{
-		if (mWithinDrawPair)
+		if (m_WithinDrawPair)
 		{
 			SDL_Log("[GeometryBatch::Begin] Cannot nest draw pairs.");
 			return false;
 		}
 
-		mWithinDrawPair = true;
-		mItemCount = 0;
-		mFlushCount = 0;
+		m_WithinDrawPair = true;
+		m_ItemCount = 0;
+		m_FlushCount = 0;
 
-		pEffect.SetProjection(pCamera.GetProjectionMatrix());
-		pEffect.SetModelView(pCamera.GetModelViewMatrix());
-		pEffect.Use();
+		p_Effect.SetProjection(p_Camera.GetProjectionMatrix());
+		p_Effect.SetModelView(p_Camera.GetModelViewMatrix());
+		p_Effect.Use();
 
 		return true;
 	}
 
-	bool GeometryBatch::DrawLine(const Vector2& pPositionA, const Vector2& pPositionB, const Color& pColor)
+	bool GeometryBatch::DrawLine(const Vector2& p_PositionA, const Vector2& p_PositionB, const Color& p_Color)
 	{
-		if (!mWithinDrawPair)
+		if (!m_WithinDrawPair)
 		{
 			SDL_Log("[GeometryBatch::DrawLine] Must start a draw pair first.");
 			return false;
 		}
 
-		GeometryBatchItem& item = mBatchItemList[mItemCount++];
+		GeometryBatchItem& item = m_BatchItemList[m_ItemCount++];
 
-		item.VertexA.Position.X = pPositionA.X;
-		item.VertexA.Position.Y = pPositionA.Y;
-		item.VertexA.Color.R = pColor.GetRed();
-		item.VertexA.Color.G = pColor.GetGreen();
-		item.VertexA.Color.B = pColor.GetBlue();
-		item.VertexA.Color.A = pColor.GetAlpha();
+		item.VertexA.Position.X = p_PositionA.X;
+		item.VertexA.Position.Y = p_PositionA.Y;
+		item.VertexA.Color.R = p_Color.GetRed();
+		item.VertexA.Color.G = p_Color.GetGreen();
+		item.VertexA.Color.B = p_Color.GetBlue();
+		item.VertexA.Color.A = p_Color.GetAlpha();
 
-		item.VertexB.Position.X = pPositionB.X;
-		item.VertexB.Position.Y = pPositionB.Y;
-		item.VertexB.Color.R = pColor.GetRed();
-		item.VertexB.Color.G = pColor.GetGreen();
-		item.VertexB.Color.B = pColor.GetBlue();
-		item.VertexB.Color.A = pColor.GetAlpha();
+		item.VertexB.Position.X = p_PositionB.X;
+		item.VertexB.Position.Y = p_PositionB.Y;
+		item.VertexB.Color.R = p_Color.GetRed();
+		item.VertexB.Color.G = p_Color.GetGreen();
+		item.VertexB.Color.B = p_Color.GetBlue();
+		item.VertexB.Color.A = p_Color.GetAlpha();
 
 		return true;
 	}
 
-	bool GeometryBatch::DrawLines(const std::vector<Vector2>& pPositions, const Color& pColor)
+	bool GeometryBatch::DrawLines(const std::vector<Vector2>& p_Positions, const Color& p_Color)
 	{
-		if (!mWithinDrawPair)
+		if (!m_WithinDrawPair)
 		{
 			SDL_Log("[GeometryBatch::DrawLines] Must start a draw pair first.");
 			return false;
 		}
 
-		if (pPositions.size() < 2)
+		if (p_Positions.size() < 2)
 		{
 			SDL_Log("[GeometryBatch::DrawLines] Must supply two or more positions to draw.");
 			return false;
 		}
 
-		for (int i = 1; i < (int)pPositions.size(); ++i)
+		for (int i = 1; i < (int)p_Positions.size(); ++i)
 		{
-			if (!DrawLine(pPositions[i - 1], pPositions[i], pColor))
+			if (!DrawLine(p_Positions[i - 1], p_Positions[i], p_Color))
 			{
 				return false;
 			}
@@ -155,58 +155,58 @@ namespace SAGE
 		return true;
 	}
 
-	bool GeometryBatch::DrawRectangle(const Vector2& pTopLeft, const Vector2& pBottomRight, const Color& pColor)
+	bool GeometryBatch::DrawRectangle(const Vector2& p_TopLeft, const Vector2& p_BottomRight, const Color& p_Color)
 	{
-		if (!mWithinDrawPair)
+		if (!m_WithinDrawPair)
 		{
 			SDL_Log("[GeometryBatch::DrawRectangle] Must start a draw pair first.");
 			return false;
 		}
 
-		Vector2 TL(pTopLeft.X, pTopLeft.Y);
-		Vector2 TR(pBottomRight.X, pTopLeft.Y);
-		Vector2 BR(pBottomRight.X, pBottomRight.Y);
-		Vector2 BL(pTopLeft.X, pBottomRight.Y);
+		Vector2 TL(p_TopLeft.X, p_TopLeft.Y);
+		Vector2 TR(p_BottomRight.X, p_TopLeft.Y);
+		Vector2 BR(p_BottomRight.X, p_BottomRight.Y);
+		Vector2 BL(p_TopLeft.X, p_BottomRight.Y);
 
-		return DrawLine(TL, TR, pColor) && DrawLine(TR, BR, pColor) && DrawLine(BR, BL, pColor) && DrawLine(BL, TL, pColor);
+		return DrawLine(TL, TR, p_Color) && DrawLine(TR, BR, p_Color) && DrawLine(BR, BL, p_Color) && DrawLine(BL, TL, p_Color);
 	}
 
-	bool GeometryBatch::DrawRectangle(const Rectangle& pRectangle, const Color& pColor)
+	bool GeometryBatch::DrawRectangle(const Rectangle& p_Rectangle, const Color& p_Color)
 	{
-		if (!mWithinDrawPair)
+		if (!m_WithinDrawPair)
 		{
 			SDL_Log("[GeometryBatch::DrawRectangle] Must start a draw pair first.");
 			return false;
 		}
 
-		return DrawRectangle(Vector2(pRectangle.X, pRectangle.Y), Vector2(pRectangle.X + pRectangle.Width, pRectangle.Y + pRectangle.Height), pColor);
+		return DrawRectangle(Vector2(p_Rectangle.X, p_Rectangle.Y), Vector2(p_Rectangle.X + p_Rectangle.Width, p_Rectangle.Y + p_Rectangle.Height), p_Color);
 	}
 
-	bool GeometryBatch::DrawCircle(const Vector2& pPosition, float pRadius, const Color& pColor, int pCount)
+	bool GeometryBatch::DrawCircle(const Vector2& p_Position, float p_Radius, const Color& p_Color, int p_Count)
 	{
-		if (!mWithinDrawPair)
+		if (!m_WithinDrawPair)
 		{
 			SDL_Log("[GeometryBatch::DrawCircle] Must start a draw pair first.");
 			return false;
 		}
 
-		float step = (float)(2.0f * M_PI) / (float)pCount;
-		std::vector<float> cosList(pCount + 1);
-		std::vector<float> sinList(pCount + 1);
+		float step = (float)(2.0f * M_PI) / (float)p_Count;
+		std::vector<float> cosList(p_Count + 1);
+		std::vector<float> sinList(p_Count + 1);
 
 		// Pre-calculate multi-use trigonometry. 
-		for (int i = 0; i < pCount + 1; ++i)
+		for (int i = 0; i < p_Count + 1; ++i)
 		{
-			cosList[i] = cosf(i * step) * pRadius;
-			sinList[i] = sinf(i * step) * pRadius;
+			cosList[i] = cosf(i * step) * p_Radius;
+			sinList[i] = sinf(i * step) * p_Radius;
 		}
 
-		for (int i = 0; i < pCount; ++i)
+		for (int i = 0; i < p_Count; ++i)
 		{
-			Vector2 positionA(pPosition.X + cosList[i], pPosition.Y + sinList[i]);
-			Vector2 positionB(pPosition.X + cosList[i + 1], pPosition.Y + sinList[i + 1]);
+			Vector2 positionA(p_Position.X + cosList[i], p_Position.Y + sinList[i]);
+			Vector2 positionB(p_Position.X + cosList[i + 1], p_Position.Y + sinList[i + 1]);
 
-			if (!DrawLine(positionA, positionB, pColor))
+			if (!DrawLine(positionA, positionB, p_Color))
 			{
 				return false;
 			}
@@ -215,27 +215,27 @@ namespace SAGE
 		return true;
 	}
 
-	bool GeometryBatch::DrawBezier(const Vector2& pStartPosition, const Vector2& pEndPosition, const Vector2& pControlPoint, const Color& pColor, int pCount)
+	bool GeometryBatch::DrawBezier(const Vector2& p_StartPosition, const Vector2& p_EndPosition, const Vector2& p_ControlPoint, const Color& p_Color, int p_Count)
 	{
-		if (!mWithinDrawPair)
+		if (!m_WithinDrawPair)
 		{
 			SDL_Log("[GeometryBatch::DrawBezier] Must start a draw pair first.");
 			return false;
 		}
 
-		float step = 1.0f / (float)pCount;
+		float step = 1.0f / (float)p_Count;
 
-		for (int i = 0; i < pCount; ++i)
+		for (int i = 0; i < p_Count; ++i)
 		{
 			float tA = i * step;
 			float tB = (i + 1) * step;
 			float invtA = 1.0f - tA;
 			float invtB = 1.0f - tB;
 
-			Vector2 positionA = pStartPosition * invtA * invtA + pControlPoint * 2.0f * invtA * tA + pEndPosition * tA * tA;
-			Vector2 positionB = pStartPosition * invtB * invtB + pControlPoint * 2.0f * invtB * tB + pEndPosition * tB * tB;
+			Vector2 positionA = p_StartPosition * invtA * invtA + p_ControlPoint * 2.0f * invtA * tA + p_EndPosition * tA * tA;
+			Vector2 positionB = p_StartPosition * invtB * invtB + p_ControlPoint * 2.0f * invtB * tB + p_EndPosition * tB * tB;
 
-			if (!DrawLine(positionA, positionB, pColor))
+			if (!DrawLine(positionA, positionB, p_Color))
 			{
 				return false;
 			}
@@ -244,27 +244,27 @@ namespace SAGE
 		return true;
 	}
 
-	bool GeometryBatch::DrawBezier(const Vector2& pStartPosition, const Vector2& pEndPosition, const Vector2& pControlPointA, const Vector2& pControlPointB, const Color& pColor, int pCount)
+	bool GeometryBatch::DrawBezier(const Vector2& p_StartPosition, const Vector2& p_EndPosition, const Vector2& p_ControlPointA, const Vector2& p_ControlPointB, const Color& p_Color, int p_Count)
 	{
-		if (!mWithinDrawPair)
+		if (!m_WithinDrawPair)
 		{
 			SDL_Log("[GeometryBatch::DrawBezier] Must start a draw pair first.");
 			return false;
 		}
 
-		float step = 1.0f / (float)pCount;
+		float step = 1.0f / (float)p_Count;
 
-		for (int i = 0; i < pCount; ++i)
+		for (int i = 0; i < p_Count; ++i)
 		{
 			float tA = i * step;
 			float tB = (i + 1) * step;
 			float invtA = 1.0f - tA;
 			float invtB = 1.0f - tB;
 
-			Vector2 positionA = pStartPosition * invtA * invtA * invtA + pControlPointA * 3.0f * invtA * invtA * tA + pControlPointB * 3.0f * invtA * tA * tA + pEndPosition * tA * tA * tA;
-			Vector2 positionB = pStartPosition * invtB * invtB * invtB + pControlPointA * 3.0f * invtB * invtB * tB + pControlPointB * 3.0f * invtB * tB * tB + pEndPosition * tB * tB * tB;
+			Vector2 positionA = p_StartPosition * invtA * invtA * invtA + p_ControlPointA * 3.0f * invtA * invtA * tA + p_ControlPointB * 3.0f * invtA * tA * tA + p_EndPosition * tA * tA * tA;
+			Vector2 positionB = p_StartPosition * invtB * invtB * invtB + p_ControlPointA * 3.0f * invtB * invtB * tB + p_ControlPointB * 3.0f * invtB * tB * tB + p_EndPosition * tB * tB * tB;
 
-			if (!DrawLine(positionA, positionB, pColor))
+			if (!DrawLine(positionA, positionB, p_Color))
 			{
 				return false;
 			}
@@ -275,16 +275,16 @@ namespace SAGE
 
 	bool GeometryBatch::End()
 	{
-		if (!mWithinDrawPair)
+		if (!m_WithinDrawPair)
 		{
 			SDL_Log("[GeometryBatch::End] Cannot end a pair without starting.");
 			return false;
 		}
 
-		if (mItemCount > 0)
+		if (m_ItemCount > 0)
 			Render();
 
-		mWithinDrawPair = false;
+		m_WithinDrawPair = false;
 
 		return true;
 	}
@@ -294,9 +294,9 @@ namespace SAGE
 		int length = 0;
 		int texID = -1;
 
-		for (int i = 0; i < mItemCount; ++i)
+		for (int i = 0; i < m_ItemCount; ++i)
 		{
-			GeometryBatchItem& item = mBatchItemList[i];
+			GeometryBatchItem& item = m_BatchItemList[i];
 
 			if (length * 2 > MaxVertexCount)
 			{
@@ -304,8 +304,8 @@ namespace SAGE
 				length = 0;
 			}
 
-			mVertexBuffer[length * 2 + 0] = item.VertexA;
-			mVertexBuffer[length * 2 + 1] = item.VertexB;
+			m_VertexBuffer[length * 2 + 0] = item.VertexA;
+			m_VertexBuffer[length * 2 + 1] = item.VertexB;
 
 			length++;
 		}
@@ -313,30 +313,30 @@ namespace SAGE
 		Flush(length);
 	}
 
-	void GeometryBatch::Flush(int pLength)
+	void GeometryBatch::Flush(int p_Length)
 	{
 		// Ensure there's something to draw.
-		if (pLength == 0)
+		if (p_Length == 0)
 			return;
 
 		// Bind the vertex array.
-		glBindVertexArray(mVertexArrayObject);
+		glBindVertexArray(m_VertexArrayObject);
 
 		// Bind the vertex buffer.
-		glBindBuffer(GL_ARRAY_BUFFER, mVertexBufferObject);
+		glBindBuffer(GL_ARRAY_BUFFER, m_VertexBufferObject);
 
 		// Insert subset into buffer.
-		glBufferSubData(GL_ARRAY_BUFFER, 0, pLength * 2 * sizeof(VertexPositionColor), mVertexBuffer);
+		glBufferSubData(GL_ARRAY_BUFFER, 0, p_Length * 2 * sizeof(VertexPositionColor), m_VertexBuffer);
 
 		// Bind the element buffer and draw.
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mIndexBufferObject);
-		glDrawElements(GL_LINES, pLength * 2, GL_UNSIGNED_SHORT, nullptr);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_IndexBufferObject);
+		glDrawElements(GL_LINES, p_Length * 2, GL_UNSIGNED_SHORT, nullptr);
 
 		// Clear bindings.
 		glBindVertexArray(0);
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
-		mFlushCount++;
+		m_FlushCount++;
 	}
 }

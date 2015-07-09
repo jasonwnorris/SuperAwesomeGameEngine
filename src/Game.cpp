@@ -16,27 +16,27 @@ namespace SAGE
 
 	int Game::Start()
 	{
-		mRunning = true;
+		m_Running = true;
 
 		if (Initialize() < 0)
 			return -1;
 
-		while (mRunning)
+		while (m_Running)
 		{
 			Events::Poll();
 
-			if (Update(mTimer.GetDeltaTime()) < 0)
+			if (Update(m_Timer.GetDeltaTime()) < 0)
 				return -1;
 
-			mWindow.Clear();
+			m_Window.Clear();
 
-			if (Render(mSpriteBatch) < 0)
+			if (Render(m_SpriteBatch) < 0)
 				return -1;
 
-			if (Render(mGeometryBatch) < 0)
+			if (Render(m_GeometryBatch) < 0)
 				return -1;
 
-			mWindow.Flip();
+			m_Window.Flip();
 		}
 
 		if (Finalize() < 0)
@@ -47,20 +47,20 @@ namespace SAGE
 
 	void Game::Quit()
 	{
-		mRunning = false;
+		m_Running = false;
 	}
 
 	int Game::Initialize()
 	{
-		mTimer.Start();
+		m_Timer.Start();
 
-		if (!mWindow.Initialize())
+		if (!m_Window.Initialize())
 			return -1;
 
-		if (!mSpriteBatch.Initialize())
+		if (!m_SpriteBatch.Initialize())
 			return -1;
 
-		if (!mGeometryBatch.Initialize())
+		if (!m_GeometryBatch.Initialize())
 			return -1;
 
 		return 0;
@@ -68,24 +68,24 @@ namespace SAGE
 
 	int Game::Finalize()
 	{
-		if (!mSpriteBatch.Finalize())
+		if (!m_SpriteBatch.Finalize())
 			return -1;
 
-		if (!mGeometryBatch.Finalize())
+		if (!m_GeometryBatch.Finalize())
 			return -1;
 
-		if (!mWindow.Finalize())
+		if (!m_Window.Finalize())
 			return -1;
 
 		return 0;
 	}
 
-	int Game::Render(SpriteBatch& pSpriteBatch)
+	int Game::Render(SpriteBatch& p_SpriteBatch)
 	{
 		return 0;
 	}
 
-	int Game::Render(GeometryBatch& pGeometryBatch)
+	int Game::Render(GeometryBatch& p_GeometryBatch)
 	{
 		return 0;
 	}

@@ -9,85 +9,85 @@ namespace SAGE
 {
 	Texture::Texture()
 	{
-		mID = -1;
+		m_ID = -1;
 	}
 
 	Texture::~Texture()
 	{
 		// Free the surface.
-		if (mSurface != nullptr)
+		if (m_Surface != nullptr)
 		{
-			SDL_FreeSurface(mSurface);
+			SDL_FreeSurface(m_Surface);
 		}
 
 		// Delete the texture.
-		if (mID != -1)
+		if (m_ID != -1)
 		{
-			glDeleteTextures(1, &mID);
+			glDeleteTextures(1, &m_ID);
 		}
 	}
 
 	unsigned int Texture::GetWidth() const
 	{
-		return mWidth;
+		return m_Width;
 	}
 
 	unsigned int Texture::GetHeight() const
 	{
-		return mHeight;
+		return m_Height;
 	}
 
 	unsigned int Texture::GetBPP() const
 	{
-		return mBPP;
+		return m_BPP;
 	}
 
 	unsigned int Texture::GetID() const
 	{
-		return mID;
+		return m_ID;
 	}
 
 	Uint32* Texture::GetPixels() const
 	{
-		return (Uint32*)mSurface->pixels;
+		return (Uint32*)m_Surface->pixels;
 	}
 
 	SDL_PixelFormat* Texture::GetFormat() const
 	{
-		return mSurface->format;
+		return m_Surface->format;
 	}
 
-	bool Texture::Load(const std::string& pFilename, Interpolation pInterpolation, Wrapping pWrapping)
+	bool Texture::Load(const std::string& p_Filename, Interpolation p_Interpolation, Wrapping p_Wrapping)
 	{
 		// Load the surface.
-		mSurface = IMG_Load(pFilename.c_str());
-		if (mSurface == nullptr)
+		m_Surface = IMG_Load(p_Filename.c_str());
+		if (m_Surface == nullptr)
 		{
-			SDL_Log("[Texture::Load] Failed to load image file \"%s\": %s", pFilename, SDL_GetError());
+			SDL_Log("[Texture::Load] Failed to load image file \"%s\": %s", p_Filename, SDL_GetError());
 			return false;
 		}
 
 		// Grab width and height.
-		mWidth = mSurface->w;
-		mHeight = mSurface->h;
-		if ((mWidth & (mWidth - 1)) != 0)
+		m_Width = m_Surface->w;
+		m_Height = m_Surface->h;
+		if ((m_Width & (m_Width - 1)) != 0)
 			SDL_LogWarn(SDL_LOG_PRIORITY_WARN, "[Texture::Load] Width is not power of two.");
-		if ((mHeight & (mHeight - 1)) != 0)
+		if ((m_Height & (m_Height - 1)) != 0)
 			SDL_LogWarn(SDL_LOG_PRIORITY_WARN, "[Texture::Load] Height is not power of two.");
 
 		// Determine color mode.
 		GLenum format;
-		GLint colorCount = mSurface->format->BytesPerPixel;
+		GLint colorCount = m_Surface->format->BytesPerPixel;
 		if (colorCount == 4)
 		{
-			if (mSurface->format->Rmask == 0x000000ff)
+			if (m_Surface->format->Rmask == 0x000000ff)
 				format = GL_RGBA;
 			else
 				format = GL_BGRA;
 		}
 		else if (colorCount == 3)
 		{
-			if (mSurface->format->Rmask == 0x000000ff)
+			if (m_Surface->format->Rmask == 0x000000ff)
 				format = GL_RGB;
 			else
 				format = GL_BGR;
@@ -98,12 +98,12 @@ namespace SAGE
 		}
 
 		// Generate and create the texture.
-		glGenTextures(1, &mID);
-		glBindTexture(GL_TEXTURE_2D, mID);
-		glTexImage2D(GL_TEXTURE_2D, 0, colorCount, mWidth, mHeight, 0, format, GL_UNSIGNED_BYTE, mSurface->pixels);
+		glGenTextures(1, &m_ID);
+		glBindTexture(GL_TEXTURE_2D, m_ID);
+		glTexImage2D(GL_TEXTURE_2D, 0, colorCount, m_Width, m_Height, 0, format, GL_UNSIGNED_BYTE, m_Surface->pixels);
 
 		// Set scaling interpolation.
-		switch (pInterpolation)
+		switch (p_Interpolation)
 		{
 			case Interpolation::Nearest:
 				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
@@ -116,7 +116,7 @@ namespace SAGE
 		}
 
 		// Set edge wrapping.
-		switch (pWrapping)
+		switch (p_Wrapping)
 		{
 			case Wrapping::Repeat:
 				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
@@ -144,12 +144,12 @@ namespace SAGE
 		return true;
 	}
 
-	void Texture::GetColor(int pX, int pY, Uint8& pRed, Uint8& pGreen, Uint8& pBlue, Uint8& pAlpha)
+	void Texture::GetColor(int p_X, int p_Y, Uint8& p_Red, Uint8& p_Green, Uint8& p_Blue, Uint8& p_Alpha)
 	{
-		Uint8* pixel = (Uint8*)mSurface->pixels + pY * mSurface->pitch + pX * mSurface->format->BytesPerPixel;
+		Uint8* pixel = (Uint8*)m_Surface->pixels + p_Y * m_Surface->pitch + p_X * m_Surface->format->BytesPerPixel;
 		Uint32 color = 0;
 
-		switch (mSurface->format->BytesPerPixel)
+		switch (m_Surface->format->BytesPerPixel)
 		{
 		case 1:
 			color = *pixel;
@@ -171,6 +171,6 @@ namespace SAGE
 			break;
 		}
 
-		SDL_GetRGBA(color, mSurface->format, &pRed, &pGreen, &pBlue, &pAlpha);
+		SDL_GetRGBA(color, m_Surface->format, &p_Red, &p_Green, &p_Blue, &p_Alpha);
 	}
 }

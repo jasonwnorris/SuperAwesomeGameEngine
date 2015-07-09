@@ -22,31 +22,31 @@ namespace SAGE
 			float Z;
 
 			Vector3();
-			Vector3(float pX, float pY, float pZ);
+			Vector3(float p_X, float p_Y, float p_Z);
 
 			float Length() const;
 			float LengthSquared() const;
-			float Dot(const Vector3& pOther);
+			float Dot(const Vector3& p_Other);
 			const Vector3& Normalize();
-			const Vector3 Cross(const Vector3& pOther);
+			const Vector3 Cross(const Vector3& p_Other);
 
-			void operator()(const float pX, const float pY, const float pZ);
-			bool operator==(const Vector3& pOther) const;
-			bool operator!=(const Vector3& pOther) const;
-			Vector3& operator=(const Vector3& pOther);
+			void operator()(const float p_X, const float p_Y, const float p_Z);
+			bool operator==(const Vector3& p_Other) const;
+			bool operator!=(const Vector3& p_Other) const;
+			Vector3& operator=(const Vector3& p_Other);
 			Vector3 operator-() const;
-			Vector3 operator-(const Vector3& pOther) const;
-			Vector3 operator+(const Vector3& pOther) const;
-			Vector3 operator*(float pScalar) const;
-			Vector3 operator/(float pScalar) const;
-			Vector3& operator+=(const Vector3& pOther);
-			Vector3& operator-=(const Vector3& pOther);
-			Vector3& operator*=(float pScalar);
-			Vector3& operator/=(float pScalar);
+			Vector3 operator-(const Vector3& p_Other) const;
+			Vector3 operator+(const Vector3& p_Other) const;
+			Vector3 operator*(float p_Scalar) const;
+			Vector3 operator/(float p_Scalar) const;
+			Vector3& operator+=(const Vector3& p_Other);
+			Vector3& operator-=(const Vector3& p_Other);
+			Vector3& operator*=(float p_Scalar);
+			Vector3& operator/=(float p_Scalar);
 
-			static float Dot(const Vector3& pVecA, const Vector3& pVecB);
-			static const Vector3 Cross(const Vector3& pVecA, const Vector3& pVecB);
-			static float Distance(const Vector3& pVecA, const Vector3& pVecB);
+			static float Dot(const Vector3& p_VecA, const Vector3& p_VecB);
+			static const Vector3 Cross(const Vector3& p_VecA, const Vector3& p_VecB);
+			static float Distance(const Vector3& p_VecA, const Vector3& p_VecB);
 	};
 }
 

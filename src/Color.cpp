@@ -33,172 +33,172 @@ namespace SAGE
 
 	Color::Color()
 	{
-		mRed = 1.0f;
-		mGreen = 1.0f;
-		mBlue = 1.0f;
-		mAlpha = 1.0f;
+		m_Red = 1.0f;
+		m_Green = 1.0f;
+		m_Blue = 1.0f;
+		m_Alpha = 1.0f;
 	}
 
-	Color::Color(float pRed, float pGreen, float pBlue, float pAlpha)
+	Color::Color(float p_Red, float p_Green, float p_Blue, float p_Alpha)
 	{
-		mRed = pRed;
-		mGreen = pGreen;
-		mBlue = pBlue;
-		mAlpha = pAlpha;
+		m_Red = p_Red;
+		m_Green = p_Green;
+		m_Blue = p_Blue;
+		m_Alpha = p_Alpha;
 	}
 
-	Color::Color(const char* pHex, float pAlpha)
+	Color::Color(const char* p_Hex, float p_Alpha)
 	{
-		int value = std::stoi(pHex, 0, 16);
+		int value = std::stoi(p_Hex, 0, 16);
 
-		mRed = (float)((value >> 16) & 0xFF) / 255.0f;
-		mGreen = (float)((value >> 8) & 0xFF) / 255.0f;;
-		mBlue = (float)(value & 0xFF) / 255.0f;;
-		mAlpha = pAlpha;
+		m_Red = (float)((value >> 16) & 0xFF) / 255.0f;
+		m_Green = (float)((value >> 8) & 0xFF) / 255.0f;;
+		m_Blue = (float)(value & 0xFF) / 255.0f;;
+		m_Alpha = p_Alpha;
 	}
 
-	bool Color::operator==(const Color& pColor) const
+	bool Color::operator==(const Color& p_Color) const
 	{
-		return mRed == pColor.GetRed() && mGreen == pColor.GetGreen() && mBlue == pColor.GetBlue() && mAlpha == pColor.GetAlpha();
+		return m_Red == p_Color.GetRed() && m_Green == p_Color.GetGreen() && m_Blue == p_Color.GetBlue() && m_Alpha == p_Color.GetAlpha();
 	}
 
-	bool Color::operator!=(const Color& pColor) const
+	bool Color::operator!=(const Color& p_Color) const
 	{
-		return mRed != pColor.GetRed() || mGreen != pColor.GetGreen() || mBlue != pColor.GetBlue() || mAlpha != pColor.GetAlpha();
+		return m_Red != p_Color.GetRed() || m_Green != p_Color.GetGreen() || m_Blue != p_Color.GetBlue() || m_Alpha != p_Color.GetAlpha();
 	}
 
-	Color& Color::operator=(const Color& pColor)
+	Color& Color::operator=(const Color& p_Color)
 	{
-		mRed = pColor.GetRed();
-		mGreen = pColor.GetGreen();
-		mBlue = pColor.GetBlue();
-		mAlpha = pColor.GetAlpha();
+		m_Red = p_Color.GetRed();
+		m_Green = p_Color.GetGreen();
+		m_Blue = p_Color.GetBlue();
+		m_Alpha = p_Color.GetAlpha();
 
 		return *this;
 	}
 
-	Color Color::operator+(const Color& pColor) const
+	Color Color::operator+(const Color& p_Color) const
 	{
-		return Color(mRed + pColor.GetRed(), mGreen + pColor.GetGreen(), mBlue + pColor.GetBlue(), mAlpha);
+		return Color(m_Red + p_Color.GetRed(), m_Green + p_Color.GetGreen(), m_Blue + p_Color.GetBlue(), m_Alpha);
 	}
 
-	Color Color::operator-(const Color& pColor) const
+	Color Color::operator-(const Color& p_Color) const
 	{
-		return Color(mRed - pColor.GetRed(), mGreen - pColor.GetGreen(), mBlue - pColor.GetBlue(), mAlpha);
+		return Color(m_Red - p_Color.GetRed(), m_Green - p_Color.GetGreen(), m_Blue - p_Color.GetBlue(), m_Alpha);
 	}
 
-	Color Color::operator*(float pScalar) const
+	Color Color::operator*(float p_Scalar) const
 	{
-		return Color(mRed * pScalar, mGreen * pScalar, mBlue * pScalar, mAlpha);
+		return Color(m_Red * p_Scalar, m_Green * p_Scalar, m_Blue * p_Scalar, m_Alpha);
 	}
 
-	Color Color::operator/(float pScalar) const
+	Color Color::operator/(float p_Scalar) const
 	{
-		return Color(mRed / pScalar, mGreen / pScalar, mBlue / pScalar, mAlpha);
+		return Color(m_Red / p_Scalar, m_Green / p_Scalar, m_Blue / p_Scalar, m_Alpha);
 	}
 
-	Color& Color::operator+=(const Color& pColor)
+	Color& Color::operator+=(const Color& p_Color)
 	{
-		mRed += pColor.GetRed();
-		mGreen += pColor.GetGreen();
-		mBlue += pColor.GetBlue();
+		m_Red += p_Color.GetRed();
+		m_Green += p_Color.GetGreen();
+		m_Blue += p_Color.GetBlue();
 
 		return *this;
 	}
 
-	Color& Color::operator-=(const Color& pColor)
+	Color& Color::operator-=(const Color& p_Color)
 	{
-		mRed -= pColor.GetRed();
-		mGreen -= pColor.GetGreen();
-		mBlue -= pColor.GetBlue();
+		m_Red -= p_Color.GetRed();
+		m_Green -= p_Color.GetGreen();
+		m_Blue -= p_Color.GetBlue();
 
 		return *this;
 	}
 
-	Color& Color::operator*=(float pScalar)
+	Color& Color::operator*=(float p_Scalar)
 	{
-		mRed *= pScalar;
-		mGreen *= pScalar;
-		mBlue *= pScalar;
+		m_Red *= p_Scalar;
+		m_Green *= p_Scalar;
+		m_Blue *= p_Scalar;
 
 		return *this;
 	}
 
-	Color& Color::operator/=(float pScalar)
+	Color& Color::operator/=(float p_Scalar)
 	{
-		mRed /= pScalar;
-		mGreen /= pScalar;
-		mBlue /= pScalar;
+		m_Red /= p_Scalar;
+		m_Green /= p_Scalar;
+		m_Blue /= p_Scalar;
 
 		return *this;
 	}
 
 	float Color::GetRed() const
 	{
-		return mRed;
+		return m_Red;
 	}
 
 	float Color::GetGreen() const
 	{
-		return mGreen;
+		return m_Green;
 	}
 
 	float Color::GetBlue() const
 	{
-		return mBlue;
+		return m_Blue;
 	}
 
 	float Color::GetAlpha() const
 	{
-		return mAlpha;
+		return m_Alpha;
 	}
 
-	void Color::SetRed(float pRed)
+	void Color::SetRed(float p_Red)
 	{
-		mRed = pRed;
+		m_Red = p_Red;
 	}
 
-	void Color::SetGreen(float pGreen)
+	void Color::SetGreen(float p_Green)
 	{
-		mGreen = pGreen;
+		m_Green = p_Green;
 	}
 
-	void Color::SetBlue(float pBlue)
+	void Color::SetBlue(float p_Blue)
 	{
-		mBlue = pBlue;
+		m_Blue = p_Blue;
 	}
 
-	void Color::SetAlpha(float pAlpha)
+	void Color::SetAlpha(float p_Alpha)
 	{
-		mAlpha = pAlpha;
+		m_Alpha = p_Alpha;
 	}
 
 	void Color::SetOpenGL() const
 	{
-		glColor4f(mRed, mGreen, mBlue, mAlpha);
+		glColor4f(m_Red, m_Green, m_Blue, m_Alpha);
 	}
 
-	Color& Color::Invert(bool pInvertAlpha)
+	Color& Color::Invert(bool p_InvertAlpha)
 	{
-		mRed = 1.0f - mRed;
-		mGreen = 1.0f - mGreen;
-		mBlue = 1.0f - mBlue;
-		mAlpha = pInvertAlpha ? 1.0f - mAlpha : mAlpha;
+		m_Red = 1.0f - m_Red;
+		m_Green = 1.0f - m_Green;
+		m_Blue = 1.0f - m_Blue;
+		m_Alpha = p_InvertAlpha ? 1.0f - m_Alpha : m_Alpha;
 
 		return *this;
 	}
 
-	Color Color::Inverse(bool pInvertAlpha) const
+	Color Color::Inverse(bool p_InvertAlpha) const
 	{
-		return Color(1.0f - mRed, 1.0f - mGreen, 1.0f - mBlue, pInvertAlpha ? 1.0f - mAlpha : mAlpha);
+		return Color(1.0f - m_Red, 1.0f - m_Green, 1.0f - m_Blue, p_InvertAlpha ? 1.0f - m_Alpha : m_Alpha);
 	}
 
 	// static
-	Color Color::Lerp(const Color& pColorA, const Color& pColorB, float pAmount)
+	Color Color::Lerp(const Color& p_ColorA, const Color& p_ColorB, float p_Amount)
 	{
-		return Color(MathUtil::Lerp(pColorA.GetRed(), pColorB.GetRed(), pAmount),
-					 MathUtil::Lerp(pColorA.GetGreen(), pColorB.GetGreen(), pAmount),
-					 MathUtil::Lerp(pColorA.GetBlue(), pColorB.GetBlue(), pAmount),
-					 MathUtil::Lerp(pColorA.GetAlpha(), pColorB.GetAlpha(), pAmount));
+		return Color(MathUtil::Lerp(p_ColorA.GetRed(), p_ColorB.GetRed(), p_Amount),
+					 MathUtil::Lerp(p_ColorA.GetGreen(), p_ColorB.GetGreen(), p_Amount),
+					 MathUtil::Lerp(p_ColorA.GetBlue(), p_ColorB.GetBlue(), p_Amount),
+					 MathUtil::Lerp(p_ColorA.GetAlpha(), p_ColorB.GetAlpha(), p_Amount));
 	}
 }

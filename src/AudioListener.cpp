@@ -7,14 +7,14 @@ namespace SAGE
 {
 	AudioListener::AudioListener()
 	{
-		mPositionX = 0.0f;
-		mPositionY = 0.0f;
-		mVelocityX = 0.0f;
-		mVelocityY = 0.0f;
+		m_PositionX = 0.0f;
+		m_PositionY = 0.0f;
+		m_VelocityX = 0.0f;
+		m_VelocityY = 0.0f;
 		ALfloat ori[] = { 0.0f, 0.0f, -1.0f, 0.0f, 1.0f, 0.0f };
 
-		alListener3f(AL_POSITION, mPositionX, mPositionY, 0.0f);
-		alListener3f(AL_VELOCITY, mVelocityX, mVelocityY, 0.0f);
+		alListener3f(AL_POSITION, m_PositionX, m_PositionY, 0.0f);
+		alListener3f(AL_VELOCITY, m_VelocityX, m_VelocityY, 0.0f);
 		alListenerfv(AL_ORIENTATION, ori);
 	}
 
@@ -22,35 +22,35 @@ namespace SAGE
 	{
 	}
 
-	void AudioListener::SetPosition(ALfloat pPositionX, ALfloat pPositionY)
+	void AudioListener::SetPosition(ALfloat p_PositionX, ALfloat p_PositionY)
 	{
-		mPositionX = pPositionX;
-		mPositionY = pPositionY;
+		m_PositionX = p_PositionX;
+		m_PositionY = p_PositionY;
 
-		alListener3f(AL_POSITION, mPositionX, mPositionY, 0.0f);
+		alListener3f(AL_POSITION, m_PositionX, m_PositionY, 0.0f);
 	}
 
-	void AudioListener::SetPosition(const Vector2& pPosition)
+	void AudioListener::SetPosition(const Vector2& p_Position)
 	{
-		mPositionX = pPosition.X;
-		mPositionY = pPosition.Y;
+		m_PositionX = p_Position.X;
+		m_PositionY = p_Position.Y;
 
-		alListener3f(AL_POSITION, mPositionX, mPositionY, 0.0f);
+		alListener3f(AL_POSITION, m_PositionX, m_PositionY, 0.0f);
 	}
 
-	void AudioListener::SetVelocity(ALfloat pVelocityX, ALfloat pVelocityY)
+	void AudioListener::SetVelocity(ALfloat p_VelocityX, ALfloat p_VelocityY)
 	{
-		mVelocityX = pVelocityX;
-		mVelocityY = pVelocityY;
+		m_VelocityX = p_VelocityX;
+		m_VelocityY = p_VelocityY;
 
-		alListener3f(AL_VELOCITY, mVelocityX, mVelocityY, 0.0f);
+		alListener3f(AL_VELOCITY, m_VelocityX, m_VelocityY, 0.0f);
 	}
 
-	void AudioListener::SetVelocity(const Vector2& pVelocity)
+	void AudioListener::SetVelocity(const Vector2& p_Velocity)
 	{
-		mVelocityX = pVelocity.X;
-		mVelocityY = pVelocity.Y;
+		m_VelocityX = p_Velocity.X;
+		m_VelocityY = p_Velocity.Y;
 
-		alListener3f(AL_VELOCITY, mVelocityX, mVelocityY, 0.0f);
+		alListener3f(AL_VELOCITY, m_VelocityX, m_VelocityY, 0.0f);
 	}
 }

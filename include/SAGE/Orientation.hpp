@@ -13,14 +13,14 @@ namespace SAGE
 		FlipBoth = (1 << 1) | (1 << 2)
 	};
 
-	inline Orientation operator|(Orientation pEffectA, Orientation pEffectB)
+	inline Orientation operator|(Orientation p_EffectA, Orientation p_EffectB)
 	{
-		return static_cast<Orientation>(static_cast<int>(pEffectA) | static_cast<int>(pEffectB));
+		return static_cast<Orientation>(static_cast<int>(p_EffectA) | static_cast<int>(p_EffectB));
 	}
 
-	inline Orientation operator&(Orientation pEffectA, Orientation pEffectB)
+	inline Orientation operator&(Orientation p_EffectA, Orientation p_EffectB)
 	{
-		return static_cast<Orientation>(static_cast<int>(pEffectA)& static_cast<int>(pEffectB));
+		return static_cast<Orientation>(static_cast<int>(p_EffectA)& static_cast<int>(p_EffectB));
 	}
 }
 

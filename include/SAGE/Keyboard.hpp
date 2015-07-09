@@ -232,17 +232,17 @@ namespace SAGE
 		friend class Events;
 
 		public:
-			static bool IsKeyDown(Key pKey);
-			static bool IsKeyUp(Key pKey);
-			static bool IsKeyPressed(Key pKey);
-			static bool IsKeyReleased(Key pKey);
+			static bool IsKeyDown(Key p_Key);
+			static bool IsKeyUp(Key p_Key);
+			static bool IsKeyPressed(Key p_Key);
+			static bool IsKeyReleased(Key p_Key);
 
 		private:
 			Keyboard() = delete;
 			~Keyboard() = delete;
 
 			static void Clear();
-			static void SetKey(Key pKey, bool pState);
+			static void SetKey(Key p_Key, bool p_State);
 
 			static std::map<Key, bool> sCurrentKeys;
 			static std::map<Key, bool> sPreviousKeys;

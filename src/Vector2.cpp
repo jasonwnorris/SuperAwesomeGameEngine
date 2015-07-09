@@ -19,16 +19,16 @@ namespace SAGE
 		Y = 0.0f;
 	}
 
-	Vector2::Vector2(float pX, float pY)
+	Vector2::Vector2(float p_X, float p_Y)
 	{
-		X = pX;
-		Y = pY;
+		X = p_X;
+		Y = p_Y;
 	}
 
-	Vector2::Vector2(int pX, int pY)
+	Vector2::Vector2(int p_X, int p_Y)
 	{
-		X = (float)pX;
-		Y = (float)pY;
+		X = (float)p_X;
+		Y = (float)p_Y;
 	}
 
 	float Vector2::Length() const
@@ -41,9 +41,9 @@ namespace SAGE
 		return X * X + Y * Y;
 	}
 
-	float Vector2::Dot(const Vector2& pOther)
+	float Vector2::Dot(const Vector2& p_Other)
 	{
-		return X * pOther.X + Y * pOther.Y;
+		return X * p_Other.X + Y * p_Other.Y;
 	}
 
 	const Vector2& Vector2::Normalize()
@@ -58,26 +58,26 @@ namespace SAGE
 		return *this;
 	}
 
-	void Vector2::operator()(const float pX, const float pY)
+	void Vector2::operator()(const float p_X, const float p_Y)
 	{
-		X = pX;
-		Y = pY;
+		X = p_X;
+		Y = p_Y;
 	}
 
-	bool Vector2::operator==(const Vector2& pOther) const
+	bool Vector2::operator==(const Vector2& p_Other) const
 	{
-		return X == pOther.X && Y == pOther.Y;
+		return X == p_Other.X && Y == p_Other.Y;
 	}
 
-	bool Vector2::operator!=(const Vector2& pOther) const
+	bool Vector2::operator!=(const Vector2& p_Other) const
 	{
-		return X != pOther.X || Y != pOther.Y;
+		return X != p_Other.X || Y != p_Other.Y;
 	}
 
-	Vector2& Vector2::operator=(const Vector2& pOther)
+	Vector2& Vector2::operator=(const Vector2& p_Other)
 	{
-		X = pOther.X;
-		Y = pOther.Y;
+		X = p_Other.X;
+		Y = p_Other.Y;
 
 		return *this;
 	}
@@ -87,79 +87,79 @@ namespace SAGE
 		return Vector2(-X, -Y);
 	}
 
-	Vector2 Vector2::operator-(const Vector2& pOther) const
+	Vector2 Vector2::operator-(const Vector2& p_Other) const
 	{
-		return Vector2(X - pOther.X, Y - pOther.Y);
+		return Vector2(X - p_Other.X, Y - p_Other.Y);
 	}
 
-	Vector2 Vector2::operator+(const Vector2& pOther) const
+	Vector2 Vector2::operator+(const Vector2& p_Other) const
 	{
-		return Vector2(X + pOther.X, Y + pOther.Y);
+		return Vector2(X + p_Other.X, Y + p_Other.Y);
 	}
 
-	Vector2 Vector2::operator*(float pScalar) const
+	Vector2 Vector2::operator*(float p_Scalar) const
 	{
-		return Vector2(X * pScalar, Y * pScalar);
+		return Vector2(X * p_Scalar, Y * p_Scalar);
 	}
 
-	Vector2 Vector2::operator/(float pScalar) const
+	Vector2 Vector2::operator/(float p_Scalar) const
 	{
-		return Vector2(X / pScalar, Y / pScalar);
+		return Vector2(X / p_Scalar, Y / p_Scalar);
 	}
 
-	Vector2& Vector2::operator+=(const Vector2& pOther)
+	Vector2& Vector2::operator+=(const Vector2& p_Other)
 	{
-		X += pOther.X;
-		Y += pOther.Y;
+		X += p_Other.X;
+		Y += p_Other.Y;
 
 		return *this;
 	}
 
-	Vector2& Vector2::operator-=(const Vector2& pOther)
+	Vector2& Vector2::operator-=(const Vector2& p_Other)
 	{
-		X -= pOther.X;
-		Y -= pOther.Y;
+		X -= p_Other.X;
+		Y -= p_Other.Y;
 
 		return *this;
 	}
 
-	Vector2& Vector2::operator*=(float pScalar)
+	Vector2& Vector2::operator*=(float p_Scalar)
 	{
-		X *= pScalar;
-		Y *= pScalar;
+		X *= p_Scalar;
+		Y *= p_Scalar;
 
 		return *this;
 	}
 
-	Vector2& Vector2::operator/=(float pScalar)
+	Vector2& Vector2::operator/=(float p_Scalar)
 	{
-		X /= pScalar;
-		Y /= pScalar;
+		X /= p_Scalar;
+		Y /= p_Scalar;
 
 		return *this;
 	}
 
 	// static
-	float Vector2::Length(const Vector2& pVector)
+	float Vector2::Length(const Vector2& p_Vector)
 	{
-		return pVector.Length();
+		return p_Vector.Length();
 	}
 
 	// static
-	float Vector2::LengthSquared(const Vector2& pVector)
+	float Vector2::LengthSquared(const Vector2& p_Vector)
 	{
-		return pVector.LengthSquared();
+		return p_Vector.LengthSquared();
 	}
 
 	// static
-	float Vector2::Dot(const Vector2& pVecA, const Vector2& pVecB)
+	float Vector2::Dot(const Vector2& p_VecA, const Vector2& p_VecB)
 	{
-		return pVecA.X * pVecB.X + pVecA.Y * pVecB.Y;
+		return p_VecA.X * p_VecB.X + p_VecA.Y * p_VecB.Y;
 	}
 
 	// static
-	float Vector2::Distance(const Vector2& pVecA, const Vector2& pVecB)
+	float Vector2::Distance(const Vector2& p_VecA, const Vector2& p_VecB)
 	{
-		return (pVecA - pVecB).Length();
+		return (p_VecA - p_VecB).Length();
 	}
 }

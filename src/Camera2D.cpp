@@ -14,11 +14,11 @@ namespace SAGE
 
 	Camera2D::Camera2D()
 	{
-		mPosition = Vector2::Zero;
-		mRotation = 0.0f;
-		mScale = Vector2::One;
-		mWidth = DefaultWidth;
-		mHeight = DefaultHeight;
+		m_Position = Vector2::Zero;
+		m_Rotation = 0.0f;
+		m_Scale = Vector2::One;
+		m_Width = DefaultWidth;
+		m_Height = DefaultHeight;
 	}
 
 	Camera2D::~Camera2D()
@@ -27,110 +27,110 @@ namespace SAGE
 
 	Vector2 Camera2D::GetPosition() const
 	{
-		return mPosition;
+		return m_Position;
 	}
 
 	float Camera2D::GetRotation() const
 	{
-		return mRotation;
+		return m_Rotation;
 	}
 
 	Vector2 Camera2D::GetScale() const
 	{
-		return mScale;
+		return m_Scale;
 	}
 
 	int Camera2D::GetWidth() const
 	{
-		return mWidth;
+		return m_Width;
 	}
 
 	int Camera2D::GetHeight() const
 	{
-		return mHeight;
+		return m_Height;
 	}
 
-	glm::mat4 Camera2D::GetProjectionMatrix(View pView) const
+	glm::mat4 Camera2D::GetProjectionMatrix(View p_View) const
 	{
-		switch (pView)
+		switch (p_View)
 		{
 			default:
 			case View::Orthographic:
-				return glm::ortho(0.0f, (float)mWidth, (float)mHeight, 0.0f, 1.0f, -1.0f);
+				return glm::ortho(0.0f, (float)m_Width, (float)m_Height, 0.0f, 1.0f, -1.0f);
 			case View::Perspective:
-				return glm::perspective(45.0f, (float)mWidth / (float)mHeight, 0.1f, 1000.0f);
+				return glm::perspective(45.0f, (float)m_Width / (float)m_Height, 0.1f, 1000.0f);
 		}
 	}
 
 	glm::mat4 Camera2D::GetModelViewMatrix() const
 	{
 		glm::mat4 modelViewMatrix;
-		modelViewMatrix = glm::translate(modelViewMatrix, glm::vec3((float)mWidth / 2.0f, (float)mHeight / 2.0f, 0.0f));
-		modelViewMatrix = glm::scale(modelViewMatrix, glm::vec3(mScale.X, mScale.Y, 1.0f));
-		modelViewMatrix = glm::rotate(modelViewMatrix, mRotation, glm::vec3(0.0f, 0.0f, 1.0f));
-		modelViewMatrix = glm::translate(modelViewMatrix, glm::vec3(-mPosition.X, -mPosition.Y, 0.0f));
+		modelViewMatrix = glm::translate(modelViewMatrix, glm::vec3((float)m_Width / 2.0f, (float)m_Height / 2.0f, 0.0f));
+		modelViewMatrix = glm::scale(modelViewMatrix, glm::vec3(m_Scale.X, m_Scale.Y, 1.0f));
+		modelViewMatrix = glm::rotate(modelViewMatrix, m_Rotation, glm::vec3(0.0f, 0.0f, 1.0f));
+		modelViewMatrix = glm::translate(modelViewMatrix, glm::vec3(-m_Position.X, -m_Position.Y, 0.0f));
 
 		return modelViewMatrix;
 	}
 
-	void Camera2D::SetPosition(const Vector2& pPosition)
+	void Camera2D::SetPosition(const Vector2& p_Position)
 	{
-		mPosition = pPosition;
+		m_Position = p_Position;
 	}
 
-	void Camera2D::SetRotation(float pRotation)
+	void Camera2D::SetRotation(float p_Rotation)
 	{
-		mRotation = pRotation;
+		m_Rotation = p_Rotation;
 	}
 
-	void Camera2D::SetScale(const Vector2& pScale)
+	void Camera2D::SetScale(const Vector2& p_Scale)
 	{
-		mScale = pScale;
+		m_Scale = p_Scale;
 	}
 
-	void Camera2D::SetTransformation(const Vector2& pPosition, float pRotation, const Vector2& pScale)
+	void Camera2D::SetTransformation(const Vector2& p_Position, float p_Rotation, const Vector2& p_Scale)
 	{
-		mPosition = pPosition;
-		mRotation = pRotation;
-		mScale = pScale;
+		m_Position = p_Position;
+		m_Rotation = p_Rotation;
+		m_Scale = p_Scale;
 	}
 
-	void Camera2D::SetWidth(int pWidth)
+	void Camera2D::SetWidth(int p_Width)
 	{
-		mWidth = pWidth;
+		m_Width = p_Width;
 	}
 
-	void Camera2D::SetHeight(int pHeight)
+	void Camera2D::SetHeight(int p_Height)
 	{
-		mHeight = pHeight;
+		m_Height = p_Height;
 	}
 
-	void Camera2D::SetDimensions(int pWidth, int pHeight)
+	void Camera2D::SetDimensions(int p_Width, int p_Height)
 	{
-		mWidth = pWidth;
-		mHeight = pHeight;
+		m_Width = p_Width;
+		m_Height = p_Height;
 	}
 
-	void Camera2D::Translate(const Vector2& pTranslation)
+	void Camera2D::Translate(const Vector2& p_Translation)
 	{
-		mPosition += pTranslation;
+		m_Position += p_Translation;
 	}
 
-	void Camera2D::Rotate(float pRotation)
+	void Camera2D::Rotate(float p_Rotation)
 	{
-		mRotation += pRotation;
+		m_Rotation += p_Rotation;
 	}
 
-	void Camera2D::Scale(const Vector2& pScale)
+	void Camera2D::Scale(const Vector2& p_Scale)
 	{
-		mScale += pScale;
+		m_Scale += p_Scale;
 	}
 
-	void Camera2D::ScreenToWorld(const Vector2& pScreenPosition, Vector2& pWorldPosition) const
+	void Camera2D::ScreenToWorld(const Vector2& p_ScreenPosition, Vector2& p_WorldPosition) const
 	{
 	}
 
-	void Camera2D::WorldToScreen(const Vector2& pWorldPosition, Vector2& pScreenPosition) const
+	void Camera2D::WorldToScreen(const Vector2& p_WorldPosition, Vector2& p_ScreenPosition) const
 	{
 	}
 }

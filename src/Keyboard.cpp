@@ -8,24 +8,24 @@ namespace SAGE
 	std::map<Key, bool> Keyboard::sCurrentKeys;
 	std::map<Key, bool> Keyboard::sPreviousKeys;
 
-	bool Keyboard::IsKeyDown(Key pKey)
+	bool Keyboard::IsKeyDown(Key p_Key)
 	{
-		return sCurrentKeys[pKey];
+		return sCurrentKeys[p_Key];
 	}
 
-	bool Keyboard::IsKeyUp(Key pKey)
+	bool Keyboard::IsKeyUp(Key p_Key)
 	{
-		return !sCurrentKeys[pKey];
+		return !sCurrentKeys[p_Key];
 	}
 
-	bool Keyboard::IsKeyPressed(Key pKey)
+	bool Keyboard::IsKeyPressed(Key p_Key)
 	{
-		return sCurrentKeys[pKey] && !sPreviousKeys[pKey];
+		return sCurrentKeys[p_Key] && !sPreviousKeys[p_Key];
 	}
 
-	bool Keyboard::IsKeyReleased(Key pKey)
+	bool Keyboard::IsKeyReleased(Key p_Key)
 	{
-		return !sCurrentKeys[pKey] && sPreviousKeys[pKey];
+		return !sCurrentKeys[p_Key] && sPreviousKeys[p_Key];
 	}
 
 	// static
@@ -35,8 +35,8 @@ namespace SAGE
 	}
 
 	// static
-	void Keyboard::SetKey(Key pKey, bool pState)
+	void Keyboard::SetKey(Key p_Key, bool p_State)
 	{
-		sCurrentKeys[pKey] = pState;
+		sCurrentKeys[p_Key] = p_State;
 	}
 }

@@ -26,18 +26,18 @@ namespace SAGE
 			virtual int Initialize();
 			virtual int Finalize();
 
-			virtual int Update(float pDeltaTime) = 0;
-			virtual int Render(SpriteBatch& pSpriteBatch);
-			virtual int Render(GeometryBatch& pGeometryBatch);
+			virtual int Update(float p_DeltaTime) = 0;
+			virtual int Render(SpriteBatch& p_SpriteBatch);
+			virtual int Render(GeometryBatch& p_GeometryBatch);
 
-			Window mWindow;
-			ScreenManager mScreenManager;
+			Window m_Window;
+			ScreenManager m_ScreenManager;
 
 		private:
-			Timer mTimer;
-			SpriteBatch mSpriteBatch;
-			GeometryBatch mGeometryBatch;
-			bool mRunning;
+			Timer m_Timer;
+			SpriteBatch m_SpriteBatch;
+			GeometryBatch m_GeometryBatch;
+			bool m_Running;
 	};
 }
 

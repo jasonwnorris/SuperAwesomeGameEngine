@@ -9,111 +9,111 @@ namespace SAGE
 	const Sint16 GamePad::MaxAxisRange = 32767;
 
 	// static
-	bool GamePad::IsButtonDown(PlayerIndex pIndex, GamePadButton pButton)
+	bool GamePad::IsButtonDown(PlayerIndex p_Index, GamePadButton p_Button)
 	{
-		if (sGamePads.find(pIndex) == sGamePads.end())
+		if (sGamePads.find(p_Index) == sGamePads.end())
 			return false;
 
-		return sGamePads[pIndex]->IsButtonDown(pButton);
+		return sGamePads[p_Index]->IsButtonDown(p_Button);
 	}
 
 	// static
-	bool GamePad::IsButtonUp(PlayerIndex pIndex, GamePadButton pButton)
+	bool GamePad::IsButtonUp(PlayerIndex p_Index, GamePadButton p_Button)
 	{
-		if (sGamePads.find(pIndex) == sGamePads.end())
+		if (sGamePads.find(p_Index) == sGamePads.end())
 			return false;
 
-		return sGamePads[pIndex]->IsButtonUp(pButton);
+		return sGamePads[p_Index]->IsButtonUp(p_Button);
 	}
 
 	// static
-	bool GamePad::IsButtonPressed(PlayerIndex pIndex, GamePadButton pButton)
+	bool GamePad::IsButtonPressed(PlayerIndex p_Index, GamePadButton p_Button)
 	{
-		if (sGamePads.find(pIndex) == sGamePads.end())
+		if (sGamePads.find(p_Index) == sGamePads.end())
 			return false;
 
-		return sGamePads[pIndex]->IsButtonPressed(pButton);
+		return sGamePads[p_Index]->IsButtonPressed(p_Button);
 	}
 
 	// static
-	bool GamePad::IsButtonReleased(PlayerIndex pIndex, GamePadButton pButton)
+	bool GamePad::IsButtonReleased(PlayerIndex p_Index, GamePadButton p_Button)
 	{
-		if (sGamePads.find(pIndex) == sGamePads.end())
+		if (sGamePads.find(p_Index) == sGamePads.end())
 			return false;
 
-		return sGamePads[pIndex]->IsButtonReleased(pButton);
+		return sGamePads[p_Index]->IsButtonReleased(p_Button);
 	}
 
 	// static
-	Sint16 GamePad::GetAxis(PlayerIndex pIndex, GamePadAxis pAxis)
+	Sint16 GamePad::GetAxis(PlayerIndex p_Index, GamePadAxis p_Axis)
 	{
-		if (sGamePads.find(pIndex) == sGamePads.end())
+		if (sGamePads.find(p_Index) == sGamePads.end())
 			return false;
 
-		return sGamePads[pIndex]->GetAxis(pAxis);
+		return sGamePads[p_Index]->GetAxis(p_Axis);
 	}
 
-	GamePad::GamePad(PlayerIndex pIndex, SDL_GameController* pMapping)
+	GamePad::GamePad(PlayerIndex p_Index, SDL_GameController* p_Mapping)
 	{
-		mIndex = pIndex;
-		mMapping = pMapping;
+		m_Index = p_Index;
+		m_Mapping = p_Mapping;
 	}
 
 	GamePad::~GamePad()
 	{
-		mIndex = PlayerIndex::Invalid;
-		mMapping = nullptr;
+		m_Index = PlayerIndex::Invalid;
+		m_Mapping = nullptr;
 	}
 
 	void GamePad::Clear()
 	{
-		mCurrentButtons = mPreviousButtons;
-		mCurrentAxes = mPreviousAxes;
+		m_CurrentButtons = m_PreviousButtons;
+		m_CurrentAxes = m_PreviousAxes;
 	}
 
 	PlayerIndex GamePad::GetIndex() const
 	{
-		return mIndex;
+		return m_Index;
 	}
 
 	SDL_GameController* GamePad::GetMapping() const
 	{
-		return mMapping;
+		return m_Mapping;
 	}
 
-	bool GamePad::IsButtonDown(GamePadButton pButton)
+	bool GamePad::IsButtonDown(GamePadButton p_Button)
 	{
-		return mCurrentButtons[pButton];
+		return m_CurrentButtons[p_Button];
 	}
 
-	bool GamePad::IsButtonUp(GamePadButton pButton)
+	bool GamePad::IsButtonUp(GamePadButton p_Button)
 	{
-		return !mCurrentButtons[pButton];
+		return !m_CurrentButtons[p_Button];
 	}
 
-	bool GamePad::IsButtonPressed(GamePadButton pButton)
+	bool GamePad::IsButtonPressed(GamePadButton p_Button)
 	{
-		return !mPreviousButtons[pButton] && mCurrentButtons[pButton];
+		return !m_PreviousButtons[p_Button] && m_CurrentButtons[p_Button];
 	}
 
-	bool GamePad::IsButtonReleased(GamePadButton pButton)
+	bool GamePad::IsButtonReleased(GamePadButton p_Button)
 	{
-		return mPreviousButtons[pButton] && !mCurrentButtons[pButton];
+		return m_PreviousButtons[p_Button] && !m_CurrentButtons[p_Button];
 	}
 
-	Sint16 GamePad::GetAxis(GamePadAxis pAxis)
+	Sint16 GamePad::GetAxis(GamePadAxis p_Axis)
 	{
-		return mCurrentAxes[pAxis];
+		return m_CurrentAxes[p_Axis];
 	}
 
-	void GamePad::SetButton(GamePadButton pButton, bool pState)
+	void GamePad::SetButton(GamePadButton p_Button, bool p_State)
 	{
-		mCurrentButtons[pButton] = pState;
+		m_CurrentButtons[p_Button] = p_State;
 	}
 
-	void GamePad::SetAxis(GamePadAxis pAxis, Sint16 pValue)
+	void GamePad::SetAxis(GamePadAxis p_Axis, Sint16 p_Value)
 	{
-		mCurrentAxes[pAxis] = pValue;
+		m_CurrentAxes[p_Axis] = p_Value;
 	}
 
 	// static
@@ -124,48 +124,48 @@ namespace SAGE
 	}
 
 	// static
-	void GamePad::Open(PlayerIndex pIndex)
+	void GamePad::Open(PlayerIndex p_Index)
 	{
 		// Check if it's already open.
-		if (sGamePads.find(pIndex) != sGamePads.end())
+		if (sGamePads.find(p_Index) != sGamePads.end())
 			return;
 
 		// Open the game controller.
-		SDL_GameController* gc = SDL_GameControllerOpen(static_cast<int>(pIndex));
+		SDL_GameController* gc = SDL_GameControllerOpen(static_cast<int>(p_Index));
 
 		// Add to map if it opened successfully.
 		if (gc != nullptr)
-			sGamePads[pIndex] = new GamePad(pIndex, gc);
+			sGamePads[p_Index] = new GamePad(p_Index, gc);
 	}
 
 	// static
-	void GamePad::Close(PlayerIndex pIndex)
+	void GamePad::Close(PlayerIndex p_Index)
 	{
 		// Close the game controller.
-		SDL_GameControllerClose(sGamePads[pIndex]->GetMapping());
+		SDL_GameControllerClose(sGamePads[p_Index]->GetMapping());
 
 		// Free the GamePad memory.
-		delete sGamePads[pIndex];
+		delete sGamePads[p_Index];
 
 		// Remove from the map.
-		sGamePads.erase(sGamePads.find(pIndex));
+		sGamePads.erase(sGamePads.find(p_Index));
 	}
 
 	// static
-	void GamePad::Remap(PlayerIndex pIndex)
+	void GamePad::Remap(PlayerIndex p_Index)
 	{
 		// TODO
 	}
 
 	// static
-	void GamePad::SetButton(PlayerIndex pIndex, GamePadButton pButton, bool pState)
+	void GamePad::SetButton(PlayerIndex p_Index, GamePadButton p_Button, bool p_State)
 	{
-		sGamePads[pIndex]->SetButton(pButton, pState);
+		sGamePads[p_Index]->SetButton(p_Button, p_State);
 	}
 
 	// static
-	void GamePad::SetAxis(PlayerIndex pIndex, GamePadAxis pAxis, Sint16 pValue)
+	void GamePad::SetAxis(PlayerIndex p_Index, GamePadAxis p_Axis, Sint16 p_Value)
 	{
-		sGamePads[pIndex]->SetAxis(pAxis, pValue);
+		sGamePads[p_Index]->SetAxis(p_Axis, p_Value);
 	}
 }

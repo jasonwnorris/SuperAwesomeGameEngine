@@ -8,39 +8,39 @@
 
 namespace SAGE
 {
-	Surface::Surface(Uint32 pFlags, int pWidth, int pHeight, int pDepth, Uint32 pRedMask, Uint32 pGreenMask, Uint32 pBlueMask, Uint32 pAlphaMask)
+	Surface::Surface(Uint32 p_Flags, int p_Width, int p_Height, int p_Depth, Uint32 p_RedMask, Uint32 p_GreenMask, Uint32 p_BlueMask, Uint32 p_AlphaMask)
 	{
 		// Create the surface.
-		mSurface = SDL_CreateRGBSurface(pFlags, pWidth, pHeight, pDepth, pRedMask, pGreenMask, pBlueMask, pAlphaMask);
+		m_Surface = SDL_CreateRGBSurface(p_Flags, p_Width, p_Height, p_Depth, p_RedMask, p_GreenMask, p_BlueMask, p_AlphaMask);
 	}
 
-	Surface::Surface(void* pPixels, int pWidth, int pHeight, int pDepth, int pPitch, Uint32 pRedMask, Uint32 pGreenMask, Uint32 pBlueMask, Uint32 pAlphaMask)
+	Surface::Surface(void* p_Pixels, int p_Width, int p_Height, int p_Depth, int p_Pitch, Uint32 p_RedMask, Uint32 p_GreenMask, Uint32 p_BlueMask, Uint32 p_AlphaMask)
 	{
 		// Create the surface.
-		mSurface = SDL_CreateRGBSurfaceFrom(pPixels, pWidth, pHeight, pDepth, pPitch, pRedMask, pGreenMask, pBlueMask, pAlphaMask);
+		m_Surface = SDL_CreateRGBSurfaceFrom(p_Pixels, p_Width, p_Height, p_Depth, p_Pitch, p_RedMask, p_GreenMask, p_BlueMask, p_AlphaMask);
 	}
 
-	Surface::Surface(const std::string& pFilename)
+	Surface::Surface(const std::string& p_Filename)
 	{
 		// Create the surface from a loaded image file.
-		mSurface = IMG_Load(pFilename.c_str());
+		m_Surface = IMG_Load(p_Filename.c_str());
 	}
 
 	Surface::~Surface()
 	{
-		SDL_FreeSurface(mSurface);
+		SDL_FreeSurface(m_Surface);
 	}
 
 	SDL_Surface* Surface::GetC() const
 	{
 		// Return C structure.
-		return mSurface;
+		return m_Surface;
 	}
 
-	int Surface::SetColorKey(Uint32 pKey)
+	int Surface::SetColorKey(Uint32 p_Key)
 	{
 		// Set a color key on the surface.
-		int code = SDL_SetColorKey(mSurface, SDL_TRUE, pKey);
+		int code = SDL_SetColorKey(m_Surface, SDL_TRUE, p_Key);
 		if (code < 0)
 			Console::WriteLine("[Surface::SetColorKey] Failed to set color key to surface: %s", SDL_GetError());
 

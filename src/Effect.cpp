@@ -67,12 +67,12 @@ namespace SAGE
 		Finalize();
 	}
 
-	bool Effect::Create(BasicType pBasicType)
+	bool Effect::Create(BasicType p_BasicType)
 	{
 		if (!Initialize())
 			return false;
 
-		switch (pBasicType)
+		switch (p_BasicType)
 		{
 			case BasicType::PositionColor:
 				if (!Attach(PositionColorVertexSource, ShaderType::Vertex))
@@ -98,7 +98,7 @@ namespace SAGE
 
 	bool Effect::Initialize()
 	{
-		mProgram = glCreateProgram();
+		m_Program = glCreateProgram();
 
 		return true;
 	}
@@ -106,17 +106,17 @@ namespace SAGE
 	bool Effect::Finalize()
 	{
 		glUseProgram(0);
-		glDeleteProgram(mProgram);
+		glDeleteProgram(m_Program);
 
 		return true;
 	}
 
-	bool Effect::Attach(const std::string& pSource, ShaderType pType)
+	bool Effect::Attach(const std::string& p_Source, ShaderType p_Type)
 	{
-		const GLchar* source = pSource.c_str();
+		const GLchar* source = p_Source.c_str();
 
 		GLint status;
-		GLuint shader = glCreateShader(pType);
+		GLuint shader = glCreateShader(p_Type);
 		glShaderSource(shader, 1, &source, NULL);
 		glCompileShader(shader);
 		glGetShaderiv(shader, GL_COMPILE_STATUS, &status);
@@ -132,7 +132,7 @@ namespace SAGE
 		}
 		else
 		{
-			glAttachShader(mProgram, shader);
+			glAttachShader(m_Program, shader);
 		}
 
 		glDeleteShader(shader);
@@ -140,15 +140,15 @@ namespace SAGE
 		return true;
 	}
 
-	bool Effect::AttachFromFile(const std::string& pFilename, ShaderType pType)
+	bool Effect::AttachFromFile(const std::string& p_Filename, ShaderType p_Type)
 	{
-		std::ifstream file(pFilename);
+		std::ifstream file(p_Filename);
 		if (file.is_open())
 		{
 			std::string buffer((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
 			file.close();
 
-			return Attach(buffer, pType);
+			return Attach(buffer, p_Type);
 		}
 
 		return false;
@@ -158,14 +158,14 @@ namespace SAGE
 	{
 		GLint linked = GL_FALSE;
 
-		glLinkProgram(mProgram);
-		glGetProgramiv(mProgram, GL_LINK_STATUS, &linked);
+		glLinkProgram(m_Program);
+		glGetProgramiv(m_Program, GL_LINK_STATUS, &linked);
 		if (linked != GL_TRUE)
 		{
 			GLsizei length;
-			glGetProgramiv(mProgram, GL_INFO_LOG_LENGTH, &length);
+			glGetProgramiv(m_Program, GL_INFO_LOG_LENGTH, &length);
 			GLchar* message = new GLchar[length + 1];
-			glGetProgramInfoLog(mProgram, length, &length, message);
+			glGetProgramInfoLog(m_Program, length, &length, message);
 
 			SDL_Log("[Effect::Link] Shader linking failed: ", message);
 			delete [] message;
@@ -174,66 +174,66 @@ namespace SAGE
 		}
 
 		// TODO: Make matrix acquisition more dynamic.
-		mProjectionMatrixLocation = glGetUniformLocation(mProgram, "uProjectionMatrix");
-		mModelViewMatrixLocation = glGetUniformLocation(mProgram, "uModelViewMatrix");
+		m_ProjectionMatrixLocation = glGetUniformLocation(m_Program, "uProjectionMatrix");
+		m_ModelViewMatrixLocation = glGetUniformLocation(m_Program, "uModelViewMatrix");
 
 		return true;
 	}
 
 	void Effect::Use()
 	{
-		glUseProgram(mProgram);
+		glUseProgram(m_Program);
 	}
 
 	void Effect::PrintUniforms()
 	{
 		GLint total;
-		glGetProgramiv(mProgram, GL_ACTIVE_UNIFORMS, &total);
+		glGetProgramiv(m_Program, GL_ACTIVE_UNIFORMS, &total);
 		for (GLint i = 0; i < total; i++)
 		{
 			int number;
 			int length;
 			GLenum type = GL_ZERO;
 			char name[128];
-			glGetActiveUniform(mProgram, i, 127, &length, &number, &type, name);
+			glGetActiveUniform(m_Program, i, 127, &length, &number, &type, name);
 			name[length] = 0;
 
 			std::cout << "Uniform #" << (i + 1) << ": " << name << std::endl;
 		}
 	}
 
-	GLint Effect::GetUniform(const std::string& pName)
+	GLint Effect::GetUniform(const std::string& p_Name)
 	{
-		return glGetUniformLocation(mProgram, pName.c_str());
+		return glGetUniformLocation(m_Program, p_Name.c_str());
 	}
 
-	void Effect::SetProjection(const glm::mat4& pMatrix)
+	void Effect::SetProjection(const glm::mat4& p_Matrix)
 	{
-		glUniformMatrix4fv(mProjectionMatrixLocation, 1, GL_FALSE, glm::value_ptr(pMatrix));
+		glUniformMatrix4fv(m_ProjectionMatrixLocation, 1, GL_FALSE, glm::value_ptr(p_Matrix));
 	}
 
-	void Effect::SetModelView(const glm::mat4& pMatrix)
+	void Effect::SetModelView(const glm::mat4& p_Matrix)
 	{
-		glUniformMatrix4fv(mModelViewMatrixLocation, 1, GL_FALSE, glm::value_ptr(pMatrix));
+		glUniformMatrix4fv(m_ModelViewMatrixLocation, 1, GL_FALSE, glm::value_ptr(p_Matrix));
 	}
 
-	void Effect::SetUniform(const std::string& pName, int pValue)
+	void Effect::SetUniform(const std::string& p_Name, int p_Value)
 	{
-		if (mUniforms.find(pName) == mUniforms.end())
+		if (m_Uniforms.find(p_Name) == m_Uniforms.end())
 		{
-			mUniforms[pName] = glGetUniformLocation(mProgram, pName.c_str());
+			m_Uniforms[p_Name] = glGetUniformLocation(m_Program, p_Name.c_str());
 		}
 
-		glUniform1i(mUniforms[pName], pValue);
+		glUniform1i(m_Uniforms[p_Name], p_Value);
 	}
 
-	void Effect::SetUniform(const std::string& pName, float pValue)
+	void Effect::SetUniform(const std::string& p_Name, float p_Value)
 	{
-		if (mUniforms.find(pName) == mUniforms.end())
+		if (m_Uniforms.find(p_Name) == m_Uniforms.end())
 		{
-			mUniforms[pName] = glGetUniformLocation(mProgram, pName.c_str());
+			m_Uniforms[p_Name] = glGetUniformLocation(m_Program, p_Name.c_str());
 		}
 
-		glUniform1f(mUniforms[pName], pValue);
+		glUniform1f(m_Uniforms[p_Name], p_Value);
 	}
 }

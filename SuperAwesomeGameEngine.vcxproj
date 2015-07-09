@@ -91,6 +91,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="IGameComponent.cpp" />
     <ClCompile Include="src\AudioBuffer.cpp" />
     <ClCompile Include="src\AudioListener.cpp" />
     <ClCompile Include="src\AudioSource.cpp" />
@@ -122,6 +123,7 @@
     <ClCompile Include="src\Window.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="IGameComponent.hpp" />
     <ClInclude Include="include\SAGE\AudioBuffer.hpp" />
     <ClInclude Include="include\SAGE\AudioListener.hpp" />
     <ClInclude Include="include\SAGE\AudioSource.hpp" />

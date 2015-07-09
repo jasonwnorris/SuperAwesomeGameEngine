@@ -5,7 +5,7 @@
 
 namespace SAGE
 {
-	MenuScreen::MenuScreen(ScreenManager* pManager) : Screen(pManager)
+	MenuScreen::MenuScreen(ScreenManager* p_Manager) : Screen(p_Manager)
 	{
 	}
 
@@ -13,12 +13,12 @@ namespace SAGE
 	{
 	}
 
-	int MenuScreen::Update(float pDeltaTime)
+	int MenuScreen::Update(float p_DeltaTime)
 	{
 		return 0;
 	}
 
-	int MenuScreen::Render(SpriteBatch& pSpriteBatch)
+	int MenuScreen::Render(SpriteBatch& p_SpriteBatch)
 	{
 		return 0;
 	}

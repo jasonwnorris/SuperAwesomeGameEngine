@@ -24,11 +24,11 @@ namespace SAGE
 			void Resume();
 
 		private:
-			Uint32 mStartTicks;
-			Uint32 mLastTicks;
-			Uint32 mPausedTicks;
-			bool mStarted;
-			bool mPaused;
+			Uint32 m_StartTicks;
+			Uint32 m_LastTicks;
+			Uint32 m_PausedTicks;
+			bool m_Started;
+			bool m_Paused;
 	};
 }
 

@@ -14,14 +14,14 @@ namespace SAGE
 	class MenuScreen : public Screen
 	{
 		public:
-			MenuScreen(ScreenManager* pManager);
+			MenuScreen(ScreenManager* p_Manager);
 			virtual ~MenuScreen();
 
-			virtual int Update(float pDeltaTime) override;
-			virtual int Render(SpriteBatch& pSpriteBatch) override;
+			virtual int Update(float p_DeltaTime) override;
+			virtual int Render(SpriteBatch& p_SpriteBatch) override;
 
 		private:
-			std::vector<std::string> mItems;
+			std::vector<std::string> m_Items;
 	};
 }
 

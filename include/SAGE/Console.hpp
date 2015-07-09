@@ -11,10 +11,10 @@ namespace SAGE
 	class Console
 	{
 		public:
-			static void Write(const char* pText, ...);
-			static void WriteLine(const char* pText, ...);
-			static void Write(const std::string& pText);
-			static void WriteLine(const std::string& pText);
+			static void Write(const char* p_Text, ...);
+			static void WriteLine(const char* p_Text, ...);
+			static void Write(const std::string& p_Text);
+			static void WriteLine(const std::string& p_Text);
 			static void WriteLine();
 
 		private:
