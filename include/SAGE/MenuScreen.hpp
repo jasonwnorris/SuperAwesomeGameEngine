@@ -3,7 +3,7 @@
 #ifndef __SAGE_MENUSCREEN_HPP__
 #define __SAGE_MENUSCREEN_HPP__
 
-// Project Includes
+// SAGE Includes
 #include <SAGE\Screen.hpp>
 // STL Includes
 #include <string>

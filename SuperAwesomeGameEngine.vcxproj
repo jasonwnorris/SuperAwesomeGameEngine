@@ -41,15 +41,15 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>C:\Libraries\SDL2_2_0_3\include;C:\Libraries\OpenAL_1_16_1\include;C:\Libraries\GLEW_1_11_0\include;C:\Libraries\GLM_0_9_5_4\include;$(SolutionDir)\..\HybridGameFramework\include;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\Libraries\SDL2_2_0_3\lib\x86;C:\Libraries\OpenAL_1_16_1\libs\Win32;C:\Libraries\GLEW_1_11_0\lib\Release\Win32;$(SolutionDir)\..\HybridGameFramework\lib\Debug;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\Libraries\SDL2_2_0_3\include;C:\Libraries\OpenAL_1_16_0\include;C:\Libraries\GLEW_1_11_0\include;C:\Libraries\GLM_0_9_5_4\include;C:\Libraries\jsoncpp_0_5_0\include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Libraries\SDL2_2_0_3\lib\x86;C:\Libraries\OpenAL_1_16_0\libs\Win32;C:\Libraries\GLEW_1_11_0\lib\Release\Win32;C:\Libraries\jsoncpp_0_5_0\lib\Debug;$(LibraryPath)</LibraryPath>
     <OutDir>$(SolutionDir)lib\$(Configuration)\</OutDir>
     <IntDir>$(SolutionDir)bin\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>C:\Libraries\SDL2_2_0_3\include;C:\Libraries\OpenAL_1_16_1\include;C:\Libraries\GLEW_1_11_0\include;C:\Libraries\GLM_0_9_5_4\include;$(SolutionDir)\..\HybridGameFramework\include;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\Libraries\SDL2_2_0_3\lib\x86;C:\Libraries\OpenAL_1_16_1\libs\Win32;C:\Libraries\GLEW_1_11_0\lib\Release\Win32;$(SolutionDir)\..\HybridGameFramework\lib\Release;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\Libraries\SDL2_2_0_3\include;C:\Libraries\OpenAL_1_16_0\include;C:\Libraries\GLEW_1_11_0\include;C:\Libraries\GLM_0_9_5_4\include;C:\Libraries\jsoncpp_0_5_0\include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Libraries\SDL2_2_0_3\lib\x86;C:\Libraries\OpenAL_1_16_0\libs\Win32;C:\Libraries\GLEW_1_11_0\lib\Release\Win32;C:\Libraries\jsoncpp_0_5_0\lib\Release;$(LibraryPath)</LibraryPath>
     <OutDir>$(SolutionDir)lib\$(Configuration)\</OutDir>
     <IntDir>$(SolutionDir)bin\$(Configuration)\</IntDir>
   </PropertyGroup>
@@ -68,7 +68,6 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <Lib>
-      <AdditionalDependencies>glew32.lib;HybridGameFramework.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreSpecificDefaultLibraries>msvcrt.lib;libcmt.lib</IgnoreSpecificDefaultLibraries>
     </Lib>
   </ItemDefinitionGroup>
@@ -92,26 +91,69 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\AudioBuffer.cpp" />
+    <ClCompile Include="src\AudioListener.cpp" />
+    <ClCompile Include="src\AudioSource.cpp" />
     <ClCompile Include="src\Camera2D.cpp" />
+    <ClCompile Include="src\Color.cpp" />
+    <ClCompile Include="src\Console.cpp" />
+    <ClCompile Include="src\Effect.cpp" />
+    <ClCompile Include="src\Events.cpp" />
+    <ClCompile Include="src\GamePad.cpp" />
     <ClCompile Include="src\GeometryBatch.cpp" />
+    <ClCompile Include="src\Keyboard.cpp" />
+    <ClCompile Include="src\MathUtil.cpp" />
+    <ClCompile Include="src\Matrix3.cpp" />
+    <ClCompile Include="src\Matrix4.cpp" />
     <ClCompile Include="src\MenuScreen.cpp" />
+    <ClCompile Include="src\Mouse.cpp" />
+    <ClCompile Include="src\Quaternion.cpp" />
+    <ClCompile Include="src\Rectangle.cpp" />
     <ClCompile Include="src\Screen.cpp" />
     <ClCompile Include="src\Game.cpp" />
     <ClCompile Include="src\ScreenManager.cpp" />
     <ClCompile Include="src\SpriteBatch.cpp" />
     <ClCompile Include="src\SpriteFont.cpp" />
+    <ClCompile Include="src\Surface.cpp" />
+    <ClCompile Include="src\Texture.cpp" />
+    <ClCompile Include="src\Timer.cpp" />
+    <ClCompile Include="src\Vector2.cpp" />
+    <ClCompile Include="src\Vector3.cpp" />
+    <ClCompile Include="src\Window.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\SAGE\AudioBuffer.hpp" />
+    <ClInclude Include="include\SAGE\AudioListener.hpp" />
+    <ClInclude Include="include\SAGE\AudioSource.hpp" />
     <ClInclude Include="include\SAGE\Camera2D.hpp" />
+    <ClInclude Include="include\SAGE\Color.hpp" />
+    <ClInclude Include="include\SAGE\Console.hpp" />
+    <ClInclude Include="include\SAGE\Delegate.hpp" />
+    <ClInclude Include="include\SAGE\Effect.hpp" />
+    <ClInclude Include="include\SAGE\Events.hpp" />
     <ClInclude Include="include\SAGE\Game.hpp" />
+    <ClInclude Include="include\SAGE\GamePad.hpp" />
     <ClInclude Include="include\SAGE\GeometryBatch.hpp" />
+    <ClInclude Include="include\SAGE\Keyboard.hpp" />
+    <ClInclude Include="include\SAGE\MathUtil.hpp" />
+    <ClInclude Include="include\SAGE\Matrix3.hpp" />
+    <ClInclude Include="include\SAGE\Matrix4.hpp" />
     <ClInclude Include="include\SAGE\MenuScreen.hpp" />
+    <ClInclude Include="include\SAGE\Mouse.hpp" />
+    <ClInclude Include="include\SAGE\Quaternion.hpp" />
+    <ClInclude Include="include\SAGE\Rectangle.hpp" />
     <ClInclude Include="include\SAGE\Screen.hpp" />
     <ClInclude Include="include\SAGE\ScreenManager.hpp" />
     <ClInclude Include="include\SAGE\SpriteBatch.hpp" />
     <ClInclude Include="include\SAGE\SpriteFont.hpp" />
+    <ClInclude Include="include\SAGE\Surface.hpp" />
+    <ClInclude Include="include\SAGE\Texture.hpp" />
+    <ClInclude Include="include\SAGE\Timer.hpp" />
+    <ClInclude Include="include\SAGE\Vector2.hpp" />
+    <ClInclude Include="include\SAGE\Vector3.hpp" />
     <ClInclude Include="include\SAGE\VertexDefinitions.hpp" />
     <ClInclude Include="include\SAGE\Orientation.hpp" />
+    <ClInclude Include="include\SAGE\Window.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

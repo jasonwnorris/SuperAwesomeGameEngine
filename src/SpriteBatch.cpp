@@ -1,6 +1,6 @@
 // SpriteBatch.cpp
 
-// GL Includes
+// OpenGL Includes
 #include <gl\glew.h>
 // SAGE Includes
 #include <SAGE\SpriteBatch.hpp>
@@ -98,7 +98,7 @@ namespace SAGE
 		return true;
 	}
 
-	bool SpriteBatch::Begin(HGF::Effect& pEffect, const Camera2D& pCamera, SortMode pSortMode, BlendMode pBlendMode, RasterizerState pRasterizerState)
+	bool SpriteBatch::Begin(Effect& pEffect, const Camera2D& pCamera, SortMode pSortMode, BlendMode pBlendMode, RasterizerState pRasterizerState)
 	{
 		if (mWithinDrawPair)
 		{
@@ -121,25 +121,25 @@ namespace SAGE
 		return true;
 	}
 
-	bool SpriteBatch::Draw(const HGF::Texture& pTexture, const HGF::Vector2& pPosition, const HGF::Vector2& pDimensions, const HGF::Rectangle& pSourceRectangle, const HGF::Color& pColor, const HGF::Vector2& pOrigin, float pRotation, const HGF::Vector2& pScale, Orientation pOrientation, float pDepth)
+	bool SpriteBatch::Draw(const Texture& pTexture, const Vector2& pPosition, const Vector2& pDimensions, const Rectangle& pSourceRectangle, const Color& pColor, const Vector2& pOrigin, float pRotation, const Vector2& pScale, Orientation pOrientation, float pDepth)
 	{
 		// TODO: Factor in pDimensions.
 		return Draw(pTexture, pPosition, pSourceRectangle, pColor, pOrigin, pRotation, pScale, pOrientation, pDepth);
 	}
 	
-	bool SpriteBatch::Draw(const HGF::Texture& pTexture, const HGF::Vector2& pPosition, const HGF::Rectangle& pDestinationRectangle, const HGF::Rectangle& pSourceRectangle, const HGF::Color& pColor, const HGF::Vector2& pOrigin, float pRotation, const HGF::Vector2& pScale, Orientation pOrientation, float pDepth)
+	bool SpriteBatch::Draw(const Texture& pTexture, const Vector2& pPosition, const Rectangle& pDestinationRectangle, const Rectangle& pSourceRectangle, const Color& pColor, const Vector2& pOrigin, float pRotation, const Vector2& pScale, Orientation pOrientation, float pDepth)
 	{
 		// TODO: Factor in pDestinationRectangle.
 		return Draw(pTexture, pPosition, pSourceRectangle, pColor, pOrigin, pRotation, pScale, pOrientation, pDepth);
 	}
 	
-	bool SpriteBatch::Draw(const HGF::Texture& pTexture, const HGF::Rectangle& pDestinationRectangle, const HGF::Rectangle& pSourceRectangle, const HGF::Color& pColor, const HGF::Vector2& pOrigin, float pRotation, const HGF::Vector2& pScale, Orientation pOrientation, float pDepth)
+	bool SpriteBatch::Draw(const Texture& pTexture, const Rectangle& pDestinationRectangle, const Rectangle& pSourceRectangle, const Color& pColor, const Vector2& pOrigin, float pRotation, const Vector2& pScale, Orientation pOrientation, float pDepth)
 	{
 		// TODO: Factor in pDestinationRectangle BETTERLY.
-		return Draw(pTexture, HGF::Vector2(pDestinationRectangle.X, pDestinationRectangle.Y), pSourceRectangle, pColor, pOrigin, pRotation, pScale, pOrientation, pDepth);
+		return Draw(pTexture, Vector2(pDestinationRectangle.X, pDestinationRectangle.Y), pSourceRectangle, pColor, pOrigin, pRotation, pScale, pOrientation, pDepth);
 	}
 
-	bool SpriteBatch::Draw(const HGF::Texture& pTexture, const HGF::Vector2& pPosition, const HGF::Rectangle& pSourceRectangle, const HGF::Color& pColor, const HGF::Vector2& pOrigin, float pRotation, const HGF::Vector2& pScale, Orientation pOrientation, float pDepth)
+	bool SpriteBatch::Draw(const Texture& pTexture, const Vector2& pPosition, const Rectangle& pSourceRectangle, const Color& pColor, const Vector2& pOrigin, float pRotation, const Vector2& pScale, Orientation pOrientation, float pDepth)
 	{
 		if (!mWithinDrawPair)
 		{
@@ -149,18 +149,18 @@ namespace SAGE
 
 		int texWidth = pTexture.GetWidth();
 		int texHeight = pTexture.GetHeight();
-		HGF::Vector2 correction(1.0f / (float)texWidth, 1.0f / (float)texHeight);
+		Vector2 correction(1.0f / (float)texWidth, 1.0f / (float)texHeight);
 
-		HGF::Rectangle rect;
-		if (pSourceRectangle != HGF::Rectangle::Empty)
+		Rectangle rect;
+		if (pSourceRectangle != Rectangle::Empty)
 			rect = pSourceRectangle;
 		else
-			rect = HGF::Rectangle(0, 0, texWidth, texHeight);
+			rect = Rectangle(0, 0, texWidth, texHeight);
 
-		HGF::Vector2 size(rect.Width * pScale.X, rect.Height * pScale.Y);
-		HGF::Vector2 origin(-pOrigin.X * pScale.X, -pOrigin.Y * pScale.Y);
-		HGF::Vector2 texCoordTL(rect.X / (float)texWidth + correction.X, rect.Y / (float)texHeight + correction.X);
-		HGF::Vector2 texCoordBR((rect.X + rect.Width) / (float)texWidth - correction.X, (rect.Y + rect.Height) / (float)texHeight - correction.Y);
+		Vector2 size(rect.Width * pScale.X, rect.Height * pScale.Y);
+		Vector2 origin(-pOrigin.X * pScale.X, -pOrigin.Y * pScale.Y);
+		Vector2 texCoordTL(rect.X / (float)texWidth + correction.X, rect.Y / (float)texHeight + correction.X);
+		Vector2 texCoordBR((rect.X + rect.Width) / (float)texWidth - correction.X, (rect.Y + rect.Height) / (float)texHeight - correction.Y);
 
 		// Calculate cos/sin for rotation in radians.
 		float cos = cosf(pRotation * (float)M_PI / 180.0f);
@@ -215,12 +215,12 @@ namespace SAGE
 		return true;
 	}
 
-	bool SpriteBatch::DrawString(const SAGE::SpriteFont& pSpriteFont, const std::string& pString, const HGF::Vector2& pPosition, const HGF::Color& pColor, float pDepth)
+	bool SpriteBatch::DrawString(const SAGE::SpriteFont& pSpriteFont, const std::string& pString, const Vector2& pPosition, const Color& pColor, float pDepth)
 	{
-		return DrawString(pSpriteFont, pString, pPosition, pColor, HGF::Vector2::Zero, 0.0f, HGF::Vector2::One, SAGE::Orientation::None, pDepth);
+		return DrawString(pSpriteFont, pString, pPosition, pColor, Vector2::Zero, 0.0f, Vector2::One, SAGE::Orientation::None, pDepth);
 	}
 
-	bool SpriteBatch::DrawString(const SAGE::SpriteFont& pSpriteFont, const std::string& pString, const HGF::Vector2& pPosition, const HGF::Color& pColor, const HGF::Vector2& pOrigin, float pRotation, const HGF::Vector2& pScale, Orientation pOrientation, float pDepth)
+	bool SpriteBatch::DrawString(const SAGE::SpriteFont& pSpriteFont, const std::string& pString, const Vector2& pPosition, const Color& pColor, const Vector2& pOrigin, float pRotation, const Vector2& pScale, Orientation pOrientation, float pDepth)
 	{
 		if (!mWithinDrawPair)
 		{
@@ -228,7 +228,7 @@ namespace SAGE
 			return false;
 		}
 
-		const HGF::Texture& texture = pSpriteFont.GetTexture();
+		const Texture& texture = pSpriteFont.GetTexture();
 
 		int texWidth = texture.GetWidth();
 		int texHeight = texture.GetHeight();
@@ -236,10 +236,10 @@ namespace SAGE
 		float size = pSpriteFont.GetSize();
 		float spacing = pSpriteFont.GetSpacing();
 
-		HGF::Vector2 correction(1.0f / (float)texWidth, 1.0f / (float)texHeight);
-		HGF::Vector2 origin(-pOrigin.X * pScale.X, -pOrigin.Y * pScale.Y);
+		Vector2 correction(1.0f / (float)texWidth, 1.0f / (float)texHeight);
+		Vector2 origin(-pOrigin.X * pScale.X, -pOrigin.Y * pScale.Y);
 
-		HGF::Vector2 offset = HGF::Vector2::Zero;
+		Vector2 offset = Vector2::Zero;
 
 		for (char glyph : pString)
 		{
@@ -250,11 +250,11 @@ namespace SAGE
 			}
 			else
 			{
-				HGF::Rectangle rect = pSpriteFont.GetGlyphBounds(glyph);
+				Rectangle rect = pSpriteFont.GetGlyphBounds(glyph);
 
-				HGF::Vector2 size(rect.Width * pScale.X, rect.Height * pScale.Y);
-				HGF::Vector2 texCoordTL(rect.X / (float)texWidth + correction.X, rect.Y / (float)texHeight + correction.X);
-				HGF::Vector2 texCoordBR((rect.X + rect.Width) / (float)texWidth - correction.X, (rect.Y + rect.Height) / (float)texHeight - correction.Y);
+				Vector2 size(rect.Width * pScale.X, rect.Height * pScale.Y);
+				Vector2 texCoordTL(rect.X / (float)texWidth + correction.X, rect.Y / (float)texHeight + correction.X);
+				Vector2 texCoordBR((rect.X + rect.Width) / (float)texWidth - correction.X, (rect.Y + rect.Height) / (float)texHeight - correction.Y);
 
 				SpriteBatchItem& item = mBatchItemList[mItemCount++];
 				item.TextureID = texture.GetID();
@@ -461,7 +461,7 @@ namespace SAGE
 		mFlushCount++;
 	}
 
-	void SpriteBatch::RotateAbout(const HGF::Vector2& pPosition, float pRotation, VertexVector2& pVertex)
+	void SpriteBatch::RotateAbout(const Vector2& pPosition, float pRotation, VertexVector2& pVertex)
 	{
 		float cos = cosf(pRotation);
 		float sin = sinf(pRotation);
@@ -476,7 +476,7 @@ namespace SAGE
 		pVertex.Y = rotY + pPosition.Y;
 	}
 
-	void SpriteBatch::FlipAbout(const HGF::Vector2& pPosition, Orientation pOrientation, VertexVector2& pVertex)
+	void SpriteBatch::FlipAbout(const Vector2& pPosition, Orientation pOrientation, VertexVector2& pVertex)
 	{
 		// Flip texture coordinates for orientation.
 		if ((pOrientation & Orientation::FlipHorizontal) == Orientation::FlipHorizontal)

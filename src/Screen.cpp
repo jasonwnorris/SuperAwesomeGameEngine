@@ -1,6 +1,6 @@
 // Screen.cpp
 
-// Project Includes
+// SAGE Includes
 #include <SAGE\Screen.hpp>
 
 namespace SAGE

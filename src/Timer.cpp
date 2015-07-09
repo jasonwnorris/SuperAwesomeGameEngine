@@ -1,0 +1,84 @@
+// Timer.cpp
+
+// SAGE Includes
+#include <SAGE\Timer.hpp>
+
+namespace SAGE
+{
+	Timer::Timer()
+	{
+		Stop();
+	}
+
+	Timer::~Timer()
+	{
+	}
+
+	float Timer::GetDeltaTime()
+	{
+		if (!mStarted || mPaused)
+			return 0.0f;
+
+		Uint32 current = SDL_GetTicks();
+		Uint32 difference = current - mLastTicks;
+		mLastTicks = current;
+
+		return (float)(difference / 1000.0f);
+	}
+
+	float Timer::GetElapsedTime() const
+	{
+		if (!mStarted)
+			return 0.0f;
+
+		if (mPaused)
+			return (float)mPausedTicks;
+		else
+			return (float)((SDL_GetTicks() - mStartTicks) / 1000.0f);
+	}
+
+	int Timer::GetTicks() const
+	{
+		if (!mStarted)
+			return 0;
+
+		if (mPaused)
+			return mPausedTicks;
+		else
+			return (SDL_GetTicks() - mStartTicks);
+	}
+
+	void Timer::Start()
+	{
+		mStartTicks = SDL_GetTicks();
+		mLastTicks = mStartTicks;
+		mPausedTicks = 0;
+		mStarted = true;
+		mPaused = false;
+	}
+
+	void Timer::Stop()
+	{
+		mStarted = false;
+		mPaused = false;
+	}
+
+	void Timer::Pause()
+	{
+		if (mStarted && !mPaused)
+		{
+			mPausedTicks = SDL_GetTicks() - mStartTicks;
+			mPaused = true;
+		}
+	}
+
+	void Timer::Resume()
+	{
+		if (mPaused)
+		{
+			mStartTicks = SDL_GetTicks() - mPausedTicks;
+			mPausedTicks = 0;
+			mPaused = false;
+		}
+	}
+}

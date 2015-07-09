@@ -8,8 +8,8 @@
 #include <glm\glm.hpp>
 #include <glm\gtx\transform.hpp>
 #include <glm\gtc\type_ptr.hpp>
-// HGF Includes
-#include <HGF\Vector2.hpp>
+// SAGE Includes
+#include <SAGE\Vector2.hpp>
 
 namespace SAGE
 {
@@ -27,36 +27,36 @@ namespace SAGE
 
 			static const Camera2D DefaultCamera;
 
-			HGF::Vector2 GetPosition() const;
+			Vector2 GetPosition() const;
 			float GetRotation() const;
-			HGF::Vector2 GetScale() const;
+			Vector2 GetScale() const;
 			int GetWidth() const;
 			int GetHeight() const;
 			glm::mat4 GetProjectionMatrix(View pView = View::Orthographic) const;
 			glm::mat4 GetModelViewMatrix() const;
 
-			void SetPosition(const HGF::Vector2& pPosition);
+			void SetPosition(const Vector2& pPosition);
 			void SetRotation(float pRotation);
-			void SetScale(const HGF::Vector2& pScale);
-			void SetTransformation(const HGF::Vector2& pPosition, float pRotation, const HGF::Vector2& pScale);
+			void SetScale(const Vector2& pScale);
+			void SetTransformation(const Vector2& pPosition, float pRotation, const Vector2& pScale);
 			void SetWidth(int pWidth);
 			void SetHeight(int pHeight);
 			void SetDimensions(int pWidth, int pHeight);
 
-			void Translate(const HGF::Vector2& pTranslation);
+			void Translate(const Vector2& pTranslation);
 			void Rotate(float pRotation);
-			void Scale(const HGF::Vector2& pScale);
+			void Scale(const Vector2& pScale);
 
-			void ScreenToWorld(const HGF::Vector2& pScreenPosition, HGF::Vector2& pWorldPosition) const;
-			void WorldToScreen(const HGF::Vector2& pWorldPosition, HGF::Vector2& pScreenPosition) const;
+			void ScreenToWorld(const Vector2& pScreenPosition, Vector2& pWorldPosition) const;
+			void WorldToScreen(const Vector2& pWorldPosition, Vector2& pScreenPosition) const;
 
 		private:
 			static int DefaultWidth;
 			static int DefaultHeight;
 
-			HGF::Vector2 mPosition;
+			Vector2 mPosition;
 			float mRotation;
-			HGF::Vector2 mScale;
+			Vector2 mScale;
 			int mWidth;
 			int mHeight;
 	};

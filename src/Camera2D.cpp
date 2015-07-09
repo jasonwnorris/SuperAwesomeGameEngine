@@ -2,9 +2,9 @@
 
 // SAGE Includes
 #include <SAGE\Camera2D.hpp>
-// HGF Includes
-#include <HGF\MathUtil.hpp>
-#include <HGF\Matrix4.hpp>
+// SAGE Includes
+#include <SAGE\MathUtil.hpp>
+#include <SAGE\Matrix4.hpp>
 
 namespace SAGE
 {
@@ -14,9 +14,9 @@ namespace SAGE
 
 	Camera2D::Camera2D()
 	{
-		mPosition = HGF::Vector2::Zero;
+		mPosition = Vector2::Zero;
 		mRotation = 0.0f;
-		mScale = HGF::Vector2::One;
+		mScale = Vector2::One;
 		mWidth = DefaultWidth;
 		mHeight = DefaultHeight;
 	}
@@ -25,7 +25,7 @@ namespace SAGE
 	{
 	}
 
-	HGF::Vector2 Camera2D::GetPosition() const
+	Vector2 Camera2D::GetPosition() const
 	{
 		return mPosition;
 	}
@@ -35,7 +35,7 @@ namespace SAGE
 		return mRotation;
 	}
 
-	HGF::Vector2 Camera2D::GetScale() const
+	Vector2 Camera2D::GetScale() const
 	{
 		return mScale;
 	}
@@ -73,7 +73,7 @@ namespace SAGE
 		return modelViewMatrix;
 	}
 
-	void Camera2D::SetPosition(const HGF::Vector2& pPosition)
+	void Camera2D::SetPosition(const Vector2& pPosition)
 	{
 		mPosition = pPosition;
 	}
@@ -83,12 +83,12 @@ namespace SAGE
 		mRotation = pRotation;
 	}
 
-	void Camera2D::SetScale(const HGF::Vector2& pScale)
+	void Camera2D::SetScale(const Vector2& pScale)
 	{
 		mScale = pScale;
 	}
 
-	void Camera2D::SetTransformation(const HGF::Vector2& pPosition, float pRotation, const HGF::Vector2& pScale)
+	void Camera2D::SetTransformation(const Vector2& pPosition, float pRotation, const Vector2& pScale)
 	{
 		mPosition = pPosition;
 		mRotation = pRotation;
@@ -111,7 +111,7 @@ namespace SAGE
 		mHeight = pHeight;
 	}
 
-	void Camera2D::Translate(const HGF::Vector2& pTranslation)
+	void Camera2D::Translate(const Vector2& pTranslation)
 	{
 		mPosition += pTranslation;
 	}
@@ -121,16 +121,16 @@ namespace SAGE
 		mRotation += pRotation;
 	}
 
-	void Camera2D::Scale(const HGF::Vector2& pScale)
+	void Camera2D::Scale(const Vector2& pScale)
 	{
 		mScale += pScale;
 	}
 
-	void Camera2D::ScreenToWorld(const HGF::Vector2& pScreenPosition, HGF::Vector2& pWorldPosition) const
+	void Camera2D::ScreenToWorld(const Vector2& pScreenPosition, Vector2& pWorldPosition) const
 	{
 	}
 
-	void Camera2D::WorldToScreen(const HGF::Vector2& pWorldPosition, HGF::Vector2& pScreenPosition) const
+	void Camera2D::WorldToScreen(const Vector2& pWorldPosition, Vector2& pScreenPosition) const
 	{
 	}
 }

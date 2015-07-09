@@ -9,67 +9,234 @@
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
       <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
     </Filter>
-    <Filter Include="Resource Files">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    <Filter Include="Header Files\Audio">
+      <UniqueIdentifier>{dcd02be3-59b3-42d2-bc4e-f8d5781b510a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Math">
+      <UniqueIdentifier>{bcd7f5a7-c605-4e1a-85d3-32070c869e45}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Graphics">
+      <UniqueIdentifier>{dc4baa7a-5f01-4cd9-af8a-4378a76be5f0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\UI">
+      <UniqueIdentifier>{1c40c946-b246-487d-b87c-7712f064c40f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Input">
+      <UniqueIdentifier>{4f877283-cac7-49ca-9c8b-f17d70016231}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Utility">
+      <UniqueIdentifier>{cfc4434b-739b-4b06-8dd3-75a613899eac}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Core">
+      <UniqueIdentifier>{322561ec-05ab-4c28-96f1-24f7b5f174bf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Audio">
+      <UniqueIdentifier>{dd2aae2e-90e4-4bcb-bc4b-7e5141b090f7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Graphics">
+      <UniqueIdentifier>{74c9fe06-fca4-4d51-b246-cb498a7f25f2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Input">
+      <UniqueIdentifier>{714f5459-b88b-43b5-b874-8d794d7ca01b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Core">
+      <UniqueIdentifier>{395de6e9-e2af-4aa6-a079-cdfcdf288f16}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Utility">
+      <UniqueIdentifier>{e392fca3-6f2d-4142-ad83-cf45d9370205}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\UI">
+      <UniqueIdentifier>{be6dc3c4-3ac5-4498-b690-f387d237a55f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Math">
+      <UniqueIdentifier>{306cee85-6358-4fda-8674-e994106c92df}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\Game.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="src\AudioBuffer.cpp">
+      <Filter>Source Files\Audio</Filter>
     </ClCompile>
-    <ClCompile Include="src\Screen.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="src\AudioListener.cpp">
+      <Filter>Source Files\Audio</Filter>
     </ClCompile>
-    <ClCompile Include="src\MenuScreen.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="src\AudioSource.cpp">
+      <Filter>Source Files\Audio</Filter>
     </ClCompile>
     <ClCompile Include="src\Camera2D.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Core</Filter>
     </ClCompile>
-    <ClCompile Include="src\GeometryBatch.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="src\Game.cpp">
+      <Filter>Source Files\Core</Filter>
     </ClCompile>
-    <ClCompile Include="src\SpriteBatch.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="src\Window.cpp">
+      <Filter>Source Files\Core</Filter>
     </ClCompile>
-    <ClCompile Include="src\SpriteFont.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="src\Console.cpp">
+      <Filter>Source Files\Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Color.cpp">
+      <Filter>Source Files\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GamePad.cpp">
+      <Filter>Source Files\Input</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Keyboard.cpp">
+      <Filter>Source Files\Input</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Mouse.cpp">
+      <Filter>Source Files\Input</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Events.cpp">
+      <Filter>Source Files\Input</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Effect.cpp">
+      <Filter>Source Files\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Vector3.cpp">
+      <Filter>Source Files\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Vector2.cpp">
+      <Filter>Source Files\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Rectangle.cpp">
+      <Filter>Source Files\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Quaternion.cpp">
+      <Filter>Source Files\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Matrix4.cpp">
+      <Filter>Source Files\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Matrix3.cpp">
+      <Filter>Source Files\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="src\MathUtil.cpp">
+      <Filter>Source Files\Math</Filter>
     </ClCompile>
     <ClCompile Include="src\ScreenManager.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Screen.cpp">
+      <Filter>Source Files\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="src\MenuScreen.cpp">
+      <Filter>Source Files\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Timer.cpp">
+      <Filter>Source Files\Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Texture.cpp">
+      <Filter>Source Files\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GeometryBatch.cpp">
+      <Filter>Source Files\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SpriteBatch.cpp">
+      <Filter>Source Files\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SpriteFont.cpp">
+      <Filter>Source Files\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Surface.cpp">
+      <Filter>Source Files\Graphics</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\SAGE\Game.hpp">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="include\SAGE\AudioBuffer.hpp">
+      <Filter>Header Files\Audio</Filter>
     </ClInclude>
-    <ClInclude Include="include\SAGE\Screen.hpp">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="include\SAGE\AudioListener.hpp">
+      <Filter>Header Files\Audio</Filter>
     </ClInclude>
-    <ClInclude Include="include\SAGE\MenuScreen.hpp">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="include\SAGE\AudioSource.hpp">
+      <Filter>Header Files\Audio</Filter>
     </ClInclude>
-    <ClInclude Include="include\SAGE\Camera2D.hpp">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="include\SAGE\Color.hpp">
+      <Filter>Header Files\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="include\SAGE\Effect.hpp">
+      <Filter>Header Files\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="include\SAGE\GeometryBatch.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\SAGE\SpriteBatch.hpp">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="include\SAGE\VertexDefinitions.hpp">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="include\SAGE\Orientation.hpp">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="include\SAGE\SpriteBatch.hpp">
+      <Filter>Header Files\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="include\SAGE\SpriteFont.hpp">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="include\SAGE\Surface.hpp">
+      <Filter>Header Files\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="include\SAGE\Texture.hpp">
+      <Filter>Header Files\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="include\SAGE\GamePad.hpp">
+      <Filter>Header Files\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="include\SAGE\Keyboard.hpp">
+      <Filter>Header Files\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="include\SAGE\Mouse.hpp">
+      <Filter>Header Files\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="include\SAGE\Events.hpp">
+      <Filter>Header Files\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="include\SAGE\Console.hpp">
+      <Filter>Header Files\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="include\SAGE\Delegate.hpp">
+      <Filter>Header Files\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="include\SAGE\Vector2.hpp">
+      <Filter>Header Files\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="include\SAGE\Vector3.hpp">
+      <Filter>Header Files\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="include\SAGE\Rectangle.hpp">
+      <Filter>Header Files\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="include\SAGE\Quaternion.hpp">
+      <Filter>Header Files\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="include\SAGE\Matrix4.hpp">
+      <Filter>Header Files\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="include\SAGE\Matrix3.hpp">
+      <Filter>Header Files\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="include\SAGE\MathUtil.hpp">
+      <Filter>Header Files\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="include\SAGE\MenuScreen.hpp">
+      <Filter>Header Files\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="include\SAGE\Screen.hpp">
+      <Filter>Header Files\UI</Filter>
     </ClInclude>
     <ClInclude Include="include\SAGE\ScreenManager.hpp">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="include\SAGE\Timer.hpp">
+      <Filter>Header Files\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="include\SAGE\Game.hpp">
+      <Filter>Header Files\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="include\SAGE\Window.hpp">
+      <Filter>Header Files\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="include\SAGE\Camera2D.hpp">
+      <Filter>Header Files\Core</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

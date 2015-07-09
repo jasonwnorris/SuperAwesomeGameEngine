@@ -8,12 +8,12 @@
 #include <SAGE\Orientation.hpp>
 #include <SAGE\SpriteFont.hpp>
 #include <SAGE\VertexDefinitions.hpp>
-// HGF Includes
-#include <HGF\Color.hpp>
-#include <HGF\Effect.hpp>
-#include <HGF\Rectangle.hpp>
-#include <HGF\Texture.hpp>
-#include <HGF\Vector2.hpp>
+// SAGE Includes
+#include <SAGE\Color.hpp>
+#include <SAGE\Effect.hpp>
+#include <SAGE\Rectangle.hpp>
+#include <SAGE\Texture.hpp>
+#include <SAGE\Vector2.hpp>
 // STL Includes
 #include <vector>
 
@@ -60,15 +60,15 @@ namespace SAGE
 			bool Initialize();
 			bool Finalize();
 
-			bool Begin(HGF::Effect& pEffect, const Camera2D& pCamera = Camera2D::DefaultCamera, SortMode pSortMode = SortMode::None, BlendMode pBlendMode = BlendMode::None, RasterizerState pRasterizerState = RasterizerState::CullCounterClockwise);
+			bool Begin(Effect& pEffect, const Camera2D& pCamera = Camera2D::DefaultCamera, SortMode pSortMode = SortMode::None, BlendMode pBlendMode = BlendMode::None, RasterizerState pRasterizerState = RasterizerState::CullCounterClockwise);
 
-			bool Draw(const HGF::Texture& pTexture, const HGF::Vector2& pPosition, const HGF::Vector2& pDimensions, const HGF::Rectangle& pSourceRectangle, const HGF::Color& pColor, const HGF::Vector2& pOrigin, float pRotation, const HGF::Vector2& pScale, Orientation pOrientation, float pDepth = 0.0f);
-			bool Draw(const HGF::Texture& pTexture, const HGF::Vector2& pPosition, const HGF::Rectangle& pDestinationRectangle, const HGF::Rectangle& pSourceRectangle, const HGF::Color& pColor, const HGF::Vector2& pOrigin, float pRotation, const HGF::Vector2& pScale, Orientation pOrientation, float pDepth = 0.0f);
-			bool Draw(const HGF::Texture& pTexture, const HGF::Rectangle& pDestinationRectangle, const HGF::Rectangle& pSourceRectangle, const HGF::Color& pColor, const HGF::Vector2& pOrigin, float pRotation, const HGF::Vector2& pScale, Orientation pOrientation, float pDepth = 0.0f);
-			bool Draw(const HGF::Texture& pTexture, const HGF::Vector2& pPosition, const HGF::Rectangle& pSourceRectangle, const HGF::Color& pColor, const HGF::Vector2& pOrigin, float pRotation, const HGF::Vector2& pScale, Orientation pOrientation, float pDepth = 0.0f);
+			bool Draw(const Texture& pTexture, const Vector2& pPosition, const Vector2& pDimensions, const Rectangle& pSourceRectangle, const Color& pColor, const Vector2& pOrigin, float pRotation, const Vector2& pScale, Orientation pOrientation, float pDepth = 0.0f);
+			bool Draw(const Texture& pTexture, const Vector2& pPosition, const Rectangle& pDestinationRectangle, const Rectangle& pSourceRectangle, const Color& pColor, const Vector2& pOrigin, float pRotation, const Vector2& pScale, Orientation pOrientation, float pDepth = 0.0f);
+			bool Draw(const Texture& pTexture, const Rectangle& pDestinationRectangle, const Rectangle& pSourceRectangle, const Color& pColor, const Vector2& pOrigin, float pRotation, const Vector2& pScale, Orientation pOrientation, float pDepth = 0.0f);
+			bool Draw(const Texture& pTexture, const Vector2& pPosition, const Rectangle& pSourceRectangle, const Color& pColor, const Vector2& pOrigin, float pRotation, const Vector2& pScale, Orientation pOrientation, float pDepth = 0.0f);
 			
-			bool DrawString(const SAGE::SpriteFont& pSpriteFont, const std::string& pString, const HGF::Vector2& pPosition, const HGF::Color& pColor, float pDepth = 0.0f);
-			bool DrawString(const SAGE::SpriteFont& pSpriteFont, const std::string& pString, const HGF::Vector2& pPosition, const HGF::Color& pColor, const HGF::Vector2& pOrigin, float pRotation, const HGF::Vector2& pScale, Orientation pOrientation, float pDepth = 0.0f);
+			bool DrawString(const SAGE::SpriteFont& pSpriteFont, const std::string& pString, const Vector2& pPosition, const Color& pColor, float pDepth = 0.0f);
+			bool DrawString(const SAGE::SpriteFont& pSpriteFont, const std::string& pString, const Vector2& pPosition, const Color& pColor, const Vector2& pOrigin, float pRotation, const Vector2& pScale, Orientation pOrientation, float pDepth = 0.0f);
 			
 			bool End();
 
@@ -86,8 +86,8 @@ namespace SAGE
 			void Render();
 			void Flush(int pTextureID, int pLength);
 
-			void RotateAbout(const HGF::Vector2& pPosition, float pRotation, VertexVector2& pVertex);
-			void FlipAbout(const HGF::Vector2& pPosition, Orientation pOrientation, VertexVector2& pVertex);
+			void RotateAbout(const Vector2& pPosition, float pRotation, VertexVector2& pVertex);
+			void FlipAbout(const Vector2& pPosition, Orientation pOrientation, VertexVector2& pVertex);
 
 			bool mWithinDrawPair;
 			int mItemCount;

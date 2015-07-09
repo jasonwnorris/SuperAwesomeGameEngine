@@ -17,7 +17,7 @@ namespace SAGE
 	{
 	}
 
-	const HGF::Texture& SpriteFont::GetTexture() const
+	const Texture& SpriteFont::GetTexture() const
 	{
 		return mTexture;
 	}
@@ -32,13 +32,13 @@ namespace SAGE
 		return mSpacing;
 	}
 
-	HGF::Rectangle SpriteFont::GetGlyphBounds(char pGlyph) const
+	Rectangle SpriteFont::GetGlyphBounds(char pGlyph) const
 	{
 		int textureWidth = mTexture.GetWidth();
 		int textureHeight = mTexture.GetHeight();
 		int index = static_cast<int>(pGlyph);
 
-		return HGF::Rectangle((index % 16) * (textureWidth / 16), (index / 16) * (textureHeight / 16), textureWidth / 16, textureHeight / 16);
+		return Rectangle((index % 16) * (textureWidth / 16), (index / 16) * (textureHeight / 16), textureWidth / 16, textureHeight / 16);
 	}
 
 	void SpriteFont::SetSize(float pSize)
@@ -51,7 +51,7 @@ namespace SAGE
 		mSpacing = pSpacing;
 	}
 
-	bool SpriteFont::Load(const std::string& pFilename, float pSize, float pSpacing, HGF::Interpolation pInterpolation, HGF::Wrapping pWrapping)
+	bool SpriteFont::Load(const std::string& pFilename, float pSize, float pSpacing, Interpolation pInterpolation, Wrapping pWrapping)
 	{
 		// Currently only supports textures with 16x16 renderer ASCII-ordered glyphs.
 		if (!mTexture.Load(pFilename, pInterpolation, pWrapping))
@@ -63,7 +63,7 @@ namespace SAGE
 		return true;
 	}
 	
-	void SpriteFont::MeasureString(const std::string& pString, HGF::Vector2& pDimensions)
+	void SpriteFont::MeasureString(const std::string& pString, Vector2& pDimensions)
 	{
 		int lineCount = 0;
 		int maxLength = 0;

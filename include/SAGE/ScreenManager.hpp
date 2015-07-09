@@ -3,7 +3,7 @@
 #ifndef __SAGE_SCREENMANAGER_HPP__
 #define __SAGE_SCREENMANAGER_HPP__
 
-// Project Includes
+// SAGE Includes
 #include <SAGE\Screen.hpp>
 // STL Includes
 #include <vector>

@@ -6,11 +6,11 @@
 // SAGE Includes
 #include <SAGE\Camera2D.hpp>
 #include <SAGE\VertexDefinitions.hpp>
-// HGF Includes
-#include <HGF\Color.hpp>
-#include <HGF\Effect.hpp>
-#include <HGF\Rectangle.hpp>
-#include <HGF\Vector2.hpp>
+// SAGE Includes
+#include <SAGE\Color.hpp>
+#include <SAGE\Effect.hpp>
+#include <SAGE\Rectangle.hpp>
+#include <SAGE\Vector2.hpp>
 // STL Includes
 #include <vector>
 
@@ -32,14 +32,14 @@ namespace SAGE
 			bool Initialize();
 			bool Finalize();
 
-			bool Begin(HGF::Effect& pEffect, const Camera2D& pCamera = Camera2D::DefaultCamera);
-			bool DrawLine(const HGF::Vector2& pPositionA, const HGF::Vector2& pPositionB, const HGF::Color& pColor);
-			bool DrawLines(const std::vector<HGF::Vector2>& pPositions, const HGF::Color& pColor);
-			bool DrawRectangle(const HGF::Vector2& pTopLeft, const HGF::Vector2& pBottomRight, const HGF::Color& pColor);
-			bool DrawRectangle(const HGF::Rectangle& pRectangle, const HGF::Color& pColor);
-			bool DrawCircle(const HGF::Vector2& pPosition, float pRadius, const HGF::Color& pColor, int pCount = 25);
-			bool DrawBezier(const HGF::Vector2& pStartPosition, const HGF::Vector2& pEndPosition, const HGF::Vector2& pControlPoint, const HGF::Color& pColor, int pCount = 25);
-			bool DrawBezier(const HGF::Vector2& pStartPosition, const HGF::Vector2& pEndPosition, const HGF::Vector2& pControlPointA, const HGF::Vector2& pControlPointB, const HGF::Color& pColor, int pCount = 25);
+			bool Begin(Effect& pEffect, const Camera2D& pCamera = Camera2D::DefaultCamera);
+			bool DrawLine(const Vector2& pPositionA, const Vector2& pPositionB, const Color& pColor);
+			bool DrawLines(const std::vector<Vector2>& pPositions, const Color& pColor);
+			bool DrawRectangle(const Vector2& pTopLeft, const Vector2& pBottomRight, const Color& pColor);
+			bool DrawRectangle(const Rectangle& pRectangle, const Color& pColor);
+			bool DrawCircle(const Vector2& pPosition, float pRadius, const Color& pColor, int pCount = 25);
+			bool DrawBezier(const Vector2& pStartPosition, const Vector2& pEndPosition, const Vector2& pControlPoint, const Color& pColor, int pCount = 25);
+			bool DrawBezier(const Vector2& pStartPosition, const Vector2& pEndPosition, const Vector2& pControlPointA, const Vector2& pControlPointB, const Color& pColor, int pCount = 25);
 			bool End();
 
 		private:

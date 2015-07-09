@@ -1,6 +1,6 @@
 // GeometryBatch.cpp
 
-// GL Includes
+// OpenGL Includes
 #include <gl\glew.h>
 // SAGE Includes
 #include <SAGE\GeometryBatch.hpp>
@@ -84,7 +84,7 @@ namespace SAGE
 		return true;
 	}
 
-	bool GeometryBatch::Begin(HGF::Effect& pEffect, const Camera2D& pCamera)
+	bool GeometryBatch::Begin(Effect& pEffect, const Camera2D& pCamera)
 	{
 		if (mWithinDrawPair)
 		{
@@ -103,7 +103,7 @@ namespace SAGE
 		return true;
 	}
 
-	bool GeometryBatch::DrawLine(const HGF::Vector2& pPositionA, const HGF::Vector2& pPositionB, const HGF::Color& pColor)
+	bool GeometryBatch::DrawLine(const Vector2& pPositionA, const Vector2& pPositionB, const Color& pColor)
 	{
 		if (!mWithinDrawPair)
 		{
@@ -130,7 +130,7 @@ namespace SAGE
 		return true;
 	}
 
-	bool GeometryBatch::DrawLines(const std::vector<HGF::Vector2>& pPositions, const HGF::Color& pColor)
+	bool GeometryBatch::DrawLines(const std::vector<Vector2>& pPositions, const Color& pColor)
 	{
 		if (!mWithinDrawPair)
 		{
@@ -155,7 +155,7 @@ namespace SAGE
 		return true;
 	}
 
-	bool GeometryBatch::DrawRectangle(const HGF::Vector2& pTopLeft, const HGF::Vector2& pBottomRight, const HGF::Color& pColor)
+	bool GeometryBatch::DrawRectangle(const Vector2& pTopLeft, const Vector2& pBottomRight, const Color& pColor)
 	{
 		if (!mWithinDrawPair)
 		{
@@ -163,15 +163,15 @@ namespace SAGE
 			return false;
 		}
 
-		HGF::Vector2 TL(pTopLeft.X, pTopLeft.Y);
-		HGF::Vector2 TR(pBottomRight.X, pTopLeft.Y);
-		HGF::Vector2 BR(pBottomRight.X, pBottomRight.Y);
-		HGF::Vector2 BL(pTopLeft.X, pBottomRight.Y);
+		Vector2 TL(pTopLeft.X, pTopLeft.Y);
+		Vector2 TR(pBottomRight.X, pTopLeft.Y);
+		Vector2 BR(pBottomRight.X, pBottomRight.Y);
+		Vector2 BL(pTopLeft.X, pBottomRight.Y);
 
 		return DrawLine(TL, TR, pColor) && DrawLine(TR, BR, pColor) && DrawLine(BR, BL, pColor) && DrawLine(BL, TL, pColor);
 	}
 
-	bool GeometryBatch::DrawRectangle(const HGF::Rectangle& pRectangle, const HGF::Color& pColor)
+	bool GeometryBatch::DrawRectangle(const Rectangle& pRectangle, const Color& pColor)
 	{
 		if (!mWithinDrawPair)
 		{
@@ -179,10 +179,10 @@ namespace SAGE
 			return false;
 		}
 
-		return DrawRectangle(HGF::Vector2(pRectangle.X, pRectangle.Y), HGF::Vector2(pRectangle.X + pRectangle.Width, pRectangle.Y + pRectangle.Height), pColor);
+		return DrawRectangle(Vector2(pRectangle.X, pRectangle.Y), Vector2(pRectangle.X + pRectangle.Width, pRectangle.Y + pRectangle.Height), pColor);
 	}
 
-	bool GeometryBatch::DrawCircle(const HGF::Vector2& pPosition, float pRadius, const HGF::Color& pColor, int pCount)
+	bool GeometryBatch::DrawCircle(const Vector2& pPosition, float pRadius, const Color& pColor, int pCount)
 	{
 		if (!mWithinDrawPair)
 		{
@@ -203,8 +203,8 @@ namespace SAGE
 
 		for (int i = 0; i < pCount; ++i)
 		{
-			HGF::Vector2 positionA(pPosition.X + cosList[i], pPosition.Y + sinList[i]);
-			HGF::Vector2 positionB(pPosition.X + cosList[i + 1], pPosition.Y + sinList[i + 1]);
+			Vector2 positionA(pPosition.X + cosList[i], pPosition.Y + sinList[i]);
+			Vector2 positionB(pPosition.X + cosList[i + 1], pPosition.Y + sinList[i + 1]);
 
 			if (!DrawLine(positionA, positionB, pColor))
 			{
@@ -215,7 +215,7 @@ namespace SAGE
 		return true;
 	}
 
-	bool GeometryBatch::DrawBezier(const HGF::Vector2& pStartPosition, const HGF::Vector2& pEndPosition, const HGF::Vector2& pControlPoint, const HGF::Color& pColor, int pCount)
+	bool GeometryBatch::DrawBezier(const Vector2& pStartPosition, const Vector2& pEndPosition, const Vector2& pControlPoint, const Color& pColor, int pCount)
 	{
 		if (!mWithinDrawPair)
 		{
@@ -232,8 +232,8 @@ namespace SAGE
 			float invtA = 1.0f - tA;
 			float invtB = 1.0f - tB;
 
-			HGF::Vector2 positionA = pStartPosition * invtA * invtA + pControlPoint * 2.0f * invtA * tA + pEndPosition * tA * tA;
-			HGF::Vector2 positionB = pStartPosition * invtB * invtB + pControlPoint * 2.0f * invtB * tB + pEndPosition * tB * tB;
+			Vector2 positionA = pStartPosition * invtA * invtA + pControlPoint * 2.0f * invtA * tA + pEndPosition * tA * tA;
+			Vector2 positionB = pStartPosition * invtB * invtB + pControlPoint * 2.0f * invtB * tB + pEndPosition * tB * tB;
 
 			if (!DrawLine(positionA, positionB, pColor))
 			{
@@ -244,7 +244,7 @@ namespace SAGE
 		return true;
 	}
 
-	bool GeometryBatch::DrawBezier(const HGF::Vector2& pStartPosition, const HGF::Vector2& pEndPosition, const HGF::Vector2& pControlPointA, const HGF::Vector2& pControlPointB, const HGF::Color& pColor, int pCount)
+	bool GeometryBatch::DrawBezier(const Vector2& pStartPosition, const Vector2& pEndPosition, const Vector2& pControlPointA, const Vector2& pControlPointB, const Color& pColor, int pCount)
 	{
 		if (!mWithinDrawPair)
 		{
@@ -261,8 +261,8 @@ namespace SAGE
 			float invtA = 1.0f - tA;
 			float invtB = 1.0f - tB;
 
-			HGF::Vector2 positionA = pStartPosition * invtA * invtA * invtA + pControlPointA * 3.0f * invtA * invtA * tA + pControlPointB * 3.0f * invtA * tA * tA + pEndPosition * tA * tA * tA;
-			HGF::Vector2 positionB = pStartPosition * invtB * invtB * invtB + pControlPointA * 3.0f * invtB * invtB * tB + pControlPointB * 3.0f * invtB * tB * tB + pEndPosition * tB * tB * tB;
+			Vector2 positionA = pStartPosition * invtA * invtA * invtA + pControlPointA * 3.0f * invtA * invtA * tA + pControlPointB * 3.0f * invtA * tA * tA + pEndPosition * tA * tA * tA;
+			Vector2 positionB = pStartPosition * invtB * invtB * invtB + pControlPointA * 3.0f * invtB * invtB * tB + pControlPointB * 3.0f * invtB * tB * tB + pEndPosition * tB * tB * tB;
 
 			if (!DrawLine(positionA, positionB, pColor))
 			{

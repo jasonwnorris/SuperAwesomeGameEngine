@@ -1,9 +1,8 @@
 // Game.cpp
 
-// HGF Includes
-#include <HGF\Events.hpp>
-// Project Includes
+// SAGE Includes
 #include <SAGE\Game.hpp>
+#include <SAGE\Events.hpp>
 
 namespace SAGE
 {
@@ -24,7 +23,7 @@ namespace SAGE
 
 		while (mRunning)
 		{
-			HGF::Events::Poll();
+			Events::Poll();
 
 			if (Update(mTimer.GetDeltaTime()) < 0)
 				return -1;
