@@ -1,7 +1,7 @@
 // Timer.cpp
 
 // SAGE Includes
-#include <SAGE\Timer.hpp>
+#include <SAGE/Timer.hpp>
 
 namespace SAGE
 {

@@ -1,7 +1,7 @@
 // MathUtil.cpp
 
 // SAGE Includes
-#include <SAGE\MathUtil.hpp>
+#include <SAGE/MathUtil.hpp>
 
 namespace SAGE
 {

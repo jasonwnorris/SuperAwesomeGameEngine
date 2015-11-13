@@ -1,8 +1,8 @@
 // Game.cpp
 
 // SAGE Includes
-#include <SAGE\Game.hpp>
-#include <SAGE\Events.hpp>
+#include <SAGE/Game.hpp>
+#include <SAGE/Events.hpp>
 
 namespace SAGE
 {

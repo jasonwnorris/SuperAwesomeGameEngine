@@ -4,9 +4,9 @@
 #define __SAGE_AUDIOSOURCE_HPP__
 
 // OpenAL Includes
-#include <AL\al.h>
+#include <AL/al.h>
 // SAGE Includes
-#include <SAGE\Vector2.hpp>
+#include <SAGE/Vector2.hpp>
 
 namespace SAGE
 {

@@ -4,8 +4,8 @@
 #define __SAGE_SCREEN_HPP__
 
 // SAGE Includes
-#include <SAGE\GeometryBatch.hpp>
-#include <SAGE\SpriteBatch.hpp>
+#include <SAGE/GeometryBatch.hpp>
+#include <SAGE/SpriteBatch.hpp>
 
 namespace SAGE
 {

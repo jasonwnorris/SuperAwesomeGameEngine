@@ -4,9 +4,9 @@
 #define __SAGE_TEXTURE_HPP__
 
 // OpenGL Includes
-#include <gl\glew.h>
+#include <GL/glew.h>
 // SAGE Includes
-#include <SAGE\Surface.hpp>
+#include <SAGE/Surface.hpp>
 // STL Includes
 #include <string>
 

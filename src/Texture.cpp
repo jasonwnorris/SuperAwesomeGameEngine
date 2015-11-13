@@ -1,9 +1,9 @@
 // Texture.cpp
 
 // SDL Includes
-#include <SDL2\SDL_image.h>
+#include <SDL2/SDL_image.h>
 // SAGE Includes
-#include <SAGE\Texture.hpp>
+#include <SAGE/Texture.hpp>
 
 namespace SAGE
 {
@@ -63,7 +63,7 @@ namespace SAGE
 		m_Surface = IMG_Load(p_Filename.c_str());
 		if (m_Surface == nullptr)
 		{
-			SDL_Log("[Texture::Load] Failed to load image file \"%s\": %s", p_Filename, SDL_GetError());
+			SDL_Log("[Texture::Load] Failed to load image file \"%s\": %s", p_Filename.c_str(), SDL_GetError());
 			return false;
 		}
 
@@ -76,16 +76,16 @@ namespace SAGE
 			SDL_LogWarn(SDL_LOG_PRIORITY_WARN, "[Texture::Load] Height is not power of two.");
 
 		// Determine color mode.
-		GLenum format;
-		GLint colorCount = m_Surface->format->BytesPerPixel;
-		if (colorCount == 4)
+		GLenum format = 0;
+		GLint bpp = m_Surface->format->BytesPerPixel;
+		if (bpp == 4)
 		{
 			if (m_Surface->format->Rmask == 0x000000ff)
 				format = GL_RGBA;
 			else
 				format = GL_BGRA;
 		}
-		else if (colorCount == 3)
+		else if (bpp == 3)
 		{
 			if (m_Surface->format->Rmask == 0x000000ff)
 				format = GL_RGB;
@@ -100,7 +100,7 @@ namespace SAGE
 		// Generate and create the texture.
 		glGenTextures(1, &m_ID);
 		glBindTexture(GL_TEXTURE_2D, m_ID);
-		glTexImage2D(GL_TEXTURE_2D, 0, colorCount, m_Width, m_Height, 0, format, GL_UNSIGNED_BYTE, m_Surface->pixels);
+		glTexImage2D(GL_TEXTURE_2D, 0, bpp, m_Width, m_Height, 0, format, GL_UNSIGNED_BYTE, m_Surface->pixels);
 
 		// Set scaling interpolation.
 		switch (p_Interpolation)

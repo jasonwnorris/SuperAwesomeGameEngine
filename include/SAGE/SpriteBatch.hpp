@@ -4,16 +4,15 @@
 #define __SAGE_SPRITEBATCH_HPP__
 
 // SAGE Includes
-#include <SAGE\Camera2D.hpp>
-#include <SAGE\Orientation.hpp>
-#include <SAGE\SpriteFont.hpp>
-#include <SAGE\VertexDefinitions.hpp>
-// SAGE Includes
-#include <SAGE\Color.hpp>
-#include <SAGE\Effect.hpp>
-#include <SAGE\Rectangle.hpp>
-#include <SAGE\Texture.hpp>
-#include <SAGE\Vector2.hpp>
+#include <SAGE/Color.hpp>
+#include <SAGE/Camera2D.hpp>
+#include <SAGE/Effect.hpp>
+#include <SAGE/Orientation.hpp>
+#include <SAGE/Rectangle.hpp>
+#include <SAGE/SpriteFont.hpp>
+#include <SAGE/Texture.hpp>
+#include <SAGE/Vector2.hpp>
+#include <SAGE/VertexDefinitions.hpp>
 // STL Includes
 #include <vector>
 

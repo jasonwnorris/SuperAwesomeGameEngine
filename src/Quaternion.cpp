@@ -1,7 +1,7 @@
 // Quaternion.cpp
 
 // SAGE Includes
-#include <SAGE\Quaternion.hpp>
+#include <SAGE/Quaternion.hpp>
 // STL Includes
 #include <math.h>
 

@@ -4,12 +4,12 @@
 #define __SAGE_EVENTS_H__
 
 // SDL Includes
-#include <SDL2\SDL.h>
+#include <SDL2/SDL.h>
 // SAGE Includes
-#include <SAGE\Delegate.hpp>
-#include <SAGE\GamePad.hpp>
-#include <SAGE\Keyboard.hpp>
-#include <SAGE\Mouse.hpp>
+#include <SAGE/Delegate.hpp>
+#include <SAGE/GamePad.hpp>
+#include <SAGE/Keyboard.hpp>
+#include <SAGE/Mouse.hpp>
 // STL Incluides
 #include <string>
 

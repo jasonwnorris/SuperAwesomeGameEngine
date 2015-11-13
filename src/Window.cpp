@@ -1,11 +1,11 @@
 // Window.cpp
 
 // GL Includes
-#include <gl\glew.h>
+#include <GL/glew.h>
 // SAGE Includes
-#include <SAGE\Window.hpp>
+#include <SAGE/Window.hpp>
 // JsonCpp Includes
-#include <json\json.h>
+#include <json/json.h>
 // STL Includes
 #include <fstream>
 
@@ -133,25 +133,75 @@ namespace SAGE
 	{
 		if (m_IsInitialized)
 		{
-			SDL_Log("[Window::Initialize] Window already initialized.");
+			SDL_Log("[Window::Initialize] Window already initialized. Use Reinitialize to make changes to an existing Window.");
 			return false;
 		}
 
 		// Initialize SDL.
 		if (SDL_Init(SDL_INIT_EVERYTHING) < 0)
+		{
+			SDL_Log("[Window::Initialize] Failed to initialize SDL: %s", SDL_GetError());
 			return false;
+		}
 		
 		// Set OpenGL values.
-		SDL_GL_SetAttribute(SDL_GL_RED_SIZE, 8);
-		SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, 8);
-		SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE, 8);
-		SDL_GL_SetAttribute(SDL_GL_ALPHA_SIZE, 8);
-		SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
-		
-		// Set OpenGL version.
-		SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_COMPATIBILITY);
-		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
-		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
+		if (SDL_GL_SetAttribute(SDL_GL_RED_SIZE, 8) < 0)
+		{
+			SDL_Log("[Window::Initialize] Failed to set red size: %s", SDL_GetError());
+			return false;
+		}
+		if (SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, 8) < 0)
+		{
+			SDL_Log("[Window::Initialize] Failed to set green size: %s", SDL_GetError());
+			return false;
+		}
+		if (SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE, 8) < 0)
+		{
+			SDL_Log("[Window::Initialize] Failed to set blue size: %s", SDL_GetError());
+			return false;
+		}
+		if (SDL_GL_SetAttribute(SDL_GL_ALPHA_SIZE, 8) < 0)
+		{
+			SDL_Log("[Window::Initialize] Failed to set alpha size: %s", SDL_GetError());
+			return false;
+		}
+		if (SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1) < 0)
+		{
+			SDL_Log("[Window::Initialize] Failed to set doublebuffer: %s", SDL_GetError());
+			return false;
+		}
+
+		// Set OpenGL context profile.
+#if defined _WIN32
+		if (SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_COMPATIBILITY) < 0)
+#elif defined __ANDROID__
+		if (SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_ES) < 0)
+#else
+		if (SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE) < 0)
+#endif
+		{
+			SDL_Log("Failed to set context profile mask: %s", SDL_GetError());
+		}
+
+		// Set OpenGL major version.
+#if defined __ANDROID__
+		if (SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3) < 0)
+#else
+		if (SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4) < 0)
+#endif
+		{
+			SDL_Log("Failed to set context major version: %s", SDL_GetError());
+		}
+
+		// Set OpenGL minor version.
+#if defined __ANDROID__
+		if (SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 0) < 0)
+#else
+		if (SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3) < 0)
+#endif
+		{
+			SDL_Log("Failed to set context minor version: %s", SDL_GetError());
+		}
 		
 		// Setup window flags.
 		Uint32 flags = SDL_WINDOW_OPENGL;

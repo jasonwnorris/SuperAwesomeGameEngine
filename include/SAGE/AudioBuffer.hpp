@@ -3,10 +3,10 @@
 #ifndef __SAGE_AUDIOBUFFER_HPP__
 #define __SAGE_AUDIOBUFFER_HPP__
 
+// OpenAL Includes
+#include <AL/al.h>
 // STD Includes
 #include <string>
-// OpenAL Includes
-#include <AL\al.h>
 
 namespace SAGE
 {

@@ -1,9 +1,10 @@
 // SpriteFont.cpp
 
 // SAGE Includes
-#include <SAGE\SpriteFont.hpp>
+#include <SAGE/SpriteFont.hpp>
 // STL Includes
 #include <sstream>
+#include <stdio.h>
 
 namespace SAGE
 {
@@ -73,7 +74,7 @@ namespace SAGE
 		std::stringstream ss(p_String);
 		std::string line;
 
-		while (std::getline(ss, line, '\n'))
+		while (std::getline(ss, line))
 		{
 			int length = (int)line.length();
 			if (length > maxLength)

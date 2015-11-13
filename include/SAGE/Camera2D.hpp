@@ -5,11 +5,11 @@
 
 // GLM Includes
 #define GLM_FORCE_RADIANS
-#include <glm\glm.hpp>
-#include <glm\gtx\transform.hpp>
-#include <glm\gtc\type_ptr.hpp>
+#include <glm/glm.hpp>
+#include <glm/gtx/transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 // SAGE Includes
-#include <SAGE\Vector2.hpp>
+#include <SAGE/Vector2.hpp>
 
 namespace SAGE
 {

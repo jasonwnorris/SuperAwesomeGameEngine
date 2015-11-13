@@ -1,10 +1,10 @@
 // Surface.cpp
 
 // SDL Includes
-#include <SDL2\SDL_image.h>
+#include <SDL2/SDL_image.h>
 // SAGE Includes
-#include <SAGE\Console.hpp>
-#include <SAGE\Surface.hpp>
+#include <SAGE/Console.hpp>
+#include <SAGE/Surface.hpp>
 
 namespace SAGE
 {

@@ -1,7 +1,7 @@
 // Mouse.cpp
 
 // SAGE Includes
-#include <SAGE\Mouse.hpp>
+#include <SAGE/Mouse.hpp>
 
 namespace SAGE
 {

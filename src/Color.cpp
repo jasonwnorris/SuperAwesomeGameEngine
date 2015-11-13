@@ -1,12 +1,12 @@
 // Color.cpp
 
 // OpenGL Includes
-#include <gl\glew.h>
+#include <GL/glew.h>
 // SDL Includes
-#include <SDL2\SDL.h>
+#include <SDL2/SDL.h>
 // SAGE Includes
-#include <SAGE\Color.hpp>
-#include <SAGE\MathUtil.hpp>
+#include <SAGE/Color.hpp>
+#include <SAGE/MathUtil.hpp>
 // STD Includes
 #include <string>
 

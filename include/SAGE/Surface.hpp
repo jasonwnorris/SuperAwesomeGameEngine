@@ -4,7 +4,7 @@
 #define __SAGE_SURFACE_HPP__
 
 // SDL Includes
-#include <SDL2\SDL.h>
+#include <SDL2/SDL.h>
 // STL Includes
 #include <string>
 

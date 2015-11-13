@@ -4,9 +4,9 @@
 #define __SPRITEFONT_HPP__
 
 // SAGE Includes
-#include <SAGE\Texture.hpp>
-#include <SAGE\Rectangle.hpp>
-#include <SAGE\Vector2.hpp>
+#include <SAGE/Texture.hpp>
+#include <SAGE/Rectangle.hpp>
+#include <SAGE/Vector2.hpp>
 // STL Includes
 #include <string>
 

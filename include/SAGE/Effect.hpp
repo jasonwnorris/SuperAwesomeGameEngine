@@ -4,12 +4,12 @@
 #define __SAGE_EFFECT_HPP__
 
 // GL Includes
-#include <gl\glew.h>
+#include <GL/glew.h>
 // GLM Includes
 #define GLM_FORCE_RADIANS
-#include <glm\glm.hpp>
-#include <glm\gtx\transform.hpp>
-#include <glm\gtc\type_ptr.hpp>
+#include <glm/glm.hpp>
+#include <glm/gtx/transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 // STL Includes
 #include <map>
 #include <string>

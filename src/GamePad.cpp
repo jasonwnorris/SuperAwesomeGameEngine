@@ -1,7 +1,7 @@
 // GamePad.cpp
 
 // SAGE Includes
-#include <SAGE\GamePad.hpp>
+#include <SAGE/GamePad.hpp>
 
 namespace SAGE
 {

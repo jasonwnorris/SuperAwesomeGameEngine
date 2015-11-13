@@ -1,8 +1,8 @@
 // Vector3.cpp
 
 // SAGE Includes
-#include <SAGE\MathUtil.hpp>
-#include <SAGE\Vector3.hpp>
+#include <SAGE/MathUtil.hpp>
+#include <SAGE/Vector3.hpp>
 
 namespace SAGE
 {

@@ -1,7 +1,7 @@
 // MenuScreen.cpp
 
 // SAGE Includes
-#include <SAGE\MenuScreen.hpp>
+#include <SAGE/MenuScreen.hpp>
 
 namespace SAGE
 {

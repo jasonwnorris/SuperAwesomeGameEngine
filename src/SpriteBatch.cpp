@@ -1,9 +1,9 @@
 // SpriteBatch.cpp
 
 // OpenGL Includes
-#include <gl\glew.h>
+#include <GL/glew.h>
 // SAGE Includes
-#include <SAGE\SpriteBatch.hpp>
+#include <SAGE/SpriteBatch.hpp>
 // STL Includes
 #include <algorithm>
 
@@ -70,15 +70,19 @@ namespace SAGE
 		glBindBuffer(GL_ARRAY_BUFFER, m_VertexBufferObject);
 		glBufferData(GL_ARRAY_BUFFER, MaxVertexCount * sizeVPCT, nullptr, GL_DYNAMIC_DRAW);
 
+		#define BUFFER_OFFSET(i) ((char*)0 + (i))
+
 		// Position attribute
 		glEnableVertexAttribArray(0);
-		glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeVPCT, (GLvoid*)(sizeFloat * 0));
+		glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeVPCT, BUFFER_OFFSET(sizeFloat * 0));
 		// Color attribute
 		glEnableVertexAttribArray(1);
-		glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeVPCT, (GLvoid*)(sizeFloat * 2));
+		glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeVPCT, BUFFER_OFFSET(sizeFloat * 2));
 		// Texcoord attribute
 		glEnableVertexAttribArray(2);
-		glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeVPCT, (GLvoid*)(sizeFloat * 6));
+		glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeVPCT, BUFFER_OFFSET(sizeFloat * 6));
+
+		#undef BUFFER_OFFSET
 
 		// Clear bindings.
 		glBindVertexArray(0);
@@ -243,7 +247,7 @@ namespace SAGE
 
 		for (char glyph : p_String)
 		{
-			if (glyph == '\n')
+			if (glyph == '/n')
 			{
 				offset.X = 0.0f;
 				offset.Y += size * p_Scale.Y;
@@ -333,6 +337,9 @@ namespace SAGE
 				break;
 			case SortMode::BackToFront:
 				std::sort(std::begin(m_BatchItemList), std::end(m_BatchItemList), [](const SpriteBatchItem& p_ItemA, const SpriteBatchItem& p_ItemB) { return p_ItemA.Depth < p_ItemB.Depth; });
+				break;
+			case SortMode::Immediate:
+			case SortMode::None:
 				break;
 		}
 

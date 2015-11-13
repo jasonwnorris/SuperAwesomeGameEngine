@@ -4,8 +4,8 @@
 #define __SAGE_WINDOW_HPP__
 
 // SAGE Includes
-#include <SAGE\Color.hpp>
-#include <SAGE\Surface.hpp>
+#include <SAGE/Color.hpp>
+#include <SAGE/Surface.hpp>
 // STL Includes
 #include <string>
 
