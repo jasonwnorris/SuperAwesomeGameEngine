@@ -11,6 +11,8 @@
 
 namespace SAGE
 {
+	const MessageBoxDetails MessageBoxDetails::DefaultDetails;
+
 	const std::string WindowOptions::DefaultTitle = "Untitled Window";
 	const int WindowOptions::DefaultWidth = 1024;
 	const int WindowOptions::DefaultHeight = 768;
@@ -184,20 +186,22 @@ namespace SAGE
 		}
 
 		// Set OpenGL major version.
-#if defined __ANDROID__
-		if (SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3) < 0)
-#else
+#if defined _WIN32
 		if (SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4) < 0)
+#else
+		if (SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3) < 0)
 #endif
 		{
 			SDL_Log("Failed to set context major version: %s", SDL_GetError());
 		}
 
 		// Set OpenGL minor version.
-#if defined __ANDROID__
+#if defined _WIN32
+		if (SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3) < 0)
+#elif defined __ANDROID__
 		if (SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 0) < 0)
 #else
-		if (SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3) < 0)
+		if (SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 2) < 0)
 #endif
 		{
 			SDL_Log("Failed to set context minor version: %s", SDL_GetError());
@@ -315,7 +319,10 @@ namespace SAGE
 		//  1 = synchronized
 		// -1 = late swap tearing (not supporting)
 		if (SDL_GL_SetSwapInterval(p_Enabled ? 1 : 0) < 0)
+		{
+			SDL_Log("[Window::SetVerticalSync] Error setting vertical sync: %s", SDL_GetError());
 			return false;
+		}
 
 		return true;
 	}
@@ -364,6 +371,117 @@ namespace SAGE
 	void Window::Flip()
 	{
 		SDL_GL_SwapWindow(m_Window);
+	}
+
+	void Window::ShowSimpleMessageBox(const std::string& p_Title, const std::string& p_Text, MessageBoxLevel p_Level)
+	{
+		if (SDL_ShowSimpleMessageBox(p_Level, p_Title.c_str(), p_Text.c_str(), m_Window) < 0)
+		{
+			SDL_Log("[Window::ShowSimpleMessageBox] Error showing message box: %s", SDL_GetError());
+		}
+	}
+
+	MessageBoxButton Window::ShowCustomMessageBox(const std::string& p_Title, const std::string& p_Text, MessageBoxDetails p_Details)
+	{
+		int buttonCount = 0;
+		SDL_MessageBoxButtonData* buttons = nullptr;
+
+		switch (p_Details.ButtonSet)
+		{
+			case AbortRetryIgnoreSet:
+				buttonCount = 3;
+				buttons = new SDL_MessageBoxButtonData[buttonCount] {
+					{                                       0, MessageBoxButton::Abort,  "Abort" },
+					{ SDL_MESSAGEBOX_BUTTON_RETURNKEY_DEFAULT, MessageBoxButton::Retry,  "Retry" },
+					{ SDL_MESSAGEBOX_BUTTON_ESCAPEKEY_DEFAULT, MessageBoxButton::Ignore, "Ignore" }
+				};
+				break;
+			case OKSet:
+				buttonCount = 1;
+				buttons = new SDL_MessageBoxButtonData[buttonCount] {
+					{ SDL_MESSAGEBOX_BUTTON_RETURNKEY_DEFAULT, MessageBoxButton::OK, "OK" }
+				};
+				break;
+			case OKCancelSet:
+				buttonCount = 2;
+				buttons = new SDL_MessageBoxButtonData[buttonCount] {
+					{ SDL_MESSAGEBOX_BUTTON_RETURNKEY_DEFAULT, MessageBoxButton::OK,     "OK" },
+					{ SDL_MESSAGEBOX_BUTTON_ESCAPEKEY_DEFAULT, MessageBoxButton::Cancel, "Cancel" }
+				};
+				break;
+			case RetryCancelSet:
+				buttonCount = 2;
+				buttons = new SDL_MessageBoxButtonData[buttonCount] {
+					{ SDL_MESSAGEBOX_BUTTON_RETURNKEY_DEFAULT, MessageBoxButton::Retry,  "Retry" },
+					{ SDL_MESSAGEBOX_BUTTON_ESCAPEKEY_DEFAULT, MessageBoxButton::Cancel,  "Cancel" }
+				};
+				break;
+			case YesNoSet:
+				buttonCount = 2;
+				buttons = new SDL_MessageBoxButtonData[buttonCount] {
+					{ SDL_MESSAGEBOX_BUTTON_RETURNKEY_DEFAULT, MessageBoxButton::Yes, "Yes" },
+					{                                       0, MessageBoxButton::No,  "No" }
+				};
+				break;
+			case YesNoCancelSet:
+				buttonCount = 3;
+				buttons = new SDL_MessageBoxButtonData[buttonCount] {
+					{ SDL_MESSAGEBOX_BUTTON_RETURNKEY_DEFAULT, MessageBoxButton::Yes,    "Yes" },
+					{                                       0, MessageBoxButton::No,     "No" },
+					{ SDL_MESSAGEBOX_BUTTON_ESCAPEKEY_DEFAULT, MessageBoxButton::Cancel, "Cancel" }
+				};
+				break;
+		}
+
+		const SDL_MessageBoxColorScheme scheme = {
+			{
+				{
+					p_Details.Scheme.BackgroundColor.GetRedAsByte(),
+					p_Details.Scheme.BackgroundColor.GetGreenAsByte(),
+					p_Details.Scheme.BackgroundColor.GetBlueAsByte()
+				},
+				{
+					p_Details.Scheme.TextColor.GetRedAsByte(),
+					p_Details.Scheme.TextColor.GetGreenAsByte(),
+					p_Details.Scheme.TextColor.GetBlueAsByte()
+				},
+				{
+					p_Details.Scheme.ButtonBorderColor.GetRedAsByte(),
+					p_Details.Scheme.ButtonBorderColor.GetGreenAsByte(),
+					p_Details.Scheme.ButtonBorderColor.GetBlueAsByte()
+				},
+				{
+					p_Details.Scheme.ButtonBackgroundColor.GetRedAsByte(),
+					p_Details.Scheme.ButtonBackgroundColor.GetGreenAsByte(),
+					p_Details.Scheme.ButtonBackgroundColor.GetBlueAsByte()
+				},
+				{
+					p_Details.Scheme.ButtonSelectedColor.GetRedAsByte(),
+					p_Details.Scheme.ButtonSelectedColor.GetGreenAsByte(),
+					p_Details.Scheme.ButtonSelectedColor.GetBlueAsByte()
+				}
+			}
+		};
+
+		const SDL_MessageBoxData data = {
+			p_Details.Level,
+			m_Window,
+			p_Title.c_str(),
+			p_Text.c_str(),
+			buttonCount,
+			buttons,
+			&scheme
+		};
+
+		int retval;
+		if (SDL_ShowMessageBox(&data, &retval) < 0)
+		{
+			SDL_Log("[Window::ShowCustomMessageBox] Error showing message box: %s", SDL_GetError());
+		}
+
+		delete [] buttons;
+
+		return static_cast<MessageBoxButton>(retval);
 	}
 
 	void Window::PrintInfo()

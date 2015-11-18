@@ -11,6 +11,67 @@
 
 namespace SAGE
 {
+	enum MessageBoxLevel
+	{
+		Information = SDL_MESSAGEBOX_INFORMATION,
+		Warning = SDL_MESSAGEBOX_WARNING,
+		Error = SDL_MESSAGEBOX_ERROR
+	};
+
+	enum MessageBoxButton
+	{
+		Abort,
+		Cancel,
+		Ignore,
+		No,
+		OK,
+		Retry,
+		Yes
+	};
+
+	enum MessageBoxButtonSet
+	{
+		AbortRetryIgnoreSet,
+		OKSet,
+		OKCancelSet,
+		RetryCancelSet,
+		YesNoSet,
+		YesNoCancelSet
+	};
+
+	struct MessageBoxScheme
+	{
+		Color BackgroundColor;
+		Color TextColor;
+		Color ButtonBorderColor;
+		Color ButtonBackgroundColor;
+		Color ButtonSelectedColor;
+
+		MessageBoxScheme()
+		{
+			BackgroundColor = Color::Gray;
+			TextColor = Color::Black;
+			ButtonBorderColor = Color::Black;
+			ButtonBackgroundColor = Color::Gray;
+			ButtonSelectedColor = Color::LightGray;
+		}
+	};
+
+	struct MessageBoxDetails
+	{
+		MessageBoxLevel Level;
+		MessageBoxButtonSet ButtonSet;
+		MessageBoxScheme Scheme;
+
+		static const MessageBoxDetails DefaultDetails;
+
+		MessageBoxDetails()
+		{
+			Level = MessageBoxLevel::Information;
+			ButtonSet = MessageBoxButtonSet::OKSet;
+		}
+	};
+
 	enum WindowMode
 	{
 		Windowed = SDL_WINDOW_SHOWN,
@@ -75,6 +136,8 @@ namespace SAGE
 			void Minimize();
 			void Clear();
 			void Flip();
+			void ShowSimpleMessageBox(const std::string& p_Title, const std::string& p_Text, MessageBoxLevel p_Level = MessageBoxLevel::Information);
+			MessageBoxButton ShowCustomMessageBox(const std::string& p_Title, const std::string& p_Text, MessageBoxDetails p_Details = MessageBoxDetails::DefaultDetails);
 			void PrintInfo();
 
 		private:
