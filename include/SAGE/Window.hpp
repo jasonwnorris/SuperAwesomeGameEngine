@@ -77,7 +77,7 @@ namespace SAGE
 		Windowed = SDL_WINDOW_SHOWN,
 		BorderlessWindowed = SDL_WINDOW_BORDERLESS,
 		Fullscreen = SDL_WINDOW_FULLSCREEN,
-		FullscreenWindowed = SDL_WINDOW_FULLSCREEN_DESKTOP,
+		FullscreenWindowed = SDL_WINDOW_FULLSCREEN_DESKTOP
 	};
 
 	struct WindowOptions
@@ -123,21 +123,31 @@ namespace SAGE
 			bool Initialize(const WindowOptions& p_Options = WindowOptions::DefaultOptions);
 			bool Reinitialize(const WindowOptions& p_Options = WindowOptions::DefaultOptions);
 			bool Finalize();
+
+			void GetTitle(std::string& p_Title);
+			void GetPosition(int& p_X, int& p_Y);
+			void GetSize(int& p_Width, int& p_Height);
+
 			void SetTitle(const std::string& p_Title);
+			void SetPosition(int p_X, int p_Y);
+			void SetSize(int p_Width, int p_Height);
 			void SetIcon(const Surface& p_Surface);
-			void SetClearColor(const Color& p_Color);
-			void Resize(int p_Width, int p_Height);
 			bool SetVerticalSync(bool p_Enabled);
+			void SetClearColor(const Color& p_Color);
+
 			void Show();
 			void Hide();
 			void Focus();
 			void Restore();
 			void Maximize();
 			void Minimize();
+
 			void Clear();
 			void Flip();
+
 			void ShowSimpleMessageBox(const std::string& p_Title, const std::string& p_Text, MessageBoxLevel p_Level = MessageBoxLevel::Information);
 			MessageBoxButton ShowCustomMessageBox(const std::string& p_Title, const std::string& p_Text, MessageBoxDetails p_Details = MessageBoxDetails::DefaultDetails);
+
 			void PrintInfo();
 
 		private:

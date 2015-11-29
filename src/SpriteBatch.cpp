@@ -247,7 +247,7 @@ namespace SAGE
 
 		for (char glyph : p_String)
 		{
-			if (glyph == '/n')
+			if (glyph == '\n' || glyph == '\r')
 			{
 				offset.X = 0.0f;
 				offset.Y += size * p_Scale.Y;

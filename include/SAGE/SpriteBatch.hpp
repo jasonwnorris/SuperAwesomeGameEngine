@@ -45,7 +45,7 @@ namespace SAGE
 	class SpriteBatch
 	{
 		private:
-			static const int MaxBatchSize = 1024;
+			static const int MaxBatchSize = 1024 * 10;
 			static const int MaxVertexCount = MaxBatchSize * 4;
 			static const int MaxIndexCount = MaxVertexCount / 2 * 3;
 			static const int RingBufferCount = 3;

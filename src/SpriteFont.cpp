@@ -12,10 +12,15 @@ namespace SAGE
 	{
 		m_Size = 0.0f;
 		m_Spacing = 0.0f;
+		m_IsLoaded = false;
 	}
 
 	SpriteFont::~SpriteFont()
 	{
+		if (m_IsLoaded)
+		{
+			Unload();
+		}
 	}
 
 	const Texture& SpriteFont::GetTexture() const
@@ -60,6 +65,22 @@ namespace SAGE
 
 		m_Size = p_Size;
 		m_Spacing = p_Spacing;
+
+		return (m_IsLoaded = true);
+	}
+
+	bool SpriteFont::Unload()
+	{
+		if (!m_IsLoaded)
+		{
+			SDL_Log("[SpriteFont::Unload] SpriteFont already unloaded. Doing nothing.");
+		}
+		else
+		{
+			m_Texture.Unload();
+
+			m_IsLoaded = false;
+		}
 
 		return true;
 	}
