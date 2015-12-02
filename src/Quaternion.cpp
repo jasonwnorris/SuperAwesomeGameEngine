@@ -239,7 +239,7 @@ namespace SAGE
 
 	void Quaternion::ToAxisAngle(Vector3& p_Axis, float& p_Angle) const
 	{
-		float acosReal = acos(m_Real);
+		float acosReal = acosf(m_Real);
 		float sinInv = 1.0f / sinf(acosReal);
 
 		p_Angle = acosReal * 2.0f;

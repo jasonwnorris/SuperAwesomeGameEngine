@@ -449,7 +449,7 @@ namespace SAGE
 		};
 
 		const SDL_MessageBoxData data = {
-			p_Details.Level,
+			static_cast<Uint32>(p_Details.Level),
 			m_Window,
 			p_Title.c_str(),
 			p_Text.c_str(),

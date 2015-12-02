@@ -33,7 +33,7 @@ namespace SAGE
 
 	float Vector2::Length() const
 	{
-		return sqrt(LengthSquared());
+		return sqrtf(LengthSquared());
 	}
 
 	float Vector2::LengthSquared() const
