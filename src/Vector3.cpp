@@ -1,7 +1,7 @@
 // Vector3.cpp
 
 // SAGE Includes
-#include <SAGE/MathUtil.hpp>
+#include <SAGE/Math.hpp>
 #include <SAGE/Vector3.hpp>
 
 namespace SAGE
@@ -31,7 +31,7 @@ namespace SAGE
 
 	float Vector3::Length() const
 	{
-		return sqrtf(LengthSquared());
+		return Math::Sqrt(LengthSquared());
 	}
 
 	float Vector3::LengthSquared() const

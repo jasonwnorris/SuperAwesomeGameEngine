@@ -2,7 +2,7 @@
 
 // SAGE Includes
 #include <SAGE/Color.hpp>
-#include <SAGE/MathUtil.hpp>
+#include <SAGE/Math.hpp>
 // STL Includes
 #include <string>
 
@@ -207,9 +207,9 @@ namespace SAGE
 	// static
 	Color Color::Lerp(const Color& p_ColorA, const Color& p_ColorB, float p_Amount)
 	{
-		return Color(MathUtil::Lerp(p_ColorA.GetRed(), p_ColorB.GetRed(), p_Amount),
-					 MathUtil::Lerp(p_ColorA.GetGreen(), p_ColorB.GetGreen(), p_Amount),
-					 MathUtil::Lerp(p_ColorA.GetBlue(), p_ColorB.GetBlue(), p_Amount),
-					 MathUtil::Lerp(p_ColorA.GetAlpha(), p_ColorB.GetAlpha(), p_Amount));
+		return Color(Math::Lerp(p_ColorA.GetRed(), p_ColorB.GetRed(), p_Amount),
+					 Math::Lerp(p_ColorA.GetGreen(), p_ColorB.GetGreen(), p_Amount),
+					 Math::Lerp(p_ColorA.GetBlue(), p_ColorB.GetBlue(), p_Amount),
+					 Math::Lerp(p_ColorA.GetAlpha(), p_ColorB.GetAlpha(), p_Amount));
 	}
 }
