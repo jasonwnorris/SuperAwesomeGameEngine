@@ -5,6 +5,7 @@
 
 // SAGE Includes
 #include <SAGE\Color.hpp>
+#include <SAGE\IGameComponent.hpp>
 #include <SAGE\Surface.hpp>
 // STL Includes
 #include <string>
@@ -51,10 +52,10 @@ namespace SAGE
 		}
 	};
 
-	class Window
+	class Window : public IGameComponent
 	{
 		public:
-			Window();
+			Window(Game* p_Game);
 			~Window();
 
 			SDL_Window* GetC() const;

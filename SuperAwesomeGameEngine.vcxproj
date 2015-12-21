@@ -91,7 +91,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="IGameComponent.cpp" />
     <ClCompile Include="src\AudioBuffer.cpp" />
     <ClCompile Include="src\AudioListener.cpp" />
     <ClCompile Include="src\AudioSource.cpp" />
@@ -102,6 +101,7 @@
     <ClCompile Include="src\Events.cpp" />
     <ClCompile Include="src\GamePad.cpp" />
     <ClCompile Include="src\GeometryBatch.cpp" />
+    <ClCompile Include="src\IGameComponent.cpp" />
     <ClCompile Include="src\Keyboard.cpp" />
     <ClCompile Include="src\MathUtil.cpp" />
     <ClCompile Include="src\Matrix3.cpp" />
@@ -123,7 +123,6 @@
     <ClCompile Include="src\Window.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="IGameComponent.hpp" />
     <ClInclude Include="include\SAGE\AudioBuffer.hpp" />
     <ClInclude Include="include\SAGE\AudioListener.hpp" />
     <ClInclude Include="include\SAGE\AudioSource.hpp" />
@@ -136,6 +135,7 @@
     <ClInclude Include="include\SAGE\Game.hpp" />
     <ClInclude Include="include\SAGE\GamePad.hpp" />
     <ClInclude Include="include\SAGE\GeometryBatch.hpp" />
+    <ClInclude Include="include\SAGE\IGameComponent.hpp" />
     <ClInclude Include="include\SAGE\Keyboard.hpp" />
     <ClInclude Include="include\SAGE\MathUtil.hpp" />
     <ClInclude Include="include\SAGE\Matrix3.hpp" />

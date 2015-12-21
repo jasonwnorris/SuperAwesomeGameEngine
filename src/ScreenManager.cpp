@@ -5,7 +5,7 @@
 
 namespace SAGE
 {
-	ScreenManager::ScreenManager()
+	ScreenManager::ScreenManager(Game* p_Game) : IGameComponent(p_Game)
 	{
 		m_ScreenToPush = nullptr;
 		m_PushPause = true;

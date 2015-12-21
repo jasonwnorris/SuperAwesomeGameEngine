@@ -98,7 +98,7 @@ namespace SAGE
 		return true;
 	}
 
-	Window::Window()
+	Window::Window(Game* p_Game) : IGameComponent(p_Game)
 	{
 		m_Window = nullptr;
 		m_Context = nullptr;

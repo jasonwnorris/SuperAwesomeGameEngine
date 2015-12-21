@@ -140,7 +140,7 @@
     <ClCompile Include="src\Surface.cpp">
       <Filter>Source Files\Graphics</Filter>
     </ClCompile>
-    <ClCompile Include="IGameComponent.cpp">
+    <ClCompile Include="src\IGameComponent.cpp">
       <Filter>Source Files\Core</Filter>
     </ClCompile>
   </ItemGroup>
@@ -241,7 +241,7 @@
     <ClInclude Include="include\SAGE\Camera2D.hpp">
       <Filter>Header Files\Core</Filter>
     </ClInclude>
-    <ClInclude Include="IGameComponent.hpp">
+    <ClInclude Include="include\SAGE\IGameComponent.hpp">
       <Filter>Header Files\Core</Filter>
     </ClInclude>
   </ItemGroup>

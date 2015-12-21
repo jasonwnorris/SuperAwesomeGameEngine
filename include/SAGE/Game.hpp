@@ -19,6 +19,9 @@ namespace SAGE
 			Game();
 			virtual ~Game();
 
+			Window* GetWindow() const;
+			ScreenManager* GetScreenManager() const;
+
 			int Start();
 			void Quit();
 
@@ -30,8 +33,8 @@ namespace SAGE
 			virtual int Render(SpriteBatch& p_SpriteBatch);
 			virtual int Render(GeometryBatch& p_GeometryBatch);
 
-			Window m_Window;
-			ScreenManager m_ScreenManager;
+			Window* m_Window;
+			ScreenManager* m_ScreenManager;
 
 		private:
 			Timer m_Timer;
