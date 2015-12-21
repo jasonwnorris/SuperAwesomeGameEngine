@@ -1,29 +1,27 @@
 // Texture.cpp
 
 // SDL Includes
-#include <SDL2\SDL_image.h>
+#if defined __ANDROID__
+	#include <SDL_image.h>
+#else
+	#include <SDL2/SDL_image.h>
+#endif
 // SAGE Includes
-#include <SAGE\Texture.hpp>
+#include <SAGE/Texture.hpp>
 
 namespace SAGE
 {
 	Texture::Texture()
 	{
 		m_ID = -1;
+		m_IsLoaded = false;
 	}
 
 	Texture::~Texture()
 	{
-		// Free the surface.
-		if (m_Surface != nullptr)
+		if (m_IsLoaded)
 		{
-			SDL_FreeSurface(m_Surface);
-		}
-
-		// Delete the texture.
-		if (m_ID != -1)
-		{
-			glDeleteTextures(1, &m_ID);
+			Unload();
 		}
 	}
 
@@ -57,13 +55,43 @@ namespace SAGE
 		return m_Surface->format;
 	}
 
+	void Texture::GetColor(int p_X, int p_Y, Uint8& p_Red, Uint8& p_Green, Uint8& p_Blue, Uint8& p_Alpha)
+	{
+		Uint8* pixel = (Uint8*)m_Surface->pixels + p_Y * m_Surface->pitch + p_X * m_Surface->format->BytesPerPixel;
+		Uint32 color = 0;
+
+		switch (m_Surface->format->BytesPerPixel)
+		{
+			case 1:
+				color = *pixel;
+				break;
+			case 2:
+				color = *(Uint16*)pixel;
+				break;
+			case 3:
+				if (SDL_BYTEORDER == SDL_BIG_ENDIAN)
+					color = pixel[0] << 16 | pixel[1] << 8 | pixel[2];
+				else
+					color = pixel[0] | pixel[1] << 8 | pixel[2] << 16;
+				break;
+			case 4:
+				color = *(Uint32*)pixel;
+				break;
+			default:
+				color = 0;
+				break;
+		}
+
+		SDL_GetRGBA(color, m_Surface->format, &p_Red, &p_Green, &p_Blue, &p_Alpha);
+	}
+
 	bool Texture::Load(const std::string& p_Filename, Interpolation p_Interpolation, Wrapping p_Wrapping)
 	{
 		// Load the surface.
 		m_Surface = IMG_Load(p_Filename.c_str());
 		if (m_Surface == nullptr)
 		{
-			SDL_Log("[Texture::Load] Failed to load image file \"%s\": %s", p_Filename, SDL_GetError());
+			SDL_Log("[Texture::Load] Failed to load image file \"%s\": %s", p_Filename.c_str(), SDL_GetError());
 			return false;
 		}
 
@@ -71,36 +99,43 @@ namespace SAGE
 		m_Width = m_Surface->w;
 		m_Height = m_Surface->h;
 		if ((m_Width & (m_Width - 1)) != 0)
+		{
 			SDL_LogWarn(SDL_LOG_PRIORITY_WARN, "[Texture::Load] Width is not power of two.");
+		}
 		if ((m_Height & (m_Height - 1)) != 0)
+		{
 			SDL_LogWarn(SDL_LOG_PRIORITY_WARN, "[Texture::Load] Height is not power of two.");
+		}
 
 		// Determine color mode.
-		GLenum format;
-		GLint colorCount = m_Surface->format->BytesPerPixel;
-		if (colorCount == 4)
+		GLenum format = 0;
+		switch (m_Surface->format->BytesPerPixel)
 		{
-			if (m_Surface->format->Rmask == 0x000000ff)
-				format = GL_RGBA;
-			else
-				format = GL_BGRA;
-		}
-		else if (colorCount == 3)
-		{
-			if (m_Surface->format->Rmask == 0x000000ff)
+#if defined __ANDROID__
+			case 3:
 				format = GL_RGB;
-			else
-				format = GL_BGR;
-		}
-		else
-		{
-			SDL_LogWarn(SDL_LOG_PRIORITY_WARN, "[Texture::Load] Image is not true color.");
+				break;
+			case 4:
+				format = GL_RGBA;
+				break;
+			default:
+#else
+			case 3:
+				format = m_Surface->format->Rmask == 0x000000ff ? GL_RGB : GL_BGR;
+				break;
+			case 4:
+				format = m_Surface->format->Rmask == 0x000000ff ? GL_RGBA : GL_BGRA;
+				break;
+#endif
+			default:
+				SDL_LogWarn(SDL_LOG_PRIORITY_WARN, "[Texture::Load] Image is not true color.");
+				break;
 		}
 
 		// Generate and create the texture.
 		glGenTextures(1, &m_ID);
 		glBindTexture(GL_TEXTURE_2D, m_ID);
-		glTexImage2D(GL_TEXTURE_2D, 0, colorCount, m_Width, m_Height, 0, format, GL_UNSIGNED_BYTE, m_Surface->pixels);
+		glTexImage2D(GL_TEXTURE_2D, 0, format, m_Width, m_Height, 0, format, GL_UNSIGNED_BYTE, m_Surface->pixels);
 
 		// Set scaling interpolation.
 		switch (p_Interpolation)
@@ -141,36 +176,32 @@ namespace SAGE
 		// Unbind the texture.
 		glBindTexture(GL_TEXTURE_2D, 0);
 
-		return true;
+		return (m_IsLoaded = true);
 	}
 
-	void Texture::GetColor(int p_X, int p_Y, Uint8& p_Red, Uint8& p_Green, Uint8& p_Blue, Uint8& p_Alpha)
+	bool Texture::Unload()
 	{
-		Uint8* pixel = (Uint8*)m_Surface->pixels + p_Y * m_Surface->pitch + p_X * m_Surface->format->BytesPerPixel;
-		Uint32 color = 0;
-
-		switch (m_Surface->format->BytesPerPixel)
+		if (!m_IsLoaded)
 		{
-		case 1:
-			color = *pixel;
-			break;
-		case 2:
-			color = *(Uint16*)pixel;
-			break;
-		case 3:
-			if (SDL_BYTEORDER == SDL_BIG_ENDIAN)
-				color = pixel[0] << 16 | pixel[1] << 8 | pixel[2];
-			else
-				color = pixel[0] | pixel[1] << 8 | pixel[2] << 16;
-			break;
-		case 4:
-			color = *(Uint32*)pixel;
-			break;
-		default:
-			color = 0;
-			break;
+			SDL_Log("[Texture::Unload] Texture already unloaded. Doing nothing.");
+		}
+		else
+		{
+			// Free the surface.
+			if (m_Surface != nullptr)
+			{
+				SDL_FreeSurface(m_Surface);
+			}
+
+			// Delete the texture.
+			if (m_ID != -1)
+			{
+				glDeleteTextures(1, &m_ID);
+			}
+
+			m_IsLoaded = false;
 		}
 
-		SDL_GetRGBA(color, m_Surface->format, &p_Red, &p_Green, &p_Blue, &p_Alpha);
+		return true;
 	}
 }

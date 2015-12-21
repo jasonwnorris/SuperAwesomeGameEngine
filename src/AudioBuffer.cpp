@@ -1,10 +1,10 @@
 // AudioBuffer.cpp
 
 // SDL Includes
-#include <SDL2\SDL_mixer.h>
+#include <SDL2/SDL_mixer.h>
 // SAGE Includes
-#include <SAGE\AudioBuffer.hpp>
-#include <SAGE\Console.hpp>
+#include <SAGE/AudioBuffer.hpp>
+#include <SAGE/Console.hpp>
 
 namespace SAGE
 {

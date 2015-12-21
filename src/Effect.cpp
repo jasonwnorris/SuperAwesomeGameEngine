@@ -1,9 +1,9 @@
 // Effect.cpp
 
 // SDL Includes
-#include <SDL2\SDL.h>
+#include <SDL2/SDL.h>
 // SAGE Includes
-#include <SAGE\Effect.hpp>
+#include <SAGE/Effect.hpp>
 // STL Includes
 #include <iostream>
 #include <fstream>
@@ -12,50 +12,68 @@
 namespace SAGE
 {
 	const std::string Effect::PositionColorVertexSource =
+#if defined __ANDROID__
+		"#version 300 es\n\n"
+#else
 		"#version 330 core\n\n"
+#endif
 		"uniform mat4 uProjectionMatrix;\n"
 		"uniform mat4 uModelViewMatrix;\n\n"
-		"layout(location = 0) in vec2 Position;\n"
-		"layout(location = 1) in vec4 Color;\n\n"
-		"out vec4 vs_fs_color;\n\n"
+		"layout(location = 0) in vec2 in_Position;\n"
+		"layout(location = 1) in vec4 in_Color;\n\n"
+		"out vec4 pass_Color;\n\n"
 		"void main()\n"
 		"{\n"
-		"	vs_fs_color = Color;\n\n"
-		"	gl_Position = uProjectionMatrix * uModelViewMatrix * vec4(Position, 1.0, 1.0);\n"
+		"	pass_Color = in_Color;\n\n"
+		"	gl_Position = uProjectionMatrix * uModelViewMatrix * vec4(in_Position, 1.0, 1.0);\n"
 		"}";
 
 	const std::string Effect::PositionColorFragmentSource =
+#if defined __ANDROID__
+		"#version 300 es\n\n"
+#else
 		"#version 330 core\n\n"
-		"in vec4 vs_fs_color;\n\n"
+#endif
+		"in vec4 pass_Color;\n"
+		"out vec4 out_Color;\n\n"
 		"void main()\n"
 		"{\n"
-		"	gl_FragColor = vs_fs_color;\n"
+		"	out_Color = pass_Color;\n"
 		"}";
 
 	const std::string Effect::PositionColorTextureVertexSource =
+#if defined __ANDROID__
+		"#version 300 es\n\n"
+#else
 		"#version 330 core\n\n"
+#endif
 		"uniform mat4 uProjectionMatrix;\n"
 		"uniform mat4 uModelViewMatrix;\n\n"
-		"layout(location = 0) in vec2 Position;\n"
-		"layout(location = 1) in vec4 Color;\n"
-		"layout(location = 2) in vec2 TexCoord;\n\n"
-		"out vec4 vs_fs_color;\n"
-		"out vec2 vs_fs_texcoord;\n\n"
+		"layout(location = 0) in vec2 in_Position;\n"
+		"layout(location = 1) in vec4 in_Color;\n"
+		"layout(location = 2) in vec2 in_TexCoord;\n\n"
+		"out vec4 pass_Color;\n"
+		"out vec2 pass_TexCoord;\n\n"
 		"void main()\n"
 		"{\n"
-		"	vs_fs_color = Color;\n"
-		"	vs_fs_texcoord = TexCoord;\n\n"
-		"	gl_Position = uProjectionMatrix * uModelViewMatrix * vec4(Position, 1.0, 1.0);\n"
+		"	pass_Color = in_Color;\n"
+		"	pass_TexCoord = in_TexCoord;\n\n"
+		"	gl_Position = uProjectionMatrix * uModelViewMatrix * vec4(in_Position, 1.0, 1.0);\n"
 		"}";
 
 	const std::string Effect::PositionColorTextureFragmentSource =
+#if defined __ANDROID__
+		"#version 300 es\n\n"
+#else
 		"#version 330 core\n\n"
+#endif
 		"uniform sampler2D uTextureSampler;\n\n"
-		"in vec4 vs_fs_color;\n"
-		"in vec2 vs_fs_texcoord;\n\n"
+		"in vec4 pass_Color;\n"
+		"in vec2 pass_TexCoord;\n\n"
+		"out vec4 out_Color;\n\n"
 		"void main()\n"
 		"{\n"
-		"	gl_FragColor = texture2D(uTextureSampler, vs_fs_texcoord) * vs_fs_color;\n"
+		"	out_Color = texture(uTextureSampler, pass_TexCoord) * pass_Color;\n"
 		"}";
 
 	Effect::Effect()
@@ -122,7 +140,7 @@ namespace SAGE
 		glGetShaderiv(shader, GL_COMPILE_STATUS, &status);
 		if (status != GL_TRUE)
 		{
-			GLint length;
+			GLint length = 0;
 			GLchar message[256];
 			glGetShaderInfoLog(shader, length, &length, message);
 
@@ -162,7 +180,7 @@ namespace SAGE
 		glGetProgramiv(m_Program, GL_LINK_STATUS, &linked);
 		if (linked != GL_TRUE)
 		{
-			GLsizei length;
+			GLsizei length = 0;
 			glGetProgramiv(m_Program, GL_INFO_LOG_LENGTH, &length);
 			GLchar* message = new GLchar[length + 1];
 			glGetProgramInfoLog(m_Program, length, &length, message);
@@ -191,8 +209,8 @@ namespace SAGE
 		glGetProgramiv(m_Program, GL_ACTIVE_UNIFORMS, &total);
 		for (GLint i = 0; i < total; i++)
 		{
-			int number;
-			int length;
+			int number = 0;
+			int length = 0;
 			GLenum type = GL_ZERO;
 			char name[128];
 			glGetActiveUniform(m_Program, i, 127, &length, &number, &type, name);

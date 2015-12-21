@@ -4,12 +4,11 @@
 #define __SAGE_GAME_HPP__
 
 // SAGE Includes
-#include <SAGE\GeometryBatch.hpp>
-#include <SAGE\SpriteBatch.hpp>
-#include <SAGE\ScreenManager.hpp>
-// SAGE Includes
-#include <SAGE\Timer.hpp>
-#include <SAGE\Window.hpp>
+#include <SAGE/GeometryBatch.hpp>
+#include <SAGE/SpriteBatch.hpp>
+#include <SAGE/ScreenManager.hpp>
+#include <SAGE/Timer.hpp>
+#include <SAGE/Window.hpp>
 
 namespace SAGE
 {

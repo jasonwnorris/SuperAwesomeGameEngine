@@ -4,8 +4,8 @@
 #define __SAGE_QUATERNION_HPP__
 
 // SAGE Includes
-#include <SAGE\Matrix3.hpp>
-#include <SAGE\Matrix4.hpp>
+#include <SAGE/Matrix3.hpp>
+#include <SAGE/Matrix4.hpp>
 
 namespace SAGE
 {

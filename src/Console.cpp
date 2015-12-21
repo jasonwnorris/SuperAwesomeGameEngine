@@ -1,11 +1,11 @@
 // Console.cpp
 
+// SAGE Includes
+#include <SAGE/Console.hpp>
 // STD Includes
 #include <iostream>
 #include <stdio.h>
 #include <stdarg.h>
-// SAGE Includes
-#include <SAGE\Console.hpp>
 
 namespace SAGE
 {
@@ -25,7 +25,7 @@ namespace SAGE
 		va_start(args, p_Text);
 		vprintf(p_Text, args);
 		va_end(args);
-		printf("\n");
+		printf("/n");
 	}
 
 	// static

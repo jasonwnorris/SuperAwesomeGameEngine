@@ -1,11 +1,11 @@
 // GeometryBatch.cpp
 
 // OpenGL Includes
-#include <gl\glew.h>
+#include <GL/glew.h>
 // SAGE Includes
-#include <SAGE\GeometryBatch.hpp>
+#include <SAGE/GeometryBatch.hpp>
 // SDL Includes
-#include <SDL2\SDL.h>
+#include <SDL2/SDL.h>
 
 namespace SAGE
 {
@@ -61,12 +61,16 @@ namespace SAGE
 		glBindBuffer(GL_ARRAY_BUFFER, m_VertexBufferObject);
 		glBufferData(GL_ARRAY_BUFFER, MaxVertexCount * sizeVPC, nullptr, GL_DYNAMIC_DRAW);
 
+		#define BUFFER_OFFSET(i) ((char*)0 + (i))
+
 		// Position
 		glEnableVertexAttribArray(0);
-		glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeVPC, (GLvoid*)(sizeFloat * 0));
+		glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeVPC, BUFFER_OFFSET(sizeFloat * 0));
 		// Color
 		glEnableVertexAttribArray(1);
-		glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeVPC, (GLvoid*)(sizeFloat * 2));
+		glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeVPC, BUFFER_OFFSET(sizeFloat * 2));
+
+		#undef BUFFER_OFFSET
 
 		glBindVertexArray(0);
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -292,7 +296,6 @@ namespace SAGE
 	void GeometryBatch::Render()
 	{
 		int length = 0;
-		int texID = -1;
 
 		for (int i = 0; i < m_ItemCount; ++i)
 		{

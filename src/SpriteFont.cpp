@@ -1,9 +1,10 @@
 // SpriteFont.cpp
 
 // SAGE Includes
-#include <SAGE\SpriteFont.hpp>
+#include <SAGE/SpriteFont.hpp>
 // STL Includes
 #include <sstream>
+#include <stdio.h>
 
 namespace SAGE
 {
@@ -11,10 +12,15 @@ namespace SAGE
 	{
 		m_Size = 0.0f;
 		m_Spacing = 0.0f;
+		m_IsLoaded = false;
 	}
 
 	SpriteFont::~SpriteFont()
 	{
+		if (m_IsLoaded)
+		{
+			Unload();
+		}
 	}
 
 	const Texture& SpriteFont::GetTexture() const
@@ -60,6 +66,22 @@ namespace SAGE
 		m_Size = p_Size;
 		m_Spacing = p_Spacing;
 
+		return (m_IsLoaded = true);
+	}
+
+	bool SpriteFont::Unload()
+	{
+		if (!m_IsLoaded)
+		{
+			SDL_Log("[SpriteFont::Unload] SpriteFont already unloaded. Doing nothing.");
+		}
+		else
+		{
+			m_Texture.Unload();
+
+			m_IsLoaded = false;
+		}
+
 		return true;
 	}
 	
@@ -73,7 +95,7 @@ namespace SAGE
 		std::stringstream ss(p_String);
 		std::string line;
 
-		while (std::getline(ss, line, '\n'))
+		while (std::getline(ss, line))
 		{
 			int length = (int)line.length();
 			if (length > maxLength)

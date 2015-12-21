@@ -4,8 +4,8 @@
 #define __SAGE_MOUSE_H__
 
 // SAGE Includes
-#include <SAGE\Events.hpp>
-#include <SAGE\Vector2.hpp>
+#include <SAGE/Events.hpp>
+#include <SAGE/Vector2.hpp>
 
 namespace SAGE
 {

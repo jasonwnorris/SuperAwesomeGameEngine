@@ -1,10 +1,10 @@
 // Events.cpp
 
 // SAGE Includes
-#include <SAGE\Events.hpp>
-#include <SAGE\GamePad.hpp>
-#include <SAGE\Keyboard.hpp>
-#include <SAGE\Mouse.hpp>
+#include <SAGE/Events.hpp>
+#include <SAGE/GamePad.hpp>
+#include <SAGE/Keyboard.hpp>
+#include <SAGE/Mouse.hpp>
 
 namespace SAGE
 {

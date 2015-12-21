@@ -1,13 +1,9 @@
 // Color.cpp
 
-// OpenGL Includes
-#include <gl\glew.h>
-// SDL Includes
-#include <SDL2\SDL.h>
 // SAGE Includes
-#include <SAGE\Color.hpp>
-#include <SAGE\MathUtil.hpp>
-// STD Includes
+#include <SAGE/Color.hpp>
+#include <SAGE/Math.hpp>
+// STL Includes
 #include <string>
 
 namespace SAGE
@@ -153,6 +149,26 @@ namespace SAGE
 		return m_Alpha;
 	}
 
+	unsigned char Color::GetRedAsByte() const
+	{
+		return static_cast<unsigned char>(GetRed() * 255);
+	}
+
+	unsigned char Color::GetGreenAsByte() const
+	{
+		return static_cast<unsigned char>(GetGreen() * 255);
+	}
+
+	unsigned char Color::GetBlueAsByte() const
+	{
+		return static_cast<unsigned char>(GetBlue() * 255);
+	}
+
+	unsigned char Color::GetAlphaAsByte() const
+	{
+		return static_cast<unsigned char>(GetAlpha() * 255);
+	}
+
 	void Color::SetRed(float p_Red)
 	{
 		m_Red = p_Red;
@@ -173,11 +189,6 @@ namespace SAGE
 		m_Alpha = p_Alpha;
 	}
 
-	void Color::SetOpenGL() const
-	{
-		glColor4f(m_Red, m_Green, m_Blue, m_Alpha);
-	}
-
 	Color& Color::Invert(bool p_InvertAlpha)
 	{
 		m_Red = 1.0f - m_Red;
@@ -196,9 +207,9 @@ namespace SAGE
 	// static
 	Color Color::Lerp(const Color& p_ColorA, const Color& p_ColorB, float p_Amount)
 	{
-		return Color(MathUtil::Lerp(p_ColorA.GetRed(), p_ColorB.GetRed(), p_Amount),
-					 MathUtil::Lerp(p_ColorA.GetGreen(), p_ColorB.GetGreen(), p_Amount),
-					 MathUtil::Lerp(p_ColorA.GetBlue(), p_ColorB.GetBlue(), p_Amount),
-					 MathUtil::Lerp(p_ColorA.GetAlpha(), p_ColorB.GetAlpha(), p_Amount));
+		return Color(Math::Lerp(p_ColorA.GetRed(), p_ColorB.GetRed(), p_Amount),
+					 Math::Lerp(p_ColorA.GetGreen(), p_ColorB.GetGreen(), p_Amount),
+					 Math::Lerp(p_ColorA.GetBlue(), p_ColorB.GetBlue(), p_Amount),
+					 Math::Lerp(p_ColorA.GetAlpha(), p_ColorB.GetAlpha(), p_Amount));
 	}
 }

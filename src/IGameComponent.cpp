@@ -1,7 +1,7 @@
 // IGameComponent.cpp
 
 // SAGE Includes
-#include <SAGE\IGameComponent.hpp>
+#include <SAGE/IGameComponent.hpp>
 
 namespace SAGE
 {

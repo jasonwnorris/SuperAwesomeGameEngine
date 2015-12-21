@@ -1,7 +1,7 @@
-// MathUtil.hpp
+// Math.hpp
 
-#ifndef __SAGE_MATHUTIL_HPP__
-#define __SAGE_MATHUTIL_HPP__
+#ifndef __SAGE_MATH_HPP__
+#define __SAGE_MATH_HPP__
 
 // STD Includes
 #include <math.h>
@@ -9,7 +9,7 @@
 
 namespace SAGE
 {
-	class MathUtil
+	class Math
 	{
 		public:
 			static float Pi;
@@ -43,6 +43,9 @@ namespace SAGE
 			static float SignOf(float p_Value) { return p_Value / Abs(p_Value); }
 			static double SignOf(double p_Value) { return p_Value / Abs(p_Value); }
 			template<typename T> static T SignOf(T p_Value) { return p_Value / Abs(p_Value); }
+
+			static float Sqrt(float p_Value) { return sqrtf(p_Value); }
+			static double Sqrt(double p_Value) { return sqrt(p_Value); }
 
 			static float Lerp(float p_ValueA, float p_ValueB, float p_Amount)
 			{

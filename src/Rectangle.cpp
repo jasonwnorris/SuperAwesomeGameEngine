@@ -1,7 +1,7 @@
 // Rectangle.cpp
 
 // SAGE Includes
-#include <SAGE\Rectangle.hpp>
+#include <SAGE/Rectangle.hpp>
 
 namespace SAGE
 {

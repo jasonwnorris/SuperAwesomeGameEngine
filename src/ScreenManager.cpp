@@ -1,7 +1,7 @@
 // ScreenManager.cpp
 
 // SAGE Includes
-#include <SAGE\ScreenManager.hpp>
+#include <SAGE/ScreenManager.hpp>
 
 namespace SAGE
 {

@@ -1,8 +1,8 @@
 // Vector2.cpp
 
 // SAGE Includes
-#include <SAGE\MathUtil.hpp>
-#include <SAGE\Vector2.hpp>
+#include <SAGE/Math.hpp>
+#include <SAGE/Vector2.hpp>
 
 namespace SAGE
 {
@@ -33,7 +33,7 @@ namespace SAGE
 
 	float Vector2::Length() const
 	{
-		return sqrt(LengthSquared());
+		return Math::Sqrt(LengthSquared());
 	}
 
 	float Vector2::LengthSquared() const

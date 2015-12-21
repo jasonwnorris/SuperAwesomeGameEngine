@@ -4,8 +4,8 @@
 #define __SAGE_SCREENMANAGER_HPP__
 
 // SAGE Includes
-#include <SAGE\IGameComponent.hpp>
-#include <SAGE\Screen.hpp>
+#include <SAGE/IGameComponent.hpp>
+#include <SAGE/Screen.hpp>
 // STL Includes
 #include <vector>
 

@@ -4,13 +4,12 @@
 #define __SAGE_GEOMETRYBATCH_HPP__
 
 // SAGE Includes
-#include <SAGE\Camera2D.hpp>
-#include <SAGE\VertexDefinitions.hpp>
-// SAGE Includes
-#include <SAGE\Color.hpp>
-#include <SAGE\Effect.hpp>
-#include <SAGE\Rectangle.hpp>
-#include <SAGE\Vector2.hpp>
+#include <SAGE/Camera2D.hpp>
+#include <SAGE/Color.hpp>
+#include <SAGE/Effect.hpp>
+#include <SAGE/Rectangle.hpp>
+#include <SAGE/Vector2.hpp>
+#include <SAGE/VertexDefinitions.hpp>
 // STL Includes
 #include <vector>
 

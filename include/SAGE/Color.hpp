@@ -49,6 +49,11 @@ namespace SAGE
 			float GetBlue() const;
 			float GetAlpha() const;
 
+			unsigned char GetRedAsByte() const;
+			unsigned char GetGreenAsByte() const;
+			unsigned char GetBlueAsByte() const;
+			unsigned char GetAlphaAsByte() const;
+
 			void SetRed(float p_Red);
 			void SetGreen(float p_Green);
 			void SetBlue(float p_Blue);

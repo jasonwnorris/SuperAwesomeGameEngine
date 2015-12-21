@@ -4,7 +4,7 @@
 #define __SAGE_KEYBOARD_H__
 
 // SDL Includes
-#include <SDL2\SDL.h>
+#include <SDL2/SDL.h>
 // STD Includes
 #include <map>
 

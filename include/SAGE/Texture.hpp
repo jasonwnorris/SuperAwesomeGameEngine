@@ -4,9 +4,13 @@
 #define __SAGE_TEXTURE_HPP__
 
 // OpenGL Includes
-#include <gl\glew.h>
+#if defined __ANDROID__
+	#include <GLES3/gl3.h>
+#else
+	#include <GL/glew.h>
+#endif
 // SAGE Includes
-#include <SAGE\Surface.hpp>
+#include <SAGE/Surface.hpp>
 // STL Includes
 #include <string>
 
@@ -38,9 +42,10 @@ namespace SAGE
 			unsigned int GetID() const;
 			Uint32* GetPixels() const;
 			SDL_PixelFormat* GetFormat() const;
+			void GetColor(int p_X, int p_Y, Uint8& p_Red, Uint8& p_Green, Uint8& p_Blue, Uint8& p_Alpha);
 
 			bool Load(const std::string& p_Filename, Interpolation p_Interpolation = Interpolation::Linear, Wrapping p_Wrapping = Wrapping::Repeat);
-			void GetColor(int p_X, int p_Y, Uint8& p_Red, Uint8& p_Green, Uint8& p_Blue, Uint8& p_Alpha);
+			bool Unload();
 
 		private:
 			SDL_Surface* m_Surface;
@@ -48,6 +53,7 @@ namespace SAGE
 			unsigned int m_Height;
 			unsigned int m_BPP;
 			unsigned int m_ID;
+			bool m_IsLoaded;
 	};
 }
 

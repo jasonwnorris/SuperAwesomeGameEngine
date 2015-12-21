@@ -1,10 +1,7 @@
 // Camera2D.cpp
 
 // SAGE Includes
-#include <SAGE\Camera2D.hpp>
-// SAGE Includes
-#include <SAGE\MathUtil.hpp>
-#include <SAGE\Matrix4.hpp>
+#include <SAGE/Camera2D.hpp>
 
 namespace SAGE
 {

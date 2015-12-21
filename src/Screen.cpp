@@ -1,7 +1,7 @@
 // Screen.cpp
 
 // SAGE Includes
-#include <SAGE\Screen.hpp>
+#include <SAGE/Screen.hpp>
 
 namespace SAGE
 {

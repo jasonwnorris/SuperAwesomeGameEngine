@@ -4,7 +4,7 @@
 #define __SAGE_TIMER_HPP__
 
 // SDL Includes
-#include <SDL2\SDL.h>
+#include <SDL2/SDL.h>
 
 namespace SAGE
 {

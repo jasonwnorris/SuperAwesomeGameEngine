@@ -3,10 +3,10 @@
 #ifndef __SAGE_GAMEPAD_H__
 #define __SAGE_GAMEPAD_H__
 
+// SDL Includes
+#include <SDL2/SDL.h>
 // STD Includes
 #include <map>
-// SDL Includes
-#include <SDL2\SDL.h>
 
 namespace SAGE
 {

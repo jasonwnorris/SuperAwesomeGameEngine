@@ -1,16 +1,22 @@
 // Window.cpp
 
-// GL Includes
-#include <gl\glew.h>
+// OpenGL Includes
+#if defined __ANDROID__
+	#include <GLES3/gl3.h>
+#else
+	#include <GL/glew.h>
+#endif
 // SAGE Includes
-#include <SAGE\Window.hpp>
+#include <SAGE/Window.hpp>
 // JsonCpp Includes
-#include <json\json.h>
+#include <json/json.h>
 // STL Includes
 #include <fstream>
 
 namespace SAGE
 {
+	const MessageBoxDetails MessageBoxDetails::DefaultDetails;
+
 	const std::string WindowOptions::DefaultTitle = "Untitled Window";
 	const int WindowOptions::DefaultWidth = 1024;
 	const int WindowOptions::DefaultHeight = 768;
@@ -107,20 +113,10 @@ namespace SAGE
 
 	Window::~Window()
 	{
-		// Delete the context.
-		if (m_Context != nullptr)
+		if (m_IsInitialized)
 		{
-			SDL_GL_DeleteContext(m_Context);
+			Finalize();
 		}
-
-		// Destroy the window.
-		if (m_Window != nullptr)
-		{
-			SDL_DestroyWindow(m_Window);
-		}
-
-		// Quit SDL.
-		SDL_Quit();
 	}
 
 	SDL_Window* Window::GetC() const
@@ -133,44 +129,49 @@ namespace SAGE
 	{
 		if (m_IsInitialized)
 		{
-			SDL_Log("[Window::Initialize] Window already initialized.");
+			SDL_Log("[Window::Initialize] Window already initialized. Use Reinitialize to make changes to an existing Window.");
 			return false;
 		}
-
-		// Initialize SDL.
-		if (SDL_Init(SDL_INIT_EVERYTHING) < 0)
-			return false;
-		
-		// Set OpenGL values.
-		SDL_GL_SetAttribute(SDL_GL_RED_SIZE, 8);
-		SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, 8);
-		SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE, 8);
-		SDL_GL_SetAttribute(SDL_GL_ALPHA_SIZE, 8);
-		SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
-		
-		// Set OpenGL version.
-		SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_COMPATIBILITY);
-		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
-		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
 		
 		// Setup window flags.
+#if defined __ANDROID__
+		Uint32 flags = SDL_WINDOW_OPENGL | SDL_WINDOW_FULLSCREEN;
+		// Grab screen display.
+		SDL_DisplayMode display;
+		SDL_GetDesktopDisplayMode(0, &display);
+		p_Options.Width = display.w;
+		p_Options.Height = display.h;
+#else
 		Uint32 flags = SDL_WINDOW_OPENGL;
 		if (p_Options.Hidden)
+		{
 			flags |= SDL_WINDOW_HIDDEN;
-		if (p_Options.Mode == WindowMode::Windowed)
-			flags |= SDL_WINDOW_SHOWN;
-		else if (p_Options.Mode == WindowMode::BorderlessWindowed)
-			flags |= SDL_WINDOW_BORDERLESS;
-		else if (p_Options.Mode == WindowMode::Fullscreen)
-			flags |= SDL_WINDOW_FULLSCREEN;
-		else if (p_Options.Mode == WindowMode::FullscreenWindowed)
-			flags |= SDL_WINDOW_FULLSCREEN_DESKTOP;
+		}
+		switch (p_Options.Mode)
+		{
+			case WindowMode::Windowed:
+				flags |= SDL_WINDOW_SHOWN;
+				break;
+			case WindowMode::BorderlessWindowed:
+				flags |= SDL_WINDOW_BORDERLESS;
+				break;
+			case WindowMode::Fullscreen:
+				flags |= SDL_WINDOW_FULLSCREEN;
+				break;
+			case WindowMode::FullscreenWindowed:
+				flags |= SDL_WINDOW_FULLSCREEN_DESKTOP;
+				break;
+		}
+#endif
+
+		// Set viewport.
+		glViewport(0, 0, p_Options.Width, p_Options.Height);
 
 		// Create the window.
 		m_Window = SDL_CreateWindow(p_Options.Title.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, p_Options.Width, p_Options.Height, flags);
 		if (m_Window == nullptr)
 		{
-			SDL_Log("[Window::Initialize] Failed to initialize window: %s", SDL_GetError());
+			SDL_Log("[Window::Initialize] Failed to create window: %s", SDL_GetError());
 			return false;
 		}
 
@@ -189,9 +190,11 @@ namespace SAGE
 			return false;
 		}
 
-		m_IsInitialized = true;
+		// Set OpenGL properties.
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-		return true;
+		return (m_IsInitialized = true);
 	}
 
 	bool Window::Reinitialize(const WindowOptions& p_Options)
@@ -204,11 +207,16 @@ namespace SAGE
 
 		// Set title and resize.
 		SetTitle(p_Options.Title);
-		Resize(p_Options.Width, p_Options.Height);
+		SetSize(p_Options.Width, p_Options.Height);
 
 		// Adjust mode.
+		Uint32 flags = 0;
+		if (p_Options.Mode == WindowMode::Fullscreen || p_Options.Mode == WindowMode::FullscreenWindowed)
+		{
+			flags = p_Options.Mode;
+		}
 		SDL_SetWindowBordered(m_Window, p_Options.Mode == WindowMode::Windowed ? SDL_TRUE : SDL_FALSE);
-		if (SDL_SetWindowFullscreen(m_Window, p_Options.Mode == WindowMode::Fullscreen || p_Options.Mode == WindowMode::FullscreenWindowed ? p_Options.Mode : 0) < 0)
+		if (SDL_SetWindowFullscreen(m_Window, flags) < 0)
 		{
 			SDL_Log("[Window::Reinitialize] Failed to adjust fullscreen: %s", SDL_GetError());
 			return false;
@@ -222,7 +230,9 @@ namespace SAGE
 
 		// Check if hidden.
 		if (p_Options.Hidden)
+		{
 			Hide();
+		}
 
 		return true;
 	}
@@ -231,22 +241,57 @@ namespace SAGE
 	{
 		if (!m_IsInitialized)
 		{
-			SDL_Log("[Window::Finalize] Window hasn't even been initialized.");
-			return false;
+			SDL_Log("[Window::Finalize] Window already finalized. Doing nothing.");
+		}
+		else
+		{
+			// Delete the context.
+			if (m_Context != nullptr)
+			{
+				SDL_GL_DeleteContext(m_Context);
+			}
+
+			// Destroy the window.
+			if (m_Window != nullptr)
+			{
+				SDL_DestroyWindow(m_Window);
+			}
+
+			m_IsInitialized = false;
 		}
 
-		SDL_GL_DeleteContext(m_Context);
-		SDL_DestroyWindow(m_Window);
-		SDL_Quit();
-
-		m_IsInitialized = false;
-
 		return true;
+	}
+
+	void Window::GetTitle(std::string& p_Title)
+	{
+		p_Title = SDL_GetWindowTitle(m_Window);
+	}
+
+	void Window::GetPosition(int& p_X, int& p_Y)
+	{
+		SDL_GetWindowPosition(m_Window, &p_X, &p_Y);
+	}
+
+	void Window::GetSize(int& p_Width, int& p_Height)
+	{
+		SDL_GetWindowSize(m_Window, &p_Width, &p_Height);
 	}
 
 	void Window::SetTitle(const std::string& p_Title)
 	{
 		SDL_SetWindowTitle(m_Window, p_Title.c_str());
+	}
+
+	void Window::SetPosition(int p_X, int p_Y)
+	{
+		SDL_SetWindowPosition(m_Window, p_X, p_Y);
+	}
+
+	void Window::SetSize(int p_Width, int p_Height)
+	{
+		SDL_SetWindowSize(m_Window, p_Width, p_Height);
+		glViewport(0, 0, p_Width, p_Height);
 	}
 
 	void Window::SetIcon(const Surface& p_Surface)
@@ -265,15 +310,12 @@ namespace SAGE
 		//  1 = synchronized
 		// -1 = late swap tearing (not supporting)
 		if (SDL_GL_SetSwapInterval(p_Enabled ? 1 : 0) < 0)
+		{
+			SDL_Log("[Window::SetVerticalSync] Error setting vertical sync: %s", SDL_GetError());
 			return false;
+		}
 
 		return true;
-	}
-
-	void Window::Resize(int p_Width, int p_Height)
-	{
-		SDL_SetWindowSize(m_Window, p_Width, p_Height);
-		glViewport(0, 0, p_Width, p_Height);
 	}
 
 	void Window::Show()
@@ -314,6 +356,117 @@ namespace SAGE
 	void Window::Flip()
 	{
 		SDL_GL_SwapWindow(m_Window);
+	}
+
+	void Window::ShowSimpleMessageBox(const std::string& p_Title, const std::string& p_Text, MessageBoxLevel p_Level)
+	{
+		if (SDL_ShowSimpleMessageBox(p_Level, p_Title.c_str(), p_Text.c_str(), m_Window) < 0)
+		{
+			SDL_Log("[Window::ShowSimpleMessageBox] Error showing message box: %s", SDL_GetError());
+		}
+	}
+
+	MessageBoxButton Window::ShowCustomMessageBox(const std::string& p_Title, const std::string& p_Text, MessageBoxDetails p_Details)
+	{
+		int buttonCount = 0;
+		SDL_MessageBoxButtonData* buttons = nullptr;
+
+		switch (p_Details.ButtonSet)
+		{
+			case AbortRetryIgnoreSet:
+				buttonCount = 3;
+				buttons = new SDL_MessageBoxButtonData[buttonCount] {
+					{                                       0, MessageBoxButton::Abort,  "Abort" },
+					{ SDL_MESSAGEBOX_BUTTON_RETURNKEY_DEFAULT, MessageBoxButton::Retry,  "Retry" },
+					{ SDL_MESSAGEBOX_BUTTON_ESCAPEKEY_DEFAULT, MessageBoxButton::Ignore, "Ignore" }
+				};
+				break;
+			case OKSet:
+				buttonCount = 1;
+				buttons = new SDL_MessageBoxButtonData[buttonCount] {
+					{ SDL_MESSAGEBOX_BUTTON_RETURNKEY_DEFAULT, MessageBoxButton::OK, "OK" }
+				};
+				break;
+			case OKCancelSet:
+				buttonCount = 2;
+				buttons = new SDL_MessageBoxButtonData[buttonCount] {
+					{ SDL_MESSAGEBOX_BUTTON_RETURNKEY_DEFAULT, MessageBoxButton::OK,     "OK" },
+					{ SDL_MESSAGEBOX_BUTTON_ESCAPEKEY_DEFAULT, MessageBoxButton::Cancel, "Cancel" }
+				};
+				break;
+			case RetryCancelSet:
+				buttonCount = 2;
+				buttons = new SDL_MessageBoxButtonData[buttonCount] {
+					{ SDL_MESSAGEBOX_BUTTON_RETURNKEY_DEFAULT, MessageBoxButton::Retry,  "Retry" },
+					{ SDL_MESSAGEBOX_BUTTON_ESCAPEKEY_DEFAULT, MessageBoxButton::Cancel,  "Cancel" }
+				};
+				break;
+			case YesNoSet:
+				buttonCount = 2;
+				buttons = new SDL_MessageBoxButtonData[buttonCount] {
+					{ SDL_MESSAGEBOX_BUTTON_RETURNKEY_DEFAULT, MessageBoxButton::Yes, "Yes" },
+					{                                       0, MessageBoxButton::No,  "No" }
+				};
+				break;
+			case YesNoCancelSet:
+				buttonCount = 3;
+				buttons = new SDL_MessageBoxButtonData[buttonCount] {
+					{ SDL_MESSAGEBOX_BUTTON_RETURNKEY_DEFAULT, MessageBoxButton::Yes,    "Yes" },
+					{                                       0, MessageBoxButton::No,     "No" },
+					{ SDL_MESSAGEBOX_BUTTON_ESCAPEKEY_DEFAULT, MessageBoxButton::Cancel, "Cancel" }
+				};
+				break;
+		}
+
+		const SDL_MessageBoxColorScheme scheme = {
+			{
+				{
+					p_Details.Scheme.BackgroundColor.GetRedAsByte(),
+					p_Details.Scheme.BackgroundColor.GetGreenAsByte(),
+					p_Details.Scheme.BackgroundColor.GetBlueAsByte()
+				},
+				{
+					p_Details.Scheme.TextColor.GetRedAsByte(),
+					p_Details.Scheme.TextColor.GetGreenAsByte(),
+					p_Details.Scheme.TextColor.GetBlueAsByte()
+				},
+				{
+					p_Details.Scheme.ButtonBorderColor.GetRedAsByte(),
+					p_Details.Scheme.ButtonBorderColor.GetGreenAsByte(),
+					p_Details.Scheme.ButtonBorderColor.GetBlueAsByte()
+				},
+				{
+					p_Details.Scheme.ButtonBackgroundColor.GetRedAsByte(),
+					p_Details.Scheme.ButtonBackgroundColor.GetGreenAsByte(),
+					p_Details.Scheme.ButtonBackgroundColor.GetBlueAsByte()
+				},
+				{
+					p_Details.Scheme.ButtonSelectedColor.GetRedAsByte(),
+					p_Details.Scheme.ButtonSelectedColor.GetGreenAsByte(),
+					p_Details.Scheme.ButtonSelectedColor.GetBlueAsByte()
+				}
+			}
+		};
+
+		const SDL_MessageBoxData data = {
+			static_cast<Uint32>(p_Details.Level),
+			m_Window,
+			p_Title.c_str(),
+			p_Text.c_str(),
+			buttonCount,
+			buttons,
+			&scheme
+		};
+
+		int retval;
+		if (SDL_ShowMessageBox(&data, &retval) < 0)
+		{
+			SDL_Log("[Window::ShowCustomMessageBox] Error showing message box: %s", SDL_GetError());
+		}
+
+		delete [] buttons;
+
+		return static_cast<MessageBoxButton>(retval);
 	}
 
 	void Window::PrintInfo()
