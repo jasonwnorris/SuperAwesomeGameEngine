@@ -10,9 +10,11 @@
 	#include <GL/glew.h>
 #endif
 // SAGE Includes
+#include <SAGE/Color.hpp>
 #include <SAGE/Surface.hpp>
 // STL Includes
 #include <string>
+#include <vector>
 
 namespace SAGE
 {
@@ -36,24 +38,31 @@ namespace SAGE
 			Texture();
 			~Texture();
 
+			unsigned int GetID() const;
 			unsigned int GetWidth() const;
 			unsigned int GetHeight() const;
-			unsigned int GetBPP() const;
-			unsigned int GetID() const;
-			Uint32* GetPixels() const;
-			SDL_PixelFormat* GetFormat() const;
-			void GetColor(int p_X, int p_Y, Uint8& p_Red, Uint8& p_Green, Uint8& p_Blue, Uint8& p_Alpha);
+			unsigned int GetBytesPerPixel() const;
+			Interpolation GetInterpolation() const;
+			Wrapping GetWrapping() const;
+			bool GetPixelColor(unsigned int p_X, unsigned int p_Y, Color& p_Color);
 
+			bool FromPixelColors(unsigned int p_Width, unsigned int p_Height, std::vector<Color> p_Colors, Interpolation p_Interpolation = Interpolation::Linear, Wrapping p_Wrapping = Wrapping::Repeat);
 			bool Load(const std::string& p_Filename, Interpolation p_Interpolation = Interpolation::Linear, Wrapping p_Wrapping = Wrapping::Repeat);
 			bool Unload();
 
 		private:
-			SDL_Surface* m_Surface;
+			bool CreateFromPixelData(void* p_PixelData);
+			bool ReadColorDataFromSurface(SDL_Surface* p_Surface, unsigned int p_X, unsigned int p_Y, Uint32& p_Pixel, Color& p_Color);
+
+			bool m_IsLoaded;
+			unsigned int m_ID;
 			unsigned int m_Width;
 			unsigned int m_Height;
-			unsigned int m_BPP;
-			unsigned int m_ID;
-			bool m_IsLoaded;
+			unsigned int m_BytesPerPixel;
+			Interpolation m_Interpolation;
+			Wrapping m_Wrapping;
+			std::vector<Uint32> m_Pixels;
+			std::vector<Color> m_Colors;
 	};
 }
 

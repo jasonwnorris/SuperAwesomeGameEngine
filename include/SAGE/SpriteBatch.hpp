@@ -61,6 +61,11 @@ namespace SAGE
 
 			bool Begin(Effect& p_Effect, const Camera2D& p_Camera = Camera2D::DefaultCamera, SortMode p_SortMode = SortMode::None, BlendMode p_BlendMode = BlendMode::None, RasterizerState p_RasterizerState = RasterizerState::CullCounterClockwise);
 
+			bool DrawLine(const Vector2& p_PositionA, const Vector2& p_PositionB, const Color& p_Color, float p_Thickness = 1.0f, float p_Depth = 0.0f);
+			bool DrawLine(const Vector2& p_PositionA, const Color& p_ColorA, const Vector2& p_PositionB, const Color& p_ColorB, float p_Thickness = 1.0f, float p_Depth = 0.0f);
+			bool DrawLines(const std::vector<Vector2>& p_Positions, const Color& p_Color, float p_Thickness = 1.0f, float p_Depth = 0.0f);
+			bool DrawLines(const std::vector<Vector2>& p_Positions, const std::vector<Color>& p_Colors, float p_Thickness = 1.0f, float p_Depth = 0.0f);
+
 			bool Draw(const Texture& p_Texture, const Vector2& p_Position, const Vector2& p_Dimensions, const Rectangle& p_SourceRectangle, const Color& p_Color, const Vector2& p_Origin, float p_Rotation, const Vector2& p_Scale, Orientation p_Orientation, float p_Depth = 0.0f);
 			bool Draw(const Texture& p_Texture, const Vector2& p_Position, const Rectangle& p_DestinationRectangle, const Rectangle& p_SourceRectangle, const Color& p_Color, const Vector2& p_Origin, float p_Rotation, const Vector2& p_Scale, Orientation p_Orientation, float p_Depth = 0.0f);
 			bool Draw(const Texture& p_Texture, const Rectangle& p_DestinationRectangle, const Rectangle& p_SourceRectangle, const Color& p_Color, const Vector2& p_Origin, float p_Rotation, const Vector2& p_Scale, Orientation p_Orientation, float p_Depth = 0.0f);
@@ -99,6 +104,7 @@ namespace SAGE
 			GLuint m_IndexBufferObject;
 			SpriteBatchItem m_BatchItemList[MaxBatchSize];
 			VertexPositionColorTexture m_VertexBuffer[MaxVertexCount];
+			Texture m_BlankTexture;
 	};
 }
 

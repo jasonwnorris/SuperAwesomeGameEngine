@@ -89,6 +89,14 @@ namespace SAGE
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
+		// Create the blank texture.
+		std::vector<Color> colors = { Color::White };
+		if (!m_BlankTexture.FromPixelColors(1, 1, colors))
+		{
+			SDL_Log("[SpriteBatch::Initialize] Failed to create 1x1 pixel blank texture.");
+			return false;
+		}
+
 		return true;
 	}
 
@@ -125,18 +133,114 @@ namespace SAGE
 		return true;
 	}
 
+	bool SpriteBatch::DrawLine(const Vector2& p_PositionA, const Vector2& p_PositionB, const Color& p_Color, float p_Thickness, float p_Depth)
+	{
+		return DrawLine(p_PositionA, p_Color, p_PositionB, p_Color, p_Thickness, p_Depth);
+	}
+
+	bool SpriteBatch::DrawLine(const Vector2& p_PositionA, const Color& p_ColorA, const Vector2& p_PositionB, const Color& p_ColorB, float p_Thickness, float p_Depth)
+	{
+		if (!m_WithinDrawPair)
+		{
+			SDL_Log("[SpriteBatch::DrawLine] Must start a draw pair first.");
+			return false;
+		}
+
+		// Create the identity vector perpendicular to the line.
+		Vector2 perpendicular = Vector2(p_PositionA.Y - p_PositionB.Y, p_PositionB.X - p_PositionA.X);
+		perpendicular.Normalize();
+
+		SpriteBatchItem& item = m_BatchItemList[m_ItemCount++];
+		item.TextureID = m_BlankTexture.GetID();
+		item.Depth = p_Depth;
+
+		item.VertexTL.Position.X = p_PositionA.X + perpendicular.X * p_Thickness / 2.0f;
+		item.VertexTL.Position.Y = p_PositionA.Y + perpendicular.Y * p_Thickness / 2.0f;
+		item.VertexTL.Color.R = p_ColorA.GetRed();
+		item.VertexTL.Color.G = p_ColorA.GetGreen();
+		item.VertexTL.Color.B = p_ColorA.GetBlue();
+		item.VertexTL.Color.A = p_ColorA.GetAlpha();
+		item.VertexTL.TexCoord.X = 0.0f;
+		item.VertexTL.TexCoord.Y = 1.0f;
+
+		item.VertexTR.Position.X = p_PositionA.X - perpendicular.X * p_Thickness / 2.0f;
+		item.VertexTR.Position.Y = p_PositionA.Y - perpendicular.Y * p_Thickness / 2.0f;
+		item.VertexTR.Color.R = p_ColorA.GetRed();
+		item.VertexTR.Color.G = p_ColorA.GetGreen();
+		item.VertexTR.Color.B = p_ColorA.GetBlue();
+		item.VertexTR.Color.A = p_ColorA.GetAlpha();
+		item.VertexTR.TexCoord.X = 1.0f;
+		item.VertexTR.TexCoord.Y = 1.0f;
+
+		item.VertexBL.Position.X = p_PositionB.X + perpendicular.X * p_Thickness / 2.0f;
+		item.VertexBL.Position.Y = p_PositionB.Y + perpendicular.Y * p_Thickness / 2.0f;
+		item.VertexBL.Color.R = p_ColorB.GetRed();
+		item.VertexBL.Color.G = p_ColorB.GetGreen();
+		item.VertexBL.Color.B = p_ColorB.GetBlue();
+		item.VertexBL.Color.A = p_ColorB.GetAlpha();
+		item.VertexBL.TexCoord.X = 0.0f;
+		item.VertexBL.TexCoord.Y = 0.0f;
+
+		item.VertexBR.Position.X = p_PositionB.X - perpendicular.X * p_Thickness / 2.0f;
+		item.VertexBR.Position.Y = p_PositionB.Y - perpendicular.Y * p_Thickness / 2.0f;
+		item.VertexBR.Color.R = p_ColorB.GetRed();
+		item.VertexBR.Color.G = p_ColorB.GetGreen();
+		item.VertexBR.Color.B = p_ColorB.GetBlue();
+		item.VertexBR.Color.A = p_ColorB.GetAlpha();
+		item.VertexBR.TexCoord.X = 1.0f;
+		item.VertexBR.TexCoord.Y = 0.0f;
+
+		return true;
+	}
+
+	bool SpriteBatch::DrawLines(const std::vector<Vector2>& p_Positions, const Color& p_Color, float p_Thickness, float p_Depth)
+	{
+		std::vector<Color> colors = { p_Color };
+
+		return DrawLines(p_Positions, colors, p_Thickness, p_Depth);
+	}
+
+	bool SpriteBatch::DrawLines(const std::vector<Vector2>& p_Positions, const std::vector<Color>& p_Colors, float p_Thickness, float p_Depth)
+	{
+		if (!m_WithinDrawPair)
+		{
+			SDL_Log("[SpriteBatch::DrawLine] Must start a draw pair first.");
+			return false;
+		}
+
+		int positionCount = static_cast<int>(p_Positions.size());
+
+		if (positionCount < 2)
+		{
+			SDL_Log("[SpriteBatch::DrawLine] Position vector must contain at least 2 values.");
+			return false;
+		}
+
+		int colorCount = static_cast<int>(p_Colors.size());
+
+		for (int i = 0; i < positionCount - 1; ++i)
+		{
+			if (!DrawLine(p_Positions[i], p_Colors[i % colorCount], p_Positions[i + 1], p_Colors[(i + 1) % colorCount], p_Thickness, p_Depth))
+			{
+				return false;
+			}
+		}
+
+		return true;
+	}
+
 	bool SpriteBatch::Draw(const Texture& p_Texture, const Vector2& p_Position, const Vector2& p_Dimensions, const Rectangle& p_SourceRectangle, const Color& p_Color, const Vector2& p_Origin, float p_Rotation, const Vector2& p_Scale, Orientation p_Orientation, float p_Depth)
 	{
 		// TODO: Factor in p_Dimensions.
 		return Draw(p_Texture, p_Position, p_SourceRectangle, p_Color, p_Origin, p_Rotation, p_Scale, p_Orientation, p_Depth);
 	}
-	
+
 	bool SpriteBatch::Draw(const Texture& p_Texture, const Vector2& p_Position, const Rectangle& p_DestinationRectangle, const Rectangle& p_SourceRectangle, const Color& p_Color, const Vector2& p_Origin, float p_Rotation, const Vector2& p_Scale, Orientation p_Orientation, float p_Depth)
 	{
 		// TODO: Factor in p_DestinationRectangle.
 		return Draw(p_Texture, p_Position, p_SourceRectangle, p_Color, p_Origin, p_Rotation, p_Scale, p_Orientation, p_Depth);
 	}
-	
+
 	bool SpriteBatch::Draw(const Texture& p_Texture, const Rectangle& p_DestinationRectangle, const Rectangle& p_SourceRectangle, const Color& p_Color, const Vector2& p_Origin, float p_Rotation, const Vector2& p_Scale, Orientation p_Orientation, float p_Depth)
 	{
 		// TODO: Factor in p_DestinationRectangle BETTERLY.

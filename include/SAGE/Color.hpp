@@ -3,6 +3,13 @@
 #ifndef __SAGE_COLOR_HPP_
 #define __SAGE_COLOR_HPP_
 
+// SDL Includes
+#if defined __ANDROID__
+	#include <SDL.h>
+#else
+	#include <SDL2/SDL.h>
+#endif
+
 namespace SAGE
 {
 	class Color
@@ -29,6 +36,7 @@ namespace SAGE
 
 			Color();
 			Color(float p_Red, float p_Green, float p_Blue, float p_Alpha = 1.0f);
+			Color(int p_Red, int p_Green, int p_Blue, int p_Alpha = 255);
 			Color(const char* p_Hex, float p_Alpha = 1.0f);
 			~Color() = default;
 
@@ -54,11 +62,19 @@ namespace SAGE
 			unsigned char GetBlueAsByte() const;
 			unsigned char GetAlphaAsByte() const;
 
+			Uint32 GetAsComposite() const;
+
 			void SetRed(float p_Red);
 			void SetGreen(float p_Green);
 			void SetBlue(float p_Blue);
 			void SetAlpha(float p_Alpha);
-			void SetOpenGL() const;
+
+			void SetRedFromByte(int p_Red);
+			void SetGreenFromByte(int p_Green);
+			void SetBlueFromByte(int p_Blue);
+			void SetAlphaFromByte(int p_Alpha);
+
+			void SetFromComposite(Uint32 p_Color);
 
 			Color& Invert(bool p_InvertAlpha = false);
 			Color Inverse(bool p_InvertAlpha = false) const;

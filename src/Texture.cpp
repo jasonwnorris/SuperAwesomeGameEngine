@@ -7,6 +7,7 @@
 	#include <SDL2/SDL_image.h>
 #endif
 // SAGE Includes
+#include <SAGE/Math.hpp>
 #include <SAGE/Texture.hpp>
 
 namespace SAGE
@@ -25,6 +26,11 @@ namespace SAGE
 		}
 	}
 
+	unsigned int Texture::GetID() const
+	{
+		return m_ID;
+	}
+
 	unsigned int Texture::GetWidth() const
 	{
 		return m_Width;
@@ -35,83 +41,166 @@ namespace SAGE
 		return m_Height;
 	}
 
-	unsigned int Texture::GetBPP() const
+	unsigned int Texture::GetBytesPerPixel() const
 	{
-		return m_BPP;
+		return m_BytesPerPixel;
 	}
 
-	unsigned int Texture::GetID() const
+	Interpolation Texture::GetInterpolation() const
 	{
-		return m_ID;
+		return m_Interpolation;
 	}
 
-	Uint32* Texture::GetPixels() const
+	Wrapping Texture::GetWrapping() const
 	{
-		return (Uint32*)m_Surface->pixels;
+		return m_Wrapping;
 	}
 
-	SDL_PixelFormat* Texture::GetFormat() const
+	bool Texture::GetPixelColor(unsigned int p_X, unsigned int p_Y, Color& p_Color)
 	{
-		return m_Surface->format;
-	}
-
-	void Texture::GetColor(int p_X, int p_Y, Uint8& p_Red, Uint8& p_Green, Uint8& p_Blue, Uint8& p_Alpha)
-	{
-		Uint8* pixel = (Uint8*)m_Surface->pixels + p_Y * m_Surface->pitch + p_X * m_Surface->format->BytesPerPixel;
-		Uint32 color = 0;
-
-		switch (m_Surface->format->BytesPerPixel)
+		// Check if within bounds.
+		if (p_X >= m_Width || p_Y >= m_Height)
 		{
-			case 1:
-				color = *pixel;
-				break;
-			case 2:
-				color = *(Uint16*)pixel;
-				break;
-			case 3:
-				if (SDL_BYTEORDER == SDL_BIG_ENDIAN)
-					color = pixel[0] << 16 | pixel[1] << 8 | pixel[2];
-				else
-					color = pixel[0] | pixel[1] << 8 | pixel[2] << 16;
-				break;
-			case 4:
-				color = *(Uint32*)pixel;
-				break;
-			default:
-				color = 0;
-				break;
+			SDL_Log("[Texture::GetPixelColor] Coordinates are out of texture bounds.");
+			return false;
 		}
 
-		SDL_GetRGBA(color, m_Surface->format, &p_Red, &p_Green, &p_Blue, &p_Alpha);
+		p_Color = m_Colors[p_X + p_Y * m_Width];
+
+		return true;
+	}
+
+	bool Texture::FromPixelColors(unsigned int p_Width, unsigned int p_Height, std::vector<Color> p_Colors, Interpolation p_Interpolation, Wrapping p_Wrapping)
+	{
+		// Check if already loaded.
+		if (m_IsLoaded)
+		{
+			SDL_Log("[Texture::FromPixelColors] Texture is already loaded.");
+			return false;
+		}
+
+		// Collect metrics.
+		m_Width = p_Width;
+		m_Height = p_Height;
+		m_BytesPerPixel = 4;
+		m_Interpolation = p_Interpolation;
+		m_Wrapping = p_Wrapping;
+
+		// Copy colors to cpmposite pixels.
+		for (const auto& color : p_Colors)
+		{
+			m_Colors.push_back(color);
+
+			Uint32 composite = color.GetAsComposite();
+			m_Pixels.push_back(composite);
+
+			SDL_Log("Added Composite Color: { R: %d, G: %d, B: %d, A: %d } = %u",
+				color.GetRedAsByte(),
+				color.GetGreenAsByte(),
+				color.GetBlueAsByte(),
+				color.GetAlphaAsByte(),
+				composite);
+		}
+
+		// Create the texture.
+		if (!CreateFromPixelData(static_cast<void*>(&m_Pixels.front())))
+		{
+			return false;
+		}
+
+		return (m_IsLoaded = true);
 	}
 
 	bool Texture::Load(const std::string& p_Filename, Interpolation p_Interpolation, Wrapping p_Wrapping)
 	{
+		// Check if already loaded.
+		if (m_IsLoaded)
+		{
+			SDL_Log("[Texture::Load] Texture is already loaded.");
+			return false;
+		}
+
 		// Load the surface.
-		m_Surface = IMG_Load(p_Filename.c_str());
-		if (m_Surface == nullptr)
+		SDL_Surface* surface = IMG_Load(p_Filename.c_str());
+		if (surface == nullptr)
 		{
 			SDL_Log("[Texture::Load] Failed to load image file \"%s\": %s", p_Filename.c_str(), SDL_GetError());
 			return false;
 		}
 
-		// Grab width and height.
-		m_Width = m_Surface->w;
-		m_Height = m_Surface->h;
-		if ((m_Width & (m_Width - 1)) != 0)
+		// Collect metrics.
+		m_Width = surface->w;
+		m_Height = surface->h;
+		m_BytesPerPixel = surface->format->BytesPerPixel;
+		m_Interpolation = p_Interpolation;
+		m_Wrapping = p_Wrapping;
+
+		// Gather pixel colors.
+		Uint32 pixel;
+		Color color;
+		for (int y = 0; y < m_Height; ++y)
 		{
-			SDL_LogWarn(SDL_LOG_PRIORITY_WARN, "[Texture::Load] Width is not power of two.");
+			for (int x = 0; x < m_Width; ++x)
+			{
+				if (ReadColorDataFromSurface(surface, x, y, pixel, color))
+				{
+					m_Pixels.push_back(pixel);
+					m_Colors.push_back(color);
+				}
+			}
 		}
-		if ((m_Height & (m_Height - 1)) != 0)
+
+		// Create the texture.
+		if (!CreateFromPixelData(surface->pixels))
 		{
-			SDL_LogWarn(SDL_LOG_PRIORITY_WARN, "[Texture::Load] Height is not power of two.");
+			return false;
+		}
+
+		// Free the loaded surface.
+		SDL_FreeSurface(surface);
+
+		return (m_IsLoaded = true);
+	}
+
+	bool Texture::Unload()
+	{
+		if (!m_IsLoaded)
+		{
+			SDL_Log("[Texture::Unload] Texture already unloaded. Doing nothing.");
+		}
+		else
+		{
+			// Delete the texture.
+			if (m_ID != -1)
+			{
+				glDeleteTextures(1, &m_ID);
+			}
+
+			m_Pixels.clear();
+			m_Colors.clear();
+
+			m_IsLoaded = false;
+		}
+
+		return true;
+	}
+
+	bool Texture::CreateFromPixelData(void* p_PixelData)
+	{
+		// Check dimensions.
+		if (!Math::IsPO2(m_Width))
+		{
+			SDL_LogWarn(SDL_LOG_PRIORITY_WARN, "[Texture::CreateFromPixelData] Width is not a power of two.");
+		}
+		if (!Math::IsPO2(m_Height))
+		{
+			SDL_LogWarn(SDL_LOG_PRIORITY_WARN, "[Texture::CreateFromPixelData] Height is not a power of two.");
 		}
 
 		// Determine color mode.
 		GLenum format = 0;
-		switch (m_Surface->format->BytesPerPixel)
+		switch (m_BytesPerPixel)
 		{
-#if defined __ANDROID__
 			case 3:
 				format = GL_RGB;
 				break;
@@ -119,26 +208,17 @@ namespace SAGE
 				format = GL_RGBA;
 				break;
 			default:
-#else
-			case 3:
-				format = m_Surface->format->Rmask == 0x000000ff ? GL_RGB : GL_BGR;
-				break;
-			case 4:
-				format = m_Surface->format->Rmask == 0x000000ff ? GL_RGBA : GL_BGRA;
-				break;
-#endif
-			default:
-				SDL_LogWarn(SDL_LOG_PRIORITY_WARN, "[Texture::Load] Image is not true color.");
-				break;
+				SDL_LogWarn(SDL_LOG_PRIORITY_WARN, "[Texture::CreateFromPixelData] Pixel data does not use true color.");
+				return false;
 		}
 
 		// Generate and create the texture.
 		glGenTextures(1, &m_ID);
 		glBindTexture(GL_TEXTURE_2D, m_ID);
-		glTexImage2D(GL_TEXTURE_2D, 0, format, m_Width, m_Height, 0, format, GL_UNSIGNED_BYTE, m_Surface->pixels);
+		glTexImage2D(GL_TEXTURE_2D, 0, format, m_Width, m_Height, 0, format, GL_UNSIGNED_BYTE, p_PixelData);
 
 		// Set scaling interpolation.
-		switch (p_Interpolation)
+		switch (m_Interpolation)
 		{
 			case Interpolation::Nearest:
 				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
@@ -151,7 +231,7 @@ namespace SAGE
 		}
 
 		// Set edge wrapping.
-		switch (p_Wrapping)
+		switch (m_Wrapping)
 		{
 			case Wrapping::Repeat:
 				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
@@ -176,32 +256,45 @@ namespace SAGE
 		// Unbind the texture.
 		glBindTexture(GL_TEXTURE_2D, 0);
 
-		return (m_IsLoaded = true);
+		return true;
 	}
 
-	bool Texture::Unload()
+	bool Texture::ReadColorDataFromSurface(SDL_Surface* p_Surface, unsigned int p_X, unsigned int p_Y, Uint32& p_Pixel, Color& p_Color)
 	{
-		if (!m_IsLoaded)
+		// Check if within bounds.
+		if (p_X >= m_Width || p_Y >= m_Height)
 		{
-			SDL_Log("[Texture::Unload] Texture already unloaded. Doing nothing.");
-		}
-		else
-		{
-			// Free the surface.
-			if (m_Surface != nullptr)
-			{
-				SDL_FreeSurface(m_Surface);
-			}
-
-			// Delete the texture.
-			if (m_ID != -1)
-			{
-				glDeleteTextures(1, &m_ID);
-			}
-
-			m_IsLoaded = false;
+			SDL_Log("[Texture::ReadColorDataFromSurface] Coordinates are out of texture bounds.");
+			return false;
 		}
 
-		return true;
+		Uint8* pointer = (Uint8*)p_Surface->pixels + p_Y * p_Surface->pitch + p_X * m_BytesPerPixel;
+
+		switch (m_BytesPerPixel)
+		{
+			case 1:
+				p_Pixel = *pointer;
+				break;
+			case 2:
+				p_Pixel = *(Uint16*)pointer;
+				break;
+			case 3:
+#if SDL_BYTEORDER == SDL_BIG_ENDIAN
+					p_Pixel = pointer[0] << 16 | pointer[1] << 8 | pointer[2];
+#else
+					p_Pixel = pointer[0] | pointer[1] << 8 | pointer[2] << 16;
+#endif
+				break;
+			case 4:
+				p_Pixel = *(Uint32*)pointer;
+				break;
+			default:
+				SDL_LogWarn(SDL_LOG_PRIORITY_WARN, "[Texture::ReadColorDataFromSurface] Pixel data has unknown color format.");
+				return false;
+		}
+
+		p_Color.SetFromComposite(p_Pixel);
+
+		return false;
 	}
 }

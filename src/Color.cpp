@@ -37,19 +37,27 @@ namespace SAGE
 
 	Color::Color(float p_Red, float p_Green, float p_Blue, float p_Alpha)
 	{
-		m_Red = p_Red;
-		m_Green = p_Green;
-		m_Blue = p_Blue;
-		m_Alpha = p_Alpha;
+		SetRed(p_Red);
+		SetGreen(p_Green);
+		SetBlue(p_Blue);
+		SetAlpha(p_Alpha);
+	}
+
+	Color::Color(int p_Red, int p_Green, int p_Blue, int p_Alpha)
+	{
+		SetRedFromByte(p_Red);
+		SetGreenFromByte(p_Green);
+		SetBlueFromByte(p_Blue);
+		SetAlphaFromByte(p_Alpha);
 	}
 
 	Color::Color(const char* p_Hex, float p_Alpha)
 	{
 		int value = std::stoi(p_Hex, 0, 16);
 
-		m_Red = (float)((value >> 16) & 0xFF) / 255.0f;
-		m_Green = (float)((value >> 8) & 0xFF) / 255.0f;;
-		m_Blue = (float)(value & 0xFF) / 255.0f;;
+		m_Red = ((value >> 16) & 0xFF) / 255.0f;
+		m_Green = ((value >> 8) & 0xFF) / 255.0f;;
+		m_Blue = (value & 0xFF) / 255.0f;;
 		m_Alpha = p_Alpha;
 	}
 
@@ -169,6 +177,21 @@ namespace SAGE
 		return static_cast<unsigned char>(GetAlpha() * 255);
 	}
 
+	Uint32 Color::GetAsComposite() const
+	{
+		SDL_PixelFormat* format = SDL_AllocFormat(SDL_PIXELFORMAT_RGBA8888);
+
+		Uint32 color = SDL_MapRGBA(format,
+			static_cast<Uint8>(GetRedAsByte()),
+			static_cast<Uint8>(GetGreenAsByte()),
+			static_cast<Uint8>(GetBlueAsByte()),
+			static_cast<Uint8>(GetAlphaAsByte()));
+
+		SDL_FreeFormat(format);
+
+		return color;
+	}
+
 	void Color::SetRed(float p_Red)
 	{
 		m_Red = p_Red;
@@ -187,6 +210,44 @@ namespace SAGE
 	void Color::SetAlpha(float p_Alpha)
 	{
 		m_Alpha = p_Alpha;
+	}
+
+	void Color::SetRedFromByte(int p_Red)
+	{
+		m_Red = p_Red / 255.0f;
+	}
+
+	void Color::SetGreenFromByte(int p_Green)
+	{
+		m_Green = p_Green / 255.0f;
+	}
+
+	void Color::SetBlueFromByte(int p_Blue)
+	{
+		m_Blue = p_Blue / 255.0f;
+	}
+
+	void Color::SetAlphaFromByte(int p_Alpha)
+	{
+		m_Alpha = p_Alpha / 255.0f;
+	}
+
+	void Color::SetFromComposite(Uint32 p_Color)
+	{
+		SDL_PixelFormat* format = SDL_AllocFormat(SDL_PIXELFORMAT_RGBA8888);
+
+		Uint8 red;
+		Uint8 green;
+		Uint8 blue;
+		Uint8 alpha;
+		SDL_GetRGBA(p_Color, format, &red, &green, &blue, &alpha);
+
+		SDL_FreeFormat(format);
+
+		SetRedFromByte(static_cast<int>(red));
+		SetGreenFromByte(static_cast<int>(green));
+		SetBlueFromByte(static_cast<int>(blue));
+		SetAlphaFromByte(static_cast<int>(alpha));
 	}
 
 	Color& Color::Invert(bool p_InvertAlpha)
