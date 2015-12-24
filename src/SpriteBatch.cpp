@@ -271,8 +271,8 @@ namespace SAGE
 		Vector2 texCoordBR((rect.X + rect.Width) / (float)texWidth - correction.X, (rect.Y + rect.Height) / (float)texHeight - correction.Y);
 
 		// Calculate cos/sin for rotation in radians.
-		float cos = cosf(p_Rotation * (float)M_PI / 180.0f);
-		float sin = sinf(p_Rotation * (float)M_PI / 180.0f);
+		float cos = cosf(p_Rotation);
+		float sin = sinf(p_Rotation);
 
 		// Flip texture coordinates for orientation.
 		if ((p_Orientation & Orientation::FlipHorizontal) == Orientation::FlipHorizontal)
