@@ -42,6 +42,16 @@ namespace SAGE
 		CullCounterClockwise,
 	};
 
+	struct SpriteBatchItem
+	{
+		unsigned int TextureID;
+		float Depth;
+		VertexPositionColorTexture VertexTL;
+		VertexPositionColorTexture VertexTR;
+		VertexPositionColorTexture VertexBL;
+		VertexPositionColorTexture VertexBR;
+	};
+
 	class SpriteBatch
 	{
 		private:
@@ -63,35 +73,43 @@ namespace SAGE
 
 			bool DrawLine(const Vector2& p_PositionA, const Vector2& p_PositionB, const Color& p_Color, float p_Thickness = 1.0f, float p_Depth = 0.0f);
 			bool DrawLine(const Vector2& p_PositionA, const Color& p_ColorA, const Vector2& p_PositionB, const Color& p_ColorB, float p_Thickness = 1.0f, float p_Depth = 0.0f);
+
 			bool DrawLines(const std::vector<Vector2>& p_Positions, const Color& p_Color, float p_Thickness = 1.0f, float p_Depth = 0.0f);
 			bool DrawLines(const std::vector<Vector2>& p_Positions, const std::vector<Color>& p_Colors, float p_Thickness = 1.0f, float p_Depth = 0.0f);
 
-			bool Draw(const Texture& p_Texture, const Vector2& p_Position, const Vector2& p_Dimensions, const Rectangle& p_SourceRectangle, const Color& p_Color, const Vector2& p_Origin, float p_Rotation, const Vector2& p_Scale, Orientation p_Orientation, float p_Depth = 0.0f);
-			bool Draw(const Texture& p_Texture, const Vector2& p_Position, const Rectangle& p_DestinationRectangle, const Rectangle& p_SourceRectangle, const Color& p_Color, const Vector2& p_Origin, float p_Rotation, const Vector2& p_Scale, Orientation p_Orientation, float p_Depth = 0.0f);
-			bool Draw(const Texture& p_Texture, const Rectangle& p_DestinationRectangle, const Rectangle& p_SourceRectangle, const Color& p_Color, const Vector2& p_Origin, float p_Rotation, const Vector2& p_Scale, Orientation p_Orientation, float p_Depth = 0.0f);
-			bool Draw(const Texture& p_Texture, const Vector2& p_Position, const Rectangle& p_SourceRectangle, const Color& p_Color, const Vector2& p_Origin, float p_Rotation, const Vector2& p_Scale, Orientation p_Orientation, float p_Depth = 0.0f);
-			
+			bool DrawLineLoop(const std::vector<Vector2>& p_Positions, const Color& p_Color, float p_Thickness = 1.0f, float p_Depth = 0.0f);
+			bool DrawLineLoop(const std::vector<Vector2>& p_Positions, const std::vector<Color>& p_Colors, float p_Thickness = 1.0f, float p_Depth = 0.0f);
+
+			bool DrawCircle(const Vector2& p_Position, const Color& p_Color, float p_Radius, float p_Thickness = 1.0f, float p_Depth = 0.0f);
+			bool DrawCircle(const Vector2& p_Position, const std::vector<Color>& p_Colors, float p_Radius, float p_Thickness = 1.0f, float p_Depth = 0.0f);
+
+			bool DrawSolidRectangle(float p_X, float p_Y, float p_Width, float p_Height, const Color& p_Color, float p_Depth = 0.0f);
+			bool DrawSolidRectangle(const Rectangle& p_Rectangle, const Color& p_Color, float p_Depth = 0.0f);
+			bool DrawSolidRectangle(const Vector2& p_Position, const Vector2& p_Dimensions, const Color& p_Color, float p_Depth = 0.0f);
+
+			bool DrawSprite(const Texture& p_Texture, const Vector2& p_Position, const Vector2& p_Dimensions, const Rectangle& p_SourceRectangle, const Color& p_Color, const Vector2& p_Origin, float p_Rotation, const Vector2& p_Scale, Orientation p_Orientation, float p_Depth = 0.0f);
+			bool DrawSprite(const Texture& p_Texture, const Vector2& p_Position, const Rectangle& p_DestinationRectangle, const Rectangle& p_SourceRectangle, const Color& p_Color, const Vector2& p_Origin, float p_Rotation, const Vector2& p_Scale, Orientation p_Orientation, float p_Depth = 0.0f);
+			bool DrawSprite(const Texture& p_Texture, const Rectangle& p_DestinationRectangle, const Rectangle& p_SourceRectangle, const Color& p_Color, const Vector2& p_Origin, float p_Rotation, const Vector2& p_Scale, Orientation p_Orientation, float p_Depth = 0.0f);
+			bool DrawSprite(const Texture& p_Texture, const Vector2& p_Position, const Rectangle& p_SourceRectangle, const Color& p_Color, const Vector2& p_Origin, float p_Rotation, const Vector2& p_Scale, Orientation p_Orientation, float p_Depth = 0.0f);
+
 			bool DrawString(const SAGE::SpriteFont& p_SpriteFont, const std::string& p_String, const Vector2& p_Position, const Color& p_Color, float p_Depth = 0.0f);
 			bool DrawString(const SAGE::SpriteFont& p_SpriteFont, const std::string& p_String, const Vector2& p_Position, const Color& p_Color, const Vector2& p_Origin, float p_Rotation, const Vector2& p_Scale, Orientation p_Orientation, float p_Depth = 0.0f);
-			
+
 			bool End();
 
 		private:
-			struct SpriteBatchItem
-			{
-				unsigned int TextureID;
-				float Depth;
-				VertexPositionColorTexture VertexTL;
-				VertexPositionColorTexture VertexTR;
-				VertexPositionColorTexture VertexBL;
-				VertexPositionColorTexture VertexBR;
-			};
-
 			void Render();
 			void Flush(int p_TextureID, int p_Length);
 
-			void RotateAbout(const Vector2& p_Position, float p_Rotation, VertexVector2& p_Vertex);
-			void FlipAbout(const Vector2& p_Position, Orientation p_Orientation, VertexVector2& p_Vertex);
+			SpriteBatchItem& GetNextItem(const Texture& p_Texture, float p_Depth = 0.0f);
+			void SetVertexPosition(VertexPositionColorTexture& p_Vertex, float p_X, float p_Y);
+			void SetVertexColor(VertexPositionColorTexture& p_Vertex, const Color& p_Color);
+			void SetVertexTexCoords(VertexPositionColorTexture& p_Vertex, float p_U, float p_V);
+			void TransformVerticesAbout(SpriteBatchItem& p_Item, const Vector2& p_Position, float p_CosAngle, float p_SinAngle, Orientation p_Orientation);
+			void RotateVerticesAbout(SpriteBatchItem& p_Item, const Vector2& p_Position, float p_CosAngle, float p_SinAngle);
+			void FlipVerticesAbout(SpriteBatchItem& p_Item, const Vector2& p_Position, Orientation p_Orientation);
+			void RotateVertexAbout(VertexPositionColorTexture& p_Vertex, const Vector2& p_Position, float p_CosAngle, float p_SinAngle);
+			void FlipVertexAbout(VertexPositionColorTexture& p_Vertex, const Vector2& p_Position, Orientation p_Orientation);
 
 			bool m_WithinDrawPair;
 			int m_ItemCount;

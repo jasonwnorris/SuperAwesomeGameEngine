@@ -3,6 +3,7 @@
 // OpenGL Includes
 #include <GL/glew.h>
 // SAGE Includes
+#include <SAGE/Math.hpp>
 #include <SAGE/SpriteBatch.hpp>
 // STL Includes
 #include <algorithm>
@@ -28,6 +29,7 @@ namespace SAGE
 
 	bool SpriteBatch::Initialize()
 	{
+		// Collect type sizes.
 		GLsizei sizeUShort = sizeof(GLushort);
 		GLsizei sizeFloat = sizeof(GLfloat);
 		GLsizei sizeVPCT = sizeof(VertexPositionColorTexture);
@@ -118,14 +120,17 @@ namespace SAGE
 			return false;
 		}
 
+		// Initialize drawing values.
 		m_WithinDrawPair = true;
 		m_ItemCount = 0;
 		m_FlushCount = 0;
 
+		// Store parameters.
 		m_SortMode = p_SortMode;
 		m_BlendMode = p_BlendMode;
 		m_RasterizerState = p_RasterizerState;
 
+		// Set matrices from camera.
 		p_Effect.SetProjection(p_Camera.GetProjectionMatrix());
 		p_Effect.SetModelView(p_Camera.GetModelViewMatrix());
 		p_Effect.Use();
@@ -150,45 +155,31 @@ namespace SAGE
 		Vector2 perpendicular = Vector2(p_PositionA.Y - p_PositionB.Y, p_PositionB.X - p_PositionA.X);
 		perpendicular.Normalize();
 
-		SpriteBatchItem& item = m_BatchItemList[m_ItemCount++];
-		item.TextureID = m_BlankTexture.GetID();
-		item.Depth = p_Depth;
+		SpriteBatchItem& item = GetNextItem(m_BlankTexture, p_Depth);
 
-		item.VertexTL.Position.X = p_PositionA.X + perpendicular.X * p_Thickness / 2.0f;
-		item.VertexTL.Position.Y = p_PositionA.Y + perpendicular.Y * p_Thickness / 2.0f;
-		item.VertexTL.Color.R = p_ColorA.GetRed();
-		item.VertexTL.Color.G = p_ColorA.GetGreen();
-		item.VertexTL.Color.B = p_ColorA.GetBlue();
-		item.VertexTL.Color.A = p_ColorA.GetAlpha();
-		item.VertexTL.TexCoord.X = 0.0f;
-		item.VertexTL.TexCoord.Y = 1.0f;
+		// Top left vertex.
+		SetVertexPosition(item.VertexTL, p_PositionA.X + perpendicular.X * p_Thickness / 2.0f,
+										 p_PositionA.Y + perpendicular.Y * p_Thickness / 2.0f);
+		SetVertexColor(item.VertexTL, p_ColorA);
+		SetVertexTexCoords(item.VertexTL, 0.0f, 1.0f);
 
-		item.VertexTR.Position.X = p_PositionA.X - perpendicular.X * p_Thickness / 2.0f;
-		item.VertexTR.Position.Y = p_PositionA.Y - perpendicular.Y * p_Thickness / 2.0f;
-		item.VertexTR.Color.R = p_ColorA.GetRed();
-		item.VertexTR.Color.G = p_ColorA.GetGreen();
-		item.VertexTR.Color.B = p_ColorA.GetBlue();
-		item.VertexTR.Color.A = p_ColorA.GetAlpha();
-		item.VertexTR.TexCoord.X = 1.0f;
-		item.VertexTR.TexCoord.Y = 1.0f;
+		// Top right vertex.
+		SetVertexPosition(item.VertexTR, p_PositionA.X - perpendicular.X * p_Thickness / 2.0f,
+										 p_PositionA.Y - perpendicular.Y * p_Thickness / 2.0f);
+		SetVertexColor(item.VertexTR, p_ColorA);
+		SetVertexTexCoords(item.VertexTR, 1.0f, 1.0f);
 
-		item.VertexBL.Position.X = p_PositionB.X + perpendicular.X * p_Thickness / 2.0f;
-		item.VertexBL.Position.Y = p_PositionB.Y + perpendicular.Y * p_Thickness / 2.0f;
-		item.VertexBL.Color.R = p_ColorB.GetRed();
-		item.VertexBL.Color.G = p_ColorB.GetGreen();
-		item.VertexBL.Color.B = p_ColorB.GetBlue();
-		item.VertexBL.Color.A = p_ColorB.GetAlpha();
-		item.VertexBL.TexCoord.X = 0.0f;
-		item.VertexBL.TexCoord.Y = 0.0f;
+		// Bottom left vertex.
+		SetVertexPosition(item.VertexBL, p_PositionB.X + perpendicular.X * p_Thickness / 2.0f,
+										 p_PositionB.Y + perpendicular.Y * p_Thickness / 2.0f);
+		SetVertexColor(item.VertexBL, p_ColorB);
+		SetVertexTexCoords(item.VertexBL, 0.0f, 0.0f);
 
-		item.VertexBR.Position.X = p_PositionB.X - perpendicular.X * p_Thickness / 2.0f;
-		item.VertexBR.Position.Y = p_PositionB.Y - perpendicular.Y * p_Thickness / 2.0f;
-		item.VertexBR.Color.R = p_ColorB.GetRed();
-		item.VertexBR.Color.G = p_ColorB.GetGreen();
-		item.VertexBR.Color.B = p_ColorB.GetBlue();
-		item.VertexBR.Color.A = p_ColorB.GetAlpha();
-		item.VertexBR.TexCoord.X = 1.0f;
-		item.VertexBR.TexCoord.Y = 0.0f;
+		// Bottom right vertex.
+		SetVertexPosition(item.VertexBR, p_PositionB.X - perpendicular.X * p_Thickness / 2.0f,
+										 p_PositionB.Y - perpendicular.Y * p_Thickness / 2.0f);
+		SetVertexColor(item.VertexBR, p_ColorB);
+		SetVertexTexCoords(item.VertexBR, 1.0f, 0.0f);
 
 		return true;
 	}
@@ -229,29 +220,142 @@ namespace SAGE
 		return true;
 	}
 
-	bool SpriteBatch::Draw(const Texture& p_Texture, const Vector2& p_Position, const Vector2& p_Dimensions, const Rectangle& p_SourceRectangle, const Color& p_Color, const Vector2& p_Origin, float p_Rotation, const Vector2& p_Scale, Orientation p_Orientation, float p_Depth)
+	bool SpriteBatch::DrawLineLoop(const std::vector<Vector2>& p_Positions, const Color& p_Color, float p_Thickness, float p_Depth)
 	{
-		// TODO: Factor in p_Dimensions.
-		return Draw(p_Texture, p_Position, p_SourceRectangle, p_Color, p_Origin, p_Rotation, p_Scale, p_Orientation, p_Depth);
+		std::vector<Color> colors = { p_Color };
+
+		return DrawLineLoop(p_Positions, colors, p_Thickness, p_Depth);
 	}
 
-	bool SpriteBatch::Draw(const Texture& p_Texture, const Vector2& p_Position, const Rectangle& p_DestinationRectangle, const Rectangle& p_SourceRectangle, const Color& p_Color, const Vector2& p_Origin, float p_Rotation, const Vector2& p_Scale, Orientation p_Orientation, float p_Depth)
-	{
-		// TODO: Factor in p_DestinationRectangle.
-		return Draw(p_Texture, p_Position, p_SourceRectangle, p_Color, p_Origin, p_Rotation, p_Scale, p_Orientation, p_Depth);
-	}
-
-	bool SpriteBatch::Draw(const Texture& p_Texture, const Rectangle& p_DestinationRectangle, const Rectangle& p_SourceRectangle, const Color& p_Color, const Vector2& p_Origin, float p_Rotation, const Vector2& p_Scale, Orientation p_Orientation, float p_Depth)
-	{
-		// TODO: Factor in p_DestinationRectangle BETTERLY.
-		return Draw(p_Texture, Vector2(p_DestinationRectangle.X, p_DestinationRectangle.Y), p_SourceRectangle, p_Color, p_Origin, p_Rotation, p_Scale, p_Orientation, p_Depth);
-	}
-
-	bool SpriteBatch::Draw(const Texture& p_Texture, const Vector2& p_Position, const Rectangle& p_SourceRectangle, const Color& p_Color, const Vector2& p_Origin, float p_Rotation, const Vector2& p_Scale, Orientation p_Orientation, float p_Depth)
+	bool SpriteBatch::DrawLineLoop(const std::vector<Vector2>& p_Positions, const std::vector<Color>& p_Colors, float p_Thickness, float p_Depth)
 	{
 		if (!m_WithinDrawPair)
 		{
-			SDL_Log("[SpriteBatch::Draw] Must start a draw pair first.");
+			SDL_Log("[SpriteBatch::DrawLineLoop] Must start a draw pair first.");
+			return false;
+		}
+
+		int positionCount = static_cast<int>(p_Positions.size());
+
+		if (positionCount < 3)
+		{
+			SDL_Log("[SpriteBatch::DrawLineLoop] Position vector must contain at least 3 values.");
+			return false;
+		}
+
+		int colorCount = static_cast<int>(p_Colors.size());
+
+		for (int i = 0; i < positionCount; ++i)
+		{
+			if (!DrawLine(p_Positions[i % positionCount], p_Colors[i % colorCount],
+						  p_Positions[(i + 1) % positionCount], p_Colors[(i + 1) % colorCount],
+						  p_Thickness, p_Depth))
+			{
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	bool SpriteBatch::DrawCircle(const Vector2& p_Position, const Color& p_Color, float p_Radius, float p_Thickness, float p_Depth)
+	{
+		std::vector<Color> colors = { p_Color };
+
+		return DrawCircle(p_Position, colors, p_Radius, p_Thickness, p_Depth);
+	}
+
+	bool SpriteBatch::DrawCircle(const Vector2& p_Position, const std::vector<Color>& p_Colors, float p_Radius, float p_Thickness, float p_Depth)
+	{
+		if (!m_WithinDrawPair)
+		{
+			SDL_Log("[SpriteBatch::DrawCircle] Must start a draw pair first.");
+			return false;
+		}
+
+		std::vector<Vector2> positions;
+		for (float angle = 0.0f; angle < Math::TwoPi; angle += Math::Pi / 16.0f)
+		{
+			float cosAngle = cosf(angle);
+			float sinAngle = sinf(angle);
+
+			positions.push_back(Vector2(p_Position.X + p_Radius * cosAngle,
+										p_Position.Y + p_Radius * sinAngle));
+		}
+
+		return DrawLineLoop(positions, p_Colors, p_Thickness, p_Depth);
+	}
+
+	bool SpriteBatch::DrawSolidRectangle(float p_X, float p_Y, float p_Width, float p_Height, const Color& p_Color, float p_Depth)
+	{
+		if (!m_WithinDrawPair)
+		{
+			SDL_Log("[SpriteBatch::DrawSolidRectangle] Must start a draw pair first.");
+			return false;
+		}
+
+		SpriteBatchItem& item = GetNextItem(m_BlankTexture, p_Depth);
+
+		// Top left vertex.
+		SetVertexPosition(item.VertexTL, p_X, p_Y);
+		SetVertexColor(item.VertexTL, p_Color);
+		SetVertexTexCoords(item.VertexTL, 0.0f, 1.0f);
+
+		// Top right vertex.
+		SetVertexPosition(item.VertexTR, p_X + p_Width, p_Y);
+		SetVertexColor(item.VertexTR, p_Color);
+		SetVertexTexCoords(item.VertexTR, 1.0f, 1.0f);
+
+		// Bottom left vertex.
+		SetVertexPosition(item.VertexBL, p_X, p_Y + p_Height);
+		SetVertexColor(item.VertexBL, p_Color);
+		SetVertexTexCoords(item.VertexBL, 0.0f, 0.0f);
+
+		// Bottom right vertex.
+		SetVertexPosition(item.VertexBR, p_X + p_Width, p_Y + p_Height);
+		SetVertexColor(item.VertexBR, p_Color);
+		SetVertexTexCoords(item.VertexBR, 1.0f, 0.0f);
+
+		return true;
+	}
+
+	bool SpriteBatch::DrawSolidRectangle(const Rectangle& p_Rectangle, const Color& p_Color, float p_Depth)
+	{
+		return DrawSolidRectangle(static_cast<float>(p_Rectangle.X),
+								  static_cast<float>(p_Rectangle.Y),
+								  static_cast<float>(p_Rectangle.Width),
+								  static_cast<float>(p_Rectangle.Height),
+								  p_Color, p_Depth);
+	}
+
+	bool SpriteBatch::DrawSolidRectangle(const Vector2& p_Position, const Vector2& p_Dimensions, const Color& p_Color, float p_Depth)
+	{
+		return DrawSolidRectangle(p_Position.X, p_Position.Y, p_Dimensions.X, p_Dimensions.Y, p_Color, p_Depth);
+	}
+
+	bool SpriteBatch::DrawSprite(const Texture& p_Texture, const Vector2& p_Position, const Vector2& p_Dimensions, const Rectangle& p_SourceRectangle, const Color& p_Color, const Vector2& p_Origin, float p_Rotation, const Vector2& p_Scale, Orientation p_Orientation, float p_Depth)
+	{
+		// TODO: Factor in p_Dimensions.
+		return DrawSprite(p_Texture, p_Position, p_SourceRectangle, p_Color, p_Origin, p_Rotation, p_Scale, p_Orientation, p_Depth);
+	}
+
+	bool SpriteBatch::DrawSprite(const Texture& p_Texture, const Vector2& p_Position, const Rectangle& p_DestinationRectangle, const Rectangle& p_SourceRectangle, const Color& p_Color, const Vector2& p_Origin, float p_Rotation, const Vector2& p_Scale, Orientation p_Orientation, float p_Depth)
+	{
+		// TODO: Factor in p_DestinationRectangle.
+		return DrawSprite(p_Texture, p_Position, p_SourceRectangle, p_Color, p_Origin, p_Rotation, p_Scale, p_Orientation, p_Depth);
+	}
+
+	bool SpriteBatch::DrawSprite(const Texture& p_Texture, const Rectangle& p_DestinationRectangle, const Rectangle& p_SourceRectangle, const Color& p_Color, const Vector2& p_Origin, float p_Rotation, const Vector2& p_Scale, Orientation p_Orientation, float p_Depth)
+	{
+		// TODO: Factor in p_DestinationRectangle BETTERLY.
+		return DrawSprite(p_Texture, Vector2(p_DestinationRectangle.X, p_DestinationRectangle.Y), p_SourceRectangle, p_Color, p_Origin, p_Rotation, p_Scale, p_Orientation, p_Depth);
+	}
+
+	bool SpriteBatch::DrawSprite(const Texture& p_Texture, const Vector2& p_Position, const Rectangle& p_SourceRectangle, const Color& p_Color, const Vector2& p_Origin, float p_Rotation, const Vector2& p_Scale, Orientation p_Orientation, float p_Depth)
+	{
+		if (!m_WithinDrawPair)
+		{
+			SDL_Log("[SpriteBatch::DrawSprite] Must start a draw pair first.");
 			return false;
 		}
 
@@ -271,8 +375,8 @@ namespace SAGE
 		Vector2 texCoordBR((rect.X + rect.Width) / (float)texWidth - correction.X, (rect.Y + rect.Height) / (float)texHeight - correction.Y);
 
 		// Calculate cos/sin for rotation in radians.
-		float cos = cosf(p_Rotation);
-		float sin = sinf(p_Rotation);
+		float cosAngle = cosf(p_Rotation);
+		float sinAngle = sinf(p_Rotation);
 
 		// Flip texture coordinates for orientation.
 		if ((p_Orientation & Orientation::FlipHorizontal) == Orientation::FlipHorizontal)
@@ -280,45 +384,31 @@ namespace SAGE
 		if ((p_Orientation & Orientation::FlipVertical) == Orientation::FlipVertical)
 			std::swap(texCoordTL.Y, texCoordBR.Y);
 
-		SpriteBatchItem& item = m_BatchItemList[m_ItemCount++];
-		item.TextureID = p_Texture.GetID();
-		item.Depth = p_Depth;
+		SpriteBatchItem& item = GetNextItem(p_Texture, p_Depth);
 
-		item.VertexTL.Position.X = p_Position.X + origin.X * cos - origin.Y * sin;
-		item.VertexTL.Position.Y = p_Position.Y + origin.X * sin + origin.Y * cos;
-		item.VertexTL.Color.R = p_Color.GetRed();
-		item.VertexTL.Color.G = p_Color.GetGreen();
-		item.VertexTL.Color.B = p_Color.GetBlue();
-		item.VertexTL.Color.A = p_Color.GetAlpha();
-		item.VertexTL.TexCoord.X = texCoordTL.X;
-		item.VertexTL.TexCoord.Y = texCoordTL.Y;
+		// Top left vertex.
+		SetVertexPosition(item.VertexTL, p_Position.X + origin.X * cosAngle - origin.Y * sinAngle,
+										 p_Position.Y + origin.X * sinAngle + origin.Y * cosAngle);
+		SetVertexColor(item.VertexTL, p_Color);
+		SetVertexTexCoords(item.VertexTL, texCoordTL.X, texCoordTL.Y);
 
-		item.VertexTR.Position.X = p_Position.X + (origin.X + size.X) * cos - origin.Y * sin;
-		item.VertexTR.Position.Y = p_Position.Y + (origin.X + size.X) * sin + origin.Y * cos;
-		item.VertexTR.Color.R = p_Color.GetRed();
-		item.VertexTR.Color.G = p_Color.GetGreen();
-		item.VertexTR.Color.B = p_Color.GetBlue();
-		item.VertexTR.Color.A = p_Color.GetAlpha();
-		item.VertexTR.TexCoord.X = texCoordBR.X;
-		item.VertexTR.TexCoord.Y = texCoordTL.Y;
+		// Top right vertex.
+		SetVertexPosition(item.VertexTR, p_Position.X + (origin.X + size.X) * cosAngle - origin.Y * sinAngle,
+										 p_Position.Y + (origin.X + size.X) * sinAngle + origin.Y * cosAngle);
+		SetVertexColor(item.VertexTR, p_Color);
+		SetVertexTexCoords(item.VertexTR, texCoordBR.X, texCoordTL.Y);
 
-		item.VertexBL.Position.X = p_Position.X + origin.X * cos - (origin.Y + size.Y) * sin;
-		item.VertexBL.Position.Y = p_Position.Y + origin.X * sin + (origin.Y + size.Y) * cos;
-		item.VertexBL.Color.R = p_Color.GetRed();
-		item.VertexBL.Color.G = p_Color.GetGreen();
-		item.VertexBL.Color.B = p_Color.GetBlue();
-		item.VertexBL.Color.A = p_Color.GetAlpha();
-		item.VertexBL.TexCoord.X = texCoordTL.X;
-		item.VertexBL.TexCoord.Y = texCoordBR.Y;
+		// Bottom left vertex.
+		SetVertexPosition(item.VertexBL, p_Position.X + origin.X * cosAngle - (origin.Y + size.Y) * sinAngle,
+										 p_Position.Y + origin.X * sinAngle + (origin.Y + size.Y) * cosAngle);
+		SetVertexColor(item.VertexBL, p_Color);
+		SetVertexTexCoords(item.VertexBL, texCoordTL.X, texCoordBR.Y);
 
-		item.VertexBR.Position.X = p_Position.X + (origin.X + size.X) * cos - (origin.Y + size.Y) * sin;
-		item.VertexBR.Position.Y = p_Position.Y + (origin.X + size.X) * sin + (origin.Y + size.Y) * cos;
-		item.VertexBR.Color.R = p_Color.GetRed();
-		item.VertexBR.Color.G = p_Color.GetGreen();
-		item.VertexBR.Color.B = p_Color.GetBlue();
-		item.VertexBR.Color.A = p_Color.GetAlpha();
-		item.VertexBR.TexCoord.X = texCoordBR.X;
-		item.VertexBR.TexCoord.Y = texCoordBR.Y;
+		// Bottom right vertex.
+		SetVertexPosition(item.VertexBR, p_Position.X + (origin.X + size.X) * cosAngle - (origin.Y + size.Y) * sinAngle,
+										 p_Position.Y + (origin.X + size.X) * sinAngle + (origin.Y + size.Y) * cosAngle);
+		SetVertexColor(item.VertexBR, p_Color);
+		SetVertexTexCoords(item.VertexBR, texCoordBR.X, texCoordBR.Y);
 
 		return true;
 	}
@@ -344,6 +434,9 @@ namespace SAGE
 		float size = p_SpriteFont.GetSize();
 		float spacing = p_SpriteFont.GetSpacing();
 
+		float cosAngle = cosf(p_Rotation);
+		float sinAngle = sinf(p_Rotation);
+
 		Vector2 correction(1.0f / (float)texWidth, 1.0f / (float)texHeight);
 		Vector2 origin(-p_Origin.X * p_Scale.X, -p_Origin.Y * p_Scale.Y);
 
@@ -364,57 +457,33 @@ namespace SAGE
 				Vector2 texCoordTL(rect.X / (float)texWidth + correction.X, rect.Y / (float)texHeight + correction.X);
 				Vector2 texCoordBR((rect.X + rect.Width) / (float)texWidth - correction.X, (rect.Y + rect.Height) / (float)texHeight - correction.Y);
 
-				SpriteBatchItem& item = m_BatchItemList[m_ItemCount++];
-				item.TextureID = texture.GetID();
-				item.Depth = p_Depth;
+				SpriteBatchItem& item = GetNextItem(texture, p_Depth);
 
-				item.VertexTL.Position.X = p_Position.X + origin.X + offset.X;
-				item.VertexTL.Position.Y = p_Position.Y + origin.Y + offset.Y;
-				item.VertexTL.Color.R = p_Color.GetRed();
-				item.VertexTL.Color.G = p_Color.GetGreen();
-				item.VertexTL.Color.B = p_Color.GetBlue();
-				item.VertexTL.Color.A = p_Color.GetAlpha();
-				item.VertexTL.TexCoord.X = texCoordTL.X;
-				item.VertexTL.TexCoord.Y = texCoordTL.Y;
+				// Top left vertex.
+				SetVertexPosition(item.VertexTL, p_Position.X + origin.X + offset.X,
+												 p_Position.Y + origin.Y + offset.Y);
+				SetVertexColor(item.VertexTL, p_Color);
+				SetVertexTexCoords(item.VertexTL, texCoordTL.X, texCoordTL.Y);
 
-				RotateAbout(p_Position, p_Rotation, item.VertexTL.Position);
-				FlipAbout(p_Position, p_Orientation, item.VertexTL.Position);
+				// Top right vertex.
+				SetVertexPosition(item.VertexTR, p_Position.X + origin.X + size.X + offset.X,
+												 p_Position.Y + origin.Y + offset.Y);
+				SetVertexColor(item.VertexTR, p_Color);
+				SetVertexTexCoords(item.VertexTR, texCoordBR.X, texCoordTL.Y);
 
-				item.VertexTR.Position.X = p_Position.X + origin.X + size.X + offset.X;
-				item.VertexTR.Position.Y = p_Position.Y + origin.Y + offset.Y;
-				item.VertexTR.Color.R = p_Color.GetRed();
-				item.VertexTR.Color.G = p_Color.GetGreen();
-				item.VertexTR.Color.B = p_Color.GetBlue();
-				item.VertexTR.Color.A = p_Color.GetAlpha();
-				item.VertexTR.TexCoord.X = texCoordBR.X;
-				item.VertexTR.TexCoord.Y = texCoordTL.Y;
+				// Bottom left vertex.
+				SetVertexPosition(item.VertexBL, p_Position.X + origin.X + offset.X,
+												 p_Position.Y + origin.Y + size.Y + offset.Y);
+				SetVertexColor(item.VertexBL, p_Color);
+				SetVertexTexCoords(item.VertexBL, texCoordTL.X, texCoordBR.Y);
 
-				RotateAbout(p_Position, p_Rotation, item.VertexTR.Position);
-				FlipAbout(p_Position, p_Orientation, item.VertexTR.Position);
+				// Bottom right vertex.
+				SetVertexPosition(item.VertexBR, p_Position.X + origin.X + size.X + offset.X,
+												 p_Position.Y + origin.Y + size.Y + offset.Y);
+				SetVertexColor(item.VertexBR, p_Color);
+				SetVertexTexCoords(item.VertexBR, texCoordBR.X, texCoordBR.Y);
 
-				item.VertexBL.Position.X = p_Position.X + origin.X + offset.X;
-				item.VertexBL.Position.Y = p_Position.Y + origin.Y + size.Y + offset.Y;
-				item.VertexBL.Color.R = p_Color.GetRed();
-				item.VertexBL.Color.G = p_Color.GetGreen();
-				item.VertexBL.Color.B = p_Color.GetBlue();
-				item.VertexBL.Color.A = p_Color.GetAlpha();
-				item.VertexBL.TexCoord.X = texCoordTL.X;
-				item.VertexBL.TexCoord.Y = texCoordBR.Y;
-
-				RotateAbout(p_Position, p_Rotation, item.VertexBL.Position);
-				FlipAbout(p_Position, p_Orientation, item.VertexBL.Position);
-
-				item.VertexBR.Position.X = p_Position.X + origin.X + size.X + offset.X;
-				item.VertexBR.Position.Y = p_Position.Y + origin.Y + size.Y + offset.Y;
-				item.VertexBR.Color.R = p_Color.GetRed();
-				item.VertexBR.Color.G = p_Color.GetGreen();
-				item.VertexBR.Color.B = p_Color.GetBlue();
-				item.VertexBR.Color.A = p_Color.GetAlpha();
-				item.VertexBR.TexCoord.X = texCoordBR.X;
-				item.VertexBR.TexCoord.Y = texCoordBR.Y;
-
-				RotateAbout(p_Position, p_Rotation, item.VertexBR.Position);
-				FlipAbout(p_Position, p_Orientation, item.VertexBR.Position);
+				TransformVerticesAbout(item, p_Position, cosAngle, sinAngle, p_Orientation);
 
 				offset.X += spacing * p_Scale.X;
 			}
@@ -572,27 +641,84 @@ namespace SAGE
 		m_FlushCount++;
 	}
 
-	void SpriteBatch::RotateAbout(const Vector2& p_Position, float p_Rotation, VertexVector2& p_Vertex)
+	SpriteBatchItem& SpriteBatch::GetNextItem(const Texture& p_Texture, float p_Depth)
 	{
-		float cos = cosf(p_Rotation);
-		float sin = sinf(p_Rotation);
+		SpriteBatchItem& item = m_BatchItemList[m_ItemCount++];
+		item.TextureID = p_Texture.GetID();
+		item.Depth = p_Depth;
 
-		p_Vertex.X -= p_Position.X;
-		p_Vertex.Y -= p_Position.Y;
-
-		float rotX = p_Vertex.X * cos - p_Vertex.Y * sin;
-		float rotY = p_Vertex.X * sin + p_Vertex.Y * cos;
-
-		p_Vertex.X = rotX + p_Position.X;
-		p_Vertex.Y = rotY + p_Position.Y;
+		return item;
 	}
 
-	void SpriteBatch::FlipAbout(const Vector2& p_Position, Orientation p_Orientation, VertexVector2& p_Vertex)
+	void SpriteBatch::SetVertexPosition(VertexPositionColorTexture& p_Vertex, float p_X, float p_Y)
 	{
-		// Flip texture coordinates for orientation.
+		p_Vertex.Position.X = p_X;
+		p_Vertex.Position.Y = p_Y;
+	}
+
+	void SpriteBatch::SetVertexColor(VertexPositionColorTexture& p_Vertex, const Color& p_Color)
+	{
+		p_Vertex.Color.R = p_Color.GetRed();
+		p_Vertex.Color.G = p_Color.GetGreen();
+		p_Vertex.Color.B = p_Color.GetBlue();
+		p_Vertex.Color.A = p_Color.GetAlpha();
+	}
+
+	void SpriteBatch::SetVertexTexCoords(VertexPositionColorTexture& p_Vertex, float p_U, float p_V)
+	{
+		p_Vertex.TexCoord.X = p_U;
+		p_Vertex.TexCoord.Y = p_V;
+	}
+
+	void SpriteBatch::TransformVerticesAbout(SpriteBatchItem& p_Item, const Vector2& p_Position, float p_CosAngle, float p_SinAngle, Orientation p_Orientation)
+	{
+		RotateVerticesAbout(p_Item, p_Position, p_CosAngle, p_SinAngle);
+		FlipVerticesAbout(p_Item, p_Position, p_Orientation);
+	}
+
+	void SpriteBatch::RotateVerticesAbout(SpriteBatchItem& p_Item, const Vector2& p_Position, float p_CosAngle, float p_SinAngle)
+	{
+		RotateVertexAbout(p_Item.VertexTL, p_Position, p_CosAngle, p_SinAngle);
+		RotateVertexAbout(p_Item.VertexTR, p_Position, p_CosAngle, p_SinAngle);
+		RotateVertexAbout(p_Item.VertexBL, p_Position, p_CosAngle, p_SinAngle);
+		RotateVertexAbout(p_Item.VertexBR, p_Position, p_CosAngle, p_SinAngle);
+	}
+
+	void SpriteBatch::FlipVerticesAbout(SpriteBatchItem& p_Item, const Vector2& p_Position, Orientation p_Orientation)
+	{
+		FlipVertexAbout(p_Item.VertexTL, p_Position, p_Orientation);
+		FlipVertexAbout(p_Item.VertexTR, p_Position, p_Orientation);
+		FlipVertexAbout(p_Item.VertexBL, p_Position, p_Orientation);
+		FlipVertexAbout(p_Item.VertexBR, p_Position, p_Orientation);
+	}
+
+	void SpriteBatch::RotateVertexAbout(VertexPositionColorTexture& p_Vertex, const Vector2& p_Position, float p_CosAngle, float p_SinAngle)
+	{
+		// Shift to transform origin.
+		p_Vertex.Position.X -= p_Position.X;
+		p_Vertex.Position.Y -= p_Position.Y;
+
+		// Rotate the vertex about the new origin.
+		float rotationX = p_Vertex.Position.X * p_CosAngle - p_Vertex.Position.Y * p_SinAngle;
+		float rotationY = p_Vertex.Position.X * p_SinAngle + p_Vertex.Position.Y * p_CosAngle;
+
+		// Shift back to the original origin.
+		p_Vertex.Position.X = rotationX + p_Position.X;
+		p_Vertex.Position.Y = rotationY + p_Position.Y;
+	}
+
+	void SpriteBatch::FlipVertexAbout(VertexPositionColorTexture& p_Vertex, const Vector2& p_Position, Orientation p_Orientation)
+	{
+		// Flip texture vertices horizontally.
 		if ((p_Orientation & Orientation::FlipHorizontal) == Orientation::FlipHorizontal)
-			p_Vertex.X = p_Position.X - (p_Vertex.X - p_Position.X);
+		{
+			p_Vertex.Position.X = p_Position.X - (p_Vertex.Position.X - p_Position.X);
+		}
+
+		// Flip texture vertices vertically.
 		if ((p_Orientation & Orientation::FlipVertical) == Orientation::FlipVertical)
-			p_Vertex.Y = p_Position.Y - (p_Vertex.Y - p_Position.Y);
+		{
+			p_Vertex.Position.Y = p_Position.Y - (p_Vertex.Position.Y - p_Position.Y);
+		}
 	}
 }
