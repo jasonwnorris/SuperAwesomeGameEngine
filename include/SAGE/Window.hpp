@@ -11,14 +11,14 @@
 
 namespace SAGE
 {
-	enum MessageBoxLevel
+	enum class MessageBoxLevel
 	{
 		Information = SDL_MESSAGEBOX_INFORMATION,
 		Warning = SDL_MESSAGEBOX_WARNING,
 		Error = SDL_MESSAGEBOX_ERROR
 	};
 
-	enum MessageBoxButton
+	enum class MessageBoxButton
 	{
 		Abort,
 		Cancel,
@@ -29,7 +29,7 @@ namespace SAGE
 		Yes
 	};
 
-	enum MessageBoxButtonSet
+	enum class MessageBoxButtonSet
 	{
 		AbortRetryIgnoreSet,
 		OKSet,
@@ -72,7 +72,7 @@ namespace SAGE
 		}
 	};
 
-	enum WindowMode
+	enum class WindowMode
 	{
 		Windowed = SDL_WINDOW_SHOWN,
 		BorderlessWindowed = SDL_WINDOW_BORDERLESS,

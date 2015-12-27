@@ -53,7 +53,7 @@ namespace SAGE
 			p_WindowOptions.Title = root.get("title", DefaultTitle).asString();
 			p_WindowOptions.Width = root.get("width", DefaultWidth).asInt();
 			p_WindowOptions.Height = root.get("height", DefaultHeight).asInt();
-			p_WindowOptions.Mode = static_cast<WindowMode>(root.get("mode", DefaultMode).asInt());
+			p_WindowOptions.Mode = static_cast<WindowMode>(root.get("mode", static_cast<Uint32>(DefaultMode)).asInt());
 			p_WindowOptions.VerticalSync = root.get("vsync", DefaultVerticalSync).asBool();
 			p_WindowOptions.Hidden = root.get("hidden", DefaultHidden).asBool();
 		}
@@ -142,25 +142,10 @@ namespace SAGE
 		p_Options.Width = display.w;
 		p_Options.Height = display.h;
 #else
-		Uint32 flags = SDL_WINDOW_OPENGL;
+		Uint32 flags = static_cast<Uint32>(p_Options.Mode) | SDL_WINDOW_OPENGL;
 		if (p_Options.Hidden)
 		{
 			flags |= SDL_WINDOW_HIDDEN;
-		}
-		switch (p_Options.Mode)
-		{
-			case WindowMode::Windowed:
-				flags |= SDL_WINDOW_SHOWN;
-				break;
-			case WindowMode::BorderlessWindowed:
-				flags |= SDL_WINDOW_BORDERLESS;
-				break;
-			case WindowMode::Fullscreen:
-				flags |= SDL_WINDOW_FULLSCREEN;
-				break;
-			case WindowMode::FullscreenWindowed:
-				flags |= SDL_WINDOW_FULLSCREEN_DESKTOP;
-				break;
 		}
 #endif
 
@@ -213,7 +198,7 @@ namespace SAGE
 		Uint32 flags = 0;
 		if (p_Options.Mode == WindowMode::Fullscreen || p_Options.Mode == WindowMode::FullscreenWindowed)
 		{
-			flags = p_Options.Mode;
+			flags = static_cast<Uint32>(p_Options.Mode);
 		}
 		SDL_SetWindowBordered(m_Window, p_Options.Mode == WindowMode::Windowed ? SDL_TRUE : SDL_FALSE);
 		if (SDL_SetWindowFullscreen(m_Window, flags) < 0)
@@ -360,7 +345,7 @@ namespace SAGE
 
 	void Window::ShowSimpleMessageBox(const std::string& p_Title, const std::string& p_Text, MessageBoxLevel p_Level)
 	{
-		if (SDL_ShowSimpleMessageBox(p_Level, p_Title.c_str(), p_Text.c_str(), m_Window) < 0)
+		if (SDL_ShowSimpleMessageBox(static_cast<Uint32>(p_Level), p_Title.c_str(), p_Text.c_str(), m_Window) < 0)
 		{
 			SDL_Log("[Window::ShowSimpleMessageBox] Error showing message box: %s", SDL_GetError());
 		}
@@ -373,47 +358,47 @@ namespace SAGE
 
 		switch (p_Details.ButtonSet)
 		{
-			case AbortRetryIgnoreSet:
+			case MessageBoxButtonSet::AbortRetryIgnoreSet:
 				buttonCount = 3;
 				buttons = new SDL_MessageBoxButtonData[buttonCount] {
-					{                                       0, MessageBoxButton::Abort,  "Abort" },
-					{ SDL_MESSAGEBOX_BUTTON_RETURNKEY_DEFAULT, MessageBoxButton::Retry,  "Retry" },
-					{ SDL_MESSAGEBOX_BUTTON_ESCAPEKEY_DEFAULT, MessageBoxButton::Ignore, "Ignore" }
+					{                                       0, static_cast<int>(MessageBoxButton::Abort),  "Abort" },
+					{ SDL_MESSAGEBOX_BUTTON_RETURNKEY_DEFAULT, static_cast<int>(MessageBoxButton::Retry),  "Retry" },
+					{ SDL_MESSAGEBOX_BUTTON_ESCAPEKEY_DEFAULT, static_cast<int>(MessageBoxButton::Ignore), "Ignore" }
 				};
 				break;
-			case OKSet:
+			case MessageBoxButtonSet::OKSet:
 				buttonCount = 1;
 				buttons = new SDL_MessageBoxButtonData[buttonCount] {
-					{ SDL_MESSAGEBOX_BUTTON_RETURNKEY_DEFAULT, MessageBoxButton::OK, "OK" }
+					{ SDL_MESSAGEBOX_BUTTON_RETURNKEY_DEFAULT, static_cast<int>(MessageBoxButton::OK), "OK" }
 				};
 				break;
-			case OKCancelSet:
+			case MessageBoxButtonSet::OKCancelSet:
 				buttonCount = 2;
 				buttons = new SDL_MessageBoxButtonData[buttonCount] {
-					{ SDL_MESSAGEBOX_BUTTON_RETURNKEY_DEFAULT, MessageBoxButton::OK,     "OK" },
-					{ SDL_MESSAGEBOX_BUTTON_ESCAPEKEY_DEFAULT, MessageBoxButton::Cancel, "Cancel" }
+					{ SDL_MESSAGEBOX_BUTTON_RETURNKEY_DEFAULT, static_cast<int>(MessageBoxButton::OK),     "OK" },
+					{ SDL_MESSAGEBOX_BUTTON_ESCAPEKEY_DEFAULT, static_cast<int>(MessageBoxButton::Cancel), "Cancel" }
 				};
 				break;
-			case RetryCancelSet:
+			case MessageBoxButtonSet::RetryCancelSet:
 				buttonCount = 2;
 				buttons = new SDL_MessageBoxButtonData[buttonCount] {
-					{ SDL_MESSAGEBOX_BUTTON_RETURNKEY_DEFAULT, MessageBoxButton::Retry,  "Retry" },
-					{ SDL_MESSAGEBOX_BUTTON_ESCAPEKEY_DEFAULT, MessageBoxButton::Cancel,  "Cancel" }
+					{ SDL_MESSAGEBOX_BUTTON_RETURNKEY_DEFAULT, static_cast<int>(MessageBoxButton::Retry),  "Retry" },
+					{ SDL_MESSAGEBOX_BUTTON_ESCAPEKEY_DEFAULT, static_cast<int>(MessageBoxButton::Cancel),  "Cancel" }
 				};
 				break;
-			case YesNoSet:
+			case MessageBoxButtonSet::YesNoSet:
 				buttonCount = 2;
 				buttons = new SDL_MessageBoxButtonData[buttonCount] {
-					{ SDL_MESSAGEBOX_BUTTON_RETURNKEY_DEFAULT, MessageBoxButton::Yes, "Yes" },
-					{                                       0, MessageBoxButton::No,  "No" }
+					{ SDL_MESSAGEBOX_BUTTON_RETURNKEY_DEFAULT, static_cast<int>(MessageBoxButton::Yes), "Yes" },
+					{                                       0, static_cast<int>(MessageBoxButton::No),  "No" }
 				};
 				break;
-			case YesNoCancelSet:
+			case MessageBoxButtonSet::YesNoCancelSet:
 				buttonCount = 3;
 				buttons = new SDL_MessageBoxButtonData[buttonCount] {
-					{ SDL_MESSAGEBOX_BUTTON_RETURNKEY_DEFAULT, MessageBoxButton::Yes,    "Yes" },
-					{                                       0, MessageBoxButton::No,     "No" },
-					{ SDL_MESSAGEBOX_BUTTON_ESCAPEKEY_DEFAULT, MessageBoxButton::Cancel, "Cancel" }
+					{ SDL_MESSAGEBOX_BUTTON_RETURNKEY_DEFAULT, static_cast<int>(MessageBoxButton::Yes),    "Yes" },
+					{                                       0, static_cast<int>(MessageBoxButton::No),     "No" },
+					{ SDL_MESSAGEBOX_BUTTON_ESCAPEKEY_DEFAULT, static_cast<int>(MessageBoxButton::Cancel), "Cancel" }
 				};
 				break;
 		}
