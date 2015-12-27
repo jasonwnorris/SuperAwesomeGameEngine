@@ -76,7 +76,7 @@ namespace SAGE
 
 			void SetFromComposite(Uint32 p_Color);
 
-			Color& Invert(bool p_InvertAlpha = false);
+			void Invert(bool p_InvertAlpha = false);
 			Color Inverse(bool p_InvertAlpha = false) const;
 
 			static Color Lerp(const Color& p_ColorA, const Color& p_ColorB, float p_Amount);

@@ -250,14 +250,12 @@ namespace SAGE
 		SetAlphaFromByte(static_cast<int>(alpha));
 	}
 
-	Color& Color::Invert(bool p_InvertAlpha)
+	void Color::Invert(bool p_InvertAlpha)
 	{
 		m_Red = 1.0f - m_Red;
 		m_Green = 1.0f - m_Green;
 		m_Blue = 1.0f - m_Blue;
 		m_Alpha = p_InvertAlpha ? 1.0f - m_Alpha : m_Alpha;
-
-		return *this;
 	}
 
 	Color Color::Inverse(bool p_InvertAlpha) const
