@@ -359,20 +359,28 @@ namespace SAGE
 			return false;
 		}
 
-		int texWidth = p_Texture.GetWidth();
-		int texHeight = p_Texture.GetHeight();
-		Vector2 correction(1.0f / (float)texWidth, 1.0f / (float)texHeight);
+		float textureWidth = static_cast<float>(p_Texture.GetWidth());
+		float textureHeight = static_cast<float>(p_Texture.GetHeight());
 
-		Rectangle rect;
+		float correctionX = 1.0f / textureWidth;
+		float correctionY = 1.0f / textureHeight;
+
+		Rectangle textureBounds;
 		if (p_SourceRectangle != Rectangle::Empty)
-			rect = p_SourceRectangle;
+			textureBounds = p_SourceRectangle;
 		else
-			rect = Rectangle(0, 0, texWidth, texHeight);
+			textureBounds = Rectangle(0, 0, textureWidth, textureHeight);
 
-		Vector2 size(rect.Width * p_Scale.X, rect.Height * p_Scale.Y);
-		Vector2 origin(-p_Origin.X * p_Scale.X, -p_Origin.Y * p_Scale.Y);
-		Vector2 texCoordTL(rect.X / (float)texWidth + correction.X, rect.Y / (float)texHeight + correction.X);
-		Vector2 texCoordBR((rect.X + rect.Width) / (float)texWidth - correction.X, (rect.Y + rect.Height) / (float)texHeight - correction.Y);
+		float sizeX = textureBounds.Width * p_Scale.X;
+		float sizeY = textureBounds.Height * p_Scale.Y;
+
+		float originX = -p_Origin.X * p_Scale.X;
+		float originY = -p_Origin.Y * p_Scale.Y;
+
+		float texCoordTop = textureBounds.Y / textureHeight + correctionY;
+		float texCoordBottom = (textureBounds.Y + textureBounds.Height) / textureHeight - correctionY;
+		float texCoordLeft = textureBounds.X / textureWidth + correctionX;
+		float texCoordRight = (textureBounds.X + textureBounds.Width) / textureWidth - correctionX;
 
 		// Calculate cos/sin for rotation in radians.
 		float cosAngle = cosf(p_Rotation);
@@ -380,35 +388,35 @@ namespace SAGE
 
 		// Flip texture coordinates for orientation.
 		if ((p_Orientation & Orientation::FlipHorizontal) == Orientation::FlipHorizontal)
-			std::swap(texCoordTL.X, texCoordBR.X);
+			std::swap(texCoordLeft, texCoordRight);
 		if ((p_Orientation & Orientation::FlipVertical) == Orientation::FlipVertical)
-			std::swap(texCoordTL.Y, texCoordBR.Y);
+			std::swap(texCoordTop, texCoordBottom);
 
 		SpriteBatchItem& item = GetNextItem(p_Texture, p_Depth);
 
 		// Top left vertex.
-		SetVertexPosition(item.VertexTL, p_Position.X + origin.X * cosAngle - origin.Y * sinAngle,
-										 p_Position.Y + origin.X * sinAngle + origin.Y * cosAngle);
+		SetVertexPosition(item.VertexTL, p_Position.X + originX * cosAngle - originY * sinAngle,
+										 p_Position.Y + originX * sinAngle + originY * cosAngle);
 		SetVertexColor(item.VertexTL, p_Color);
-		SetVertexTexCoords(item.VertexTL, texCoordTL.X, texCoordTL.Y);
+		SetVertexTexCoords(item.VertexTL, texCoordLeft, texCoordTop);
 
 		// Top right vertex.
-		SetVertexPosition(item.VertexTR, p_Position.X + (origin.X + size.X) * cosAngle - origin.Y * sinAngle,
-										 p_Position.Y + (origin.X + size.X) * sinAngle + origin.Y * cosAngle);
+		SetVertexPosition(item.VertexTR, p_Position.X + (originX + sizeX) * cosAngle - originY * sinAngle,
+										 p_Position.Y + (originX + sizeX) * sinAngle + originY * cosAngle);
 		SetVertexColor(item.VertexTR, p_Color);
-		SetVertexTexCoords(item.VertexTR, texCoordBR.X, texCoordTL.Y);
+		SetVertexTexCoords(item.VertexTR, texCoordRight, texCoordTop);
 
 		// Bottom left vertex.
-		SetVertexPosition(item.VertexBL, p_Position.X + origin.X * cosAngle - (origin.Y + size.Y) * sinAngle,
-										 p_Position.Y + origin.X * sinAngle + (origin.Y + size.Y) * cosAngle);
+		SetVertexPosition(item.VertexBL, p_Position.X + originX * cosAngle - (originY + sizeY) * sinAngle,
+										 p_Position.Y + originX * sinAngle + (originY + sizeY) * cosAngle);
 		SetVertexColor(item.VertexBL, p_Color);
-		SetVertexTexCoords(item.VertexBL, texCoordTL.X, texCoordBR.Y);
+		SetVertexTexCoords(item.VertexBL, texCoordLeft, texCoordBottom);
 
 		// Bottom right vertex.
-		SetVertexPosition(item.VertexBR, p_Position.X + (origin.X + size.X) * cosAngle - (origin.Y + size.Y) * sinAngle,
-										 p_Position.Y + (origin.X + size.X) * sinAngle + (origin.Y + size.Y) * cosAngle);
+		SetVertexPosition(item.VertexBR, p_Position.X + (originX + sizeX) * cosAngle - (originY + sizeY) * sinAngle,
+										 p_Position.Y + (originX + sizeX) * sinAngle + (originY + sizeY) * cosAngle);
 		SetVertexColor(item.VertexBR, p_Color);
-		SetVertexTexCoords(item.VertexBR, texCoordBR.X, texCoordBR.Y);
+		SetVertexTexCoords(item.VertexBR, texCoordRight, texCoordBottom);
 
 		return true;
 	}
