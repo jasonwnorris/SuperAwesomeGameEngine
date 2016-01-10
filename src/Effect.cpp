@@ -144,7 +144,7 @@ namespace SAGE
 			GLchar message[256];
 			glGetShaderInfoLog(shader, length, &length, message);
 
-			SDL_Log("[Effect::Attach] Error compiling shader: ", message);
+			SDL_Log("[Effect::Attach] Error compiling shader: %s", message);
 
 			return false;
 		}
@@ -185,7 +185,7 @@ namespace SAGE
 			GLchar* message = new GLchar[length + 1];
 			glGetProgramInfoLog(m_Program, length, &length, message);
 
-			SDL_Log("[Effect::Link] Shader linking failed: ", message);
+			SDL_Log("[Effect::Link] Shader linking failed: %s", message);
 			delete [] message;
 
 			return false;
