@@ -5,6 +5,7 @@
 // SAGE Includes
 #include <SAGE/Math.hpp>
 #include <SAGE/SpriteBatch.hpp>
+#include <SAGE/String.hpp>
 // STL Includes
 #include <algorithm>
 
@@ -421,12 +422,12 @@ namespace SAGE
 		return true;
 	}
 
-	bool SpriteBatch::DrawString(const SAGE::SpriteFont& p_SpriteFont, const std::string& p_String, const Vector2& p_Position, const Color& p_Color, float p_Depth)
+	bool SpriteBatch::DrawString(const SAGE::IFont* const p_Font, const std::string& p_String, const Vector2& p_Position, const Color& p_Color, float p_Depth)
 	{
-		return DrawString(p_SpriteFont, p_String, p_Position, p_Color, Vector2::Zero, 0.0f, Vector2::One, SAGE::Orientation::None, p_Depth);
+		return DrawString(p_Font, p_String, p_Position, p_Color, Vector2::Zero, 0.0f, Vector2::One, SAGE::Orientation::None, p_Depth);
 	}
 
-	bool SpriteBatch::DrawString(const SAGE::SpriteFont& p_SpriteFont, const std::string& p_String, const Vector2& p_Position, const Color& p_Color, const Vector2& p_Origin, float p_Rotation, const Vector2& p_Scale, Orientation p_Orientation, float p_Depth)
+	bool SpriteBatch::DrawString(const SAGE::IFont* const p_Font, const std::string& p_String, const Vector2& p_Position, const Color& p_Color, const Vector2& p_Origin, float p_Rotation, const Vector2& p_Scale, Orientation p_Orientation, float p_Depth)
 	{
 		if (!m_WithinDrawPair)
 		{
@@ -434,67 +435,75 @@ namespace SAGE
 			return false;
 		}
 
-		const Texture& texture = p_SpriteFont.GetTexture();
+		const Texture& texture = p_Font->GetTexture();
 
-		int texWidth = texture.GetWidth();
-		int texHeight = texture.GetHeight();
+		float textureWidth = static_cast<float>(texture.GetWidth());
+		float textureHeight = static_cast<float>(texture.GetHeight());
 
-		float size = p_SpriteFont.GetSize();
-		float spacing = p_SpriteFont.GetSpacing();
+		float lineSpacing = p_Font->GetLineSpacing();
+
+		float correctionX = 1.0f / textureWidth;
+		float correctionY = 1.0f / textureHeight;
+
+		float originX = -p_Origin.X * p_Scale.X;
+		float originY = -p_Origin.Y * p_Scale.Y;
 
 		float cosAngle = cosf(p_Rotation);
 		float sinAngle = sinf(p_Rotation);
 
-		Vector2 correction(1.0f / (float)texWidth, 1.0f / (float)texHeight);
-		Vector2 origin(-p_Origin.X * p_Scale.X, -p_Origin.Y * p_Scale.Y);
+		float offsetX = 0.0f;
+		float offsetY = 0.0f;
 
-		Vector2 offset = Vector2::Zero;
+		std::vector<std::string> lines;
+		String::Split(p_String, "\n", lines);
 
-		for (char glyph : p_String)
+		for (std::string line : lines)
 		{
-			if (glyph == '\n' || glyph == '\r')
+			for (char character : line)
 			{
-				offset.X = 0.0f;
-				offset.Y += size * p_Scale.Y;
-			}
-			else
-			{
-				Rectangle rect = p_SpriteFont.GetGlyphBounds(glyph);
+				Rectangle textureBounds = p_Font->GetCharacterBounds(character);
 
-				Vector2 size(rect.Width * p_Scale.X, rect.Height * p_Scale.Y);
-				Vector2 texCoordTL(rect.X / (float)texWidth + correction.X, rect.Y / (float)texHeight + correction.X);
-				Vector2 texCoordBR((rect.X + rect.Width) / (float)texWidth - correction.X, (rect.Y + rect.Height) / (float)texHeight - correction.Y);
+				float sizeX = textureBounds.Width * p_Scale.X;
+				float sizeY = textureBounds.Height * p_Scale.Y;
+
+				float texCoordTop = textureBounds.Y / textureHeight + correctionY;
+				float texCoordBottom = (textureBounds.Y + textureBounds.Height) / textureHeight - correctionY;
+				float texCoordLeft = textureBounds.X / textureWidth + correctionX;
+				float texCoordRight = (textureBounds.X + textureBounds.Width) / textureWidth - correctionX;
 
 				SpriteBatchItem& item = GetNextItem(texture, p_Depth);
 
 				// Top left vertex.
-				SetVertexPosition(item.VertexTL, p_Position.X + origin.X + offset.X,
-												 p_Position.Y + origin.Y + offset.Y);
+				SetVertexPosition(item.VertexTL, p_Position.X + originX + offsetX,
+												 p_Position.Y + originY + offsetY);
 				SetVertexColor(item.VertexTL, p_Color);
-				SetVertexTexCoords(item.VertexTL, texCoordTL.X, texCoordTL.Y);
+				SetVertexTexCoords(item.VertexTL, texCoordLeft, texCoordTop);
 
 				// Top right vertex.
-				SetVertexPosition(item.VertexTR, p_Position.X + origin.X + size.X + offset.X,
-												 p_Position.Y + origin.Y + offset.Y);
+				SetVertexPosition(item.VertexTR, p_Position.X + originX + sizeX + offsetX,
+												 p_Position.Y + originY + offsetY);
 				SetVertexColor(item.VertexTR, p_Color);
-				SetVertexTexCoords(item.VertexTR, texCoordBR.X, texCoordTL.Y);
+				SetVertexTexCoords(item.VertexTR, texCoordRight, texCoordTop);
 
 				// Bottom left vertex.
-				SetVertexPosition(item.VertexBL, p_Position.X + origin.X + offset.X,
-												 p_Position.Y + origin.Y + size.Y + offset.Y);
+				SetVertexPosition(item.VertexBL, p_Position.X + originX + offsetX,
+												 p_Position.Y + originY + sizeY + offsetY);
 				SetVertexColor(item.VertexBL, p_Color);
-				SetVertexTexCoords(item.VertexBL, texCoordTL.X, texCoordBR.Y);
+				SetVertexTexCoords(item.VertexBL, texCoordLeft, texCoordBottom);
 
 				// Bottom right vertex.
-				SetVertexPosition(item.VertexBR, p_Position.X + origin.X + size.X + offset.X,
-												 p_Position.Y + origin.Y + size.Y + offset.Y);
+				SetVertexPosition(item.VertexBR, p_Position.X + originX + sizeX + offsetX,
+												 p_Position.Y + originY + sizeY + offsetY);
 				SetVertexColor(item.VertexBR, p_Color);
-				SetVertexTexCoords(item.VertexBR, texCoordBR.X, texCoordBR.Y);
+				SetVertexTexCoords(item.VertexBR, texCoordRight, texCoordBottom);
 
 				TransformVerticesAbout(item, p_Position, cosAngle, sinAngle, p_Orientation);
 
-				offset.X += spacing * p_Scale.X;
+				offsetX += p_Font->GetCharacterSpacing(character) * p_Scale.X;
 			}
+
+			offsetX = 0.0f;
+			offsetY += lineSpacing * p_Scale.Y;
 		}
 
 		return false;

@@ -4,37 +4,39 @@
 #define __SPRITEFONT_HPP__
 
 // SAGE Includes
-#include <SAGE/Texture.hpp>
-#include <SAGE/Rectangle.hpp>
-#include <SAGE/Vector2.hpp>
+#include <SAGE/IFont.hpp>
 // STL Includes
 #include <string>
 
 namespace SAGE
 {
-	class SpriteFont
+	struct SpriteFontOptions
+	{
+		float Size;
+		float Spacing;
+	};
+
+	class SpriteFont : public ILoadableFont<SpriteFontOptions>
 	{
 		public:
 			SpriteFont();
 			~SpriteFont();
 
-			const Texture& GetTexture() const;
-			float GetSize() const;
-			float GetSpacing() const;
-			Rectangle GetGlyphBounds(char p_Glyph) const;
+			float GetCharacterSpacing(Uint16 p_Character) const override;
+			float GetLineSpacing() const override;
 
-			void SetSize(float p_Size);
-			void SetSpacing(float p_Spacing);
+			const Texture& GetTexture() const override;
+			Rectangle GetCharacterBounds(Uint16 p_Character) const override;
 
-			bool Load(const std::string& p_Filename, float p_Size, float p_Spacing, Interpolation p_Interpolation = Interpolation::Linear, Wrapping p_Wrapping = Wrapping::Repeat);
-			bool Unload();
-			void MeasureString(const std::string& p_String, Vector2& p_Dimensions);
+			void MeasureString(const std::string& p_String, Vector2& p_Dimensions) override;
+
+			bool Load(const std::string& p_Filename, const SpriteFontOptions& p_Options) override;
+			bool Unload() override;
 
 		private:
 			Texture m_Texture;
 			float m_Size;
 			float m_Spacing;
-			bool m_IsLoaded;
 	};
 }
 

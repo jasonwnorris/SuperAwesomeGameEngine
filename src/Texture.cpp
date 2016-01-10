@@ -94,12 +94,14 @@ namespace SAGE
 			Uint32 composite = color.GetAsComposite();
 			m_Pixels.push_back(composite);
 
+			/*
 			SDL_Log("Added Composite Color: { R: %d, G: %d, B: %d, A: %d } = %u",
 				color.GetRedAsByte(),
 				color.GetGreenAsByte(),
 				color.GetBlueAsByte(),
 				color.GetAlphaAsByte(),
 				composite);
+			*/
 		}
 
 		// Create the texture.
