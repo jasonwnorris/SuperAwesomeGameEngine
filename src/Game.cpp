@@ -8,10 +8,31 @@ namespace SAGE
 {
 	Game::Game()
 	{
+		m_Window = new Window(this);
+		m_ScreenManager = new ScreenManager(this);
 	}
 
 	Game::~Game()
 	{
+		if (m_Window != nullptr)
+		{
+			delete m_Window;
+		}
+
+		if (m_ScreenManager != nullptr)
+		{
+			delete m_ScreenManager;
+		}
+	}
+
+	Window* Game::GetWindow() const
+	{
+		return m_Window;
+	}
+
+	ScreenManager* Game::GetScreenManager() const
+	{
+		return m_ScreenManager;
 	}
 
 	int Game::Start()
@@ -28,7 +49,7 @@ namespace SAGE
 			if (Update(m_Timer.GetDeltaTime()) < 0)
 				return -1;
 
-			m_Window.Clear();
+			m_Window->Clear();
 
 			if (Render(m_SpriteBatch) < 0)
 				return -1;
@@ -36,7 +57,7 @@ namespace SAGE
 			if (Render(m_GeometryBatch) < 0)
 				return -1;
 
-			m_Window.Flip();
+			m_Window->Flip();
 		}
 
 		if (Finalize() < 0)
@@ -54,7 +75,7 @@ namespace SAGE
 	{
 		m_Timer.Start();
 
-		if (!m_Window.Initialize())
+		if (!m_Window->Initialize())
 			return -1;
 
 		if (!m_SpriteBatch.Initialize())
@@ -74,7 +95,7 @@ namespace SAGE
 		if (!m_GeometryBatch.Finalize())
 			return -1;
 
-		if (!m_Window.Finalize())
+		if (!m_Window->Finalize())
 			return -1;
 
 		return 0;

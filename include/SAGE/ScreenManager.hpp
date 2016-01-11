@@ -4,16 +4,17 @@
 #define __SAGE_SCREENMANAGER_HPP__
 
 // SAGE Includes
+#include <SAGE/IGameComponent.hpp>
 #include <SAGE/Screen.hpp>
 // STL Includes
 #include <vector>
 
 namespace SAGE
 {
-	class ScreenManager
+	class ScreenManager : public IGameComponent
 	{
 		public:
-			ScreenManager();
+			ScreenManager(Game* p_Game);
 			~ScreenManager();
 
 			bool IsEmpty() const;
