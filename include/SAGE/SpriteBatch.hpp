@@ -46,19 +46,17 @@ namespace SAGE
 	{
 		unsigned int TextureID;
 		float Depth;
-		VertexPositionColorTexture VertexTL;
-		VertexPositionColorTexture VertexTR;
-		VertexPositionColorTexture VertexBL;
-		VertexPositionColorTexture VertexBR;
+		VertexPositionColorTexture VertexA;
+		VertexPositionColorTexture VertexB;
+		VertexPositionColorTexture VertexC;
 	};
 
 	class SpriteBatch
 	{
 		private:
 			static const int MaxBatchSize = 1024 * 10;
-			static const int MaxVertexCount = MaxBatchSize * 4;
-			static const int MaxIndexCount = MaxVertexCount / 2 * 3;
-			static const int RingBufferCount = 3;
+			static const int MaxVertexCount = MaxBatchSize * 3;
+			static const int MaxIndexCount = MaxBatchSize * 3;
 
 		public:
 			SpriteBatch();
@@ -83,6 +81,8 @@ namespace SAGE
 			bool DrawCircle(const Vector2& p_Position, const Color& p_Color, float p_Radius, float p_Thickness = 1.0f, float p_Depth = 0.0f);
 			bool DrawCircle(const Vector2& p_Position, const std::vector<Color>& p_Colors, float p_Radius, float p_Thickness = 1.0f, float p_Depth = 0.0f);
 
+			bool DrawSolidTriangle(const Vector2 p_Positions[3], const Color& p_Color, float p_Depth = 0.0f);
+
 			bool DrawSolidRectangle(float p_X, float p_Y, float p_Width, float p_Height, const Color& p_Color, float p_Depth = 0.0f);
 			bool DrawSolidRectangle(const Rectangle& p_Rectangle, const Color& p_Color, float p_Depth = 0.0f);
 			bool DrawSolidRectangle(const Vector2& p_Position, const Vector2& p_Dimensions, const Color& p_Color, float p_Depth = 0.0f);
@@ -105,6 +105,7 @@ namespace SAGE
 			void SetVertexPosition(VertexPositionColorTexture& p_Vertex, float p_X, float p_Y);
 			void SetVertexColor(VertexPositionColorTexture& p_Vertex, const Color& p_Color);
 			void SetVertexTexCoords(VertexPositionColorTexture& p_Vertex, float p_U, float p_V);
+			void SetVertex(VertexPositionColorTexture& p_Vertex, float p_X, float p_Y, const Color& p_Color, float p_U, float p_V);
 			void TransformVerticesAbout(SpriteBatchItem& p_Item, const Vector2& p_Position, float p_CosAngle, float p_SinAngle, Orientation p_Orientation);
 			void RotateVerticesAbout(SpriteBatchItem& p_Item, const Vector2& p_Position, float p_CosAngle, float p_SinAngle);
 			void FlipVerticesAbout(SpriteBatchItem& p_Item, const Vector2& p_Position, Orientation p_Orientation);

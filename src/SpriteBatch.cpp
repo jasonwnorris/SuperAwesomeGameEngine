@@ -46,14 +46,12 @@ namespace SAGE
 
 		// Generate data for index buffer.
 		GLushort indexData[MaxIndexCount];
-		for (int i = 0; i < MaxIndexCount / 6; i++)
+		for (int i = 0; i < MaxIndexCount / 3; ++i)
 		{
-			indexData[i * 6 + 0] = i * 4 + 0;
-			indexData[i * 6 + 1] = i * 4 + 1;
-			indexData[i * 6 + 2] = i * 4 + 2;
-			indexData[i * 6 + 3] = i * 4 + 0;
-			indexData[i * 6 + 4] = i * 4 + 2;
-			indexData[i * 6 + 5] = i * 4 + 3;
+			for (int j = 0; j < 3; ++j)
+			{
+				indexData[i * 3 + j] = i * 3 + j;
+			}
 		}
 
 		// Create the index buffer object.
@@ -156,31 +154,42 @@ namespace SAGE
 		Vector2 perpendicular = Vector2(p_PositionA.Y - p_PositionB.Y, p_PositionB.X - p_PositionA.X);
 		perpendicular.Normalize();
 
-		SpriteBatchItem& item = GetNextItem(m_BlankTexture, p_Depth);
+		SpriteBatchItem& item1 = GetNextItem(m_BlankTexture, p_Depth);
+		SpriteBatchItem& item2 = GetNextItem(m_BlankTexture, p_Depth);
 
 		// Top left vertex.
-		SetVertexPosition(item.VertexTL, p_PositionA.X + perpendicular.X * p_Thickness / 2.0f,
-										 p_PositionA.Y + perpendicular.Y * p_Thickness / 2.0f);
-		SetVertexColor(item.VertexTL, p_ColorA);
-		SetVertexTexCoords(item.VertexTL, 0.0f, 1.0f);
+		SetVertex(item1.VertexA,
+			p_PositionA.X + perpendicular.X * p_Thickness / 2.0f, p_PositionA.Y + perpendicular.Y * p_Thickness / 2.0f,
+			p_ColorA,
+			0.0f, 1.0f);
 
-		// Top right vertex.
-		SetVertexPosition(item.VertexTR, p_PositionA.X - perpendicular.X * p_Thickness / 2.0f,
-										 p_PositionA.Y - perpendicular.Y * p_Thickness / 2.0f);
-		SetVertexColor(item.VertexTR, p_ColorA);
-		SetVertexTexCoords(item.VertexTR, 1.0f, 1.0f);
+		// Top right vertex. (2)
+		SetVertex(item1.VertexC,
+			p_PositionA.X - perpendicular.X * p_Thickness / 2.0f, p_PositionA.Y - perpendicular.Y * p_Thickness / 2.0f,
+			p_ColorA,
+			1.0f, 1.0f);
 
-		// Bottom left vertex.
-		SetVertexPosition(item.VertexBL, p_PositionB.X + perpendicular.X * p_Thickness / 2.0f,
-										 p_PositionB.Y + perpendicular.Y * p_Thickness / 2.0f);
-		SetVertexColor(item.VertexBL, p_ColorB);
-		SetVertexTexCoords(item.VertexBL, 0.0f, 0.0f);
+		SetVertex(item2.VertexA,
+			p_PositionA.X - perpendicular.X * p_Thickness / 2.0f, p_PositionA.Y - perpendicular.Y * p_Thickness / 2.0f,
+			p_ColorA,
+			1.0f, 1.0f);
+
+		// Bottom left vertex. (2)
+		SetVertex(item1.VertexB,
+			p_PositionB.X + perpendicular.X * p_Thickness / 2.0f, p_PositionB.Y + perpendicular.Y * p_Thickness / 2.0f,
+			p_ColorB,
+			0.0f, 0.0f);
+
+		SetVertex(item2.VertexB,
+			p_PositionB.X + perpendicular.X * p_Thickness / 2.0f, p_PositionB.Y + perpendicular.Y * p_Thickness / 2.0f,
+			p_ColorB,
+			0.0f, 0.0f);
 
 		// Bottom right vertex.
-		SetVertexPosition(item.VertexBR, p_PositionB.X - perpendicular.X * p_Thickness / 2.0f,
-										 p_PositionB.Y - perpendicular.Y * p_Thickness / 2.0f);
-		SetVertexColor(item.VertexBR, p_ColorB);
-		SetVertexTexCoords(item.VertexBR, 1.0f, 0.0f);
+		SetVertex(item2.VertexC,
+			p_PositionB.X - perpendicular.X * p_Thickness / 2.0f, p_PositionB.Y - perpendicular.Y * p_Thickness / 2.0f,
+			p_ColorB,
+			1.0f, 0.0f);
 
 		return true;
 	}
@@ -287,6 +296,37 @@ namespace SAGE
 		return DrawLineLoop(positions, p_Colors, p_Thickness, p_Depth);
 	}
 
+	bool SpriteBatch::DrawSolidTriangle(const Vector2 p_Positions[3], const Color& p_Color, float p_Depth)
+	{
+		if (!m_WithinDrawPair)
+		{
+			SDL_Log("[SpriteBatch::DrawSolidTriangle] Must start a draw pair first.");
+			return false;
+		}
+
+		SpriteBatchItem& item = GetNextItem(m_BlankTexture, p_Depth);
+
+		// Top left vertex.
+		SetVertex(item.VertexA,
+			p_Positions[0].X, p_Positions[0].Y,
+			p_Color,
+			0.0f, 0.0f);
+
+		// Top right vertex.
+		SetVertex(item.VertexB,
+			p_Positions[1].X, p_Positions[1].Y,
+			p_Color,
+			0.0f, 0.0f);
+
+		// Bottom left vertex.
+		SetVertex(item.VertexC,
+			p_Positions[2].X, p_Positions[2].Y,
+			p_Color,
+			0.0f, 0.0f);
+
+		return true;
+	}
+
 	bool SpriteBatch::DrawSolidRectangle(float p_X, float p_Y, float p_Width, float p_Height, const Color& p_Color, float p_Depth)
 	{
 		if (!m_WithinDrawPair)
@@ -295,27 +335,42 @@ namespace SAGE
 			return false;
 		}
 
-		SpriteBatchItem& item = GetNextItem(m_BlankTexture, p_Depth);
+		SpriteBatchItem& item1 = GetNextItem(m_BlankTexture, p_Depth);
+		SpriteBatchItem& item2 = GetNextItem(m_BlankTexture, p_Depth);
 
 		// Top left vertex.
-		SetVertexPosition(item.VertexTL, p_X, p_Y);
-		SetVertexColor(item.VertexTL, p_Color);
-		SetVertexTexCoords(item.VertexTL, 0.0f, 1.0f);
+		SetVertex(item1.VertexA,
+			p_X, p_Y,
+			p_Color,
+			0.0f, 1.0f);
 
-		// Top right vertex.
-		SetVertexPosition(item.VertexTR, p_X + p_Width, p_Y);
-		SetVertexColor(item.VertexTR, p_Color);
-		SetVertexTexCoords(item.VertexTR, 1.0f, 1.0f);
+		// Top right vertex. (2)
+		SetVertex(item1.VertexC,
+			p_X + p_Width, p_Y,
+			p_Color,
+			1.0f, 1.0f);
 
-		// Bottom left vertex.
-		SetVertexPosition(item.VertexBL, p_X, p_Y + p_Height);
-		SetVertexColor(item.VertexBL, p_Color);
-		SetVertexTexCoords(item.VertexBL, 0.0f, 0.0f);
+		SetVertex(item2.VertexA,
+			p_X + p_Width, p_Y,
+			p_Color,
+			1.0f, 1.0f);
+
+		// Bottom left vertex. (2)
+		SetVertex(item1.VertexB,
+			p_X, p_Y + p_Height,
+			p_Color,
+			0.0f, 0.0f);
+
+		SetVertex(item2.VertexB,
+			p_X, p_Y + p_Height,
+			p_Color,
+			0.0f, 0.0f);
 
 		// Bottom right vertex.
-		SetVertexPosition(item.VertexBR, p_X + p_Width, p_Y + p_Height);
-		SetVertexColor(item.VertexBR, p_Color);
-		SetVertexTexCoords(item.VertexBR, 1.0f, 0.0f);
+		SetVertex(item2.VertexC,
+			p_X + p_Width, p_Y + p_Height,
+			p_Color,
+			1.0f, 0.0f);
 
 		return true;
 	}
@@ -393,31 +448,48 @@ namespace SAGE
 		if ((p_Orientation & Orientation::FlipVertical) == Orientation::FlipVertical)
 			std::swap(texCoordTop, texCoordBottom);
 
-		SpriteBatchItem& item = GetNextItem(p_Texture, p_Depth);
+		SpriteBatchItem& item1 = GetNextItem(p_Texture, p_Depth);
+		SpriteBatchItem& item2 = GetNextItem(p_Texture, p_Depth);
 
 		// Top left vertex.
-		SetVertexPosition(item.VertexTL, p_Position.X + originX * cosAngle - originY * sinAngle,
-										 p_Position.Y + originX * sinAngle + originY * cosAngle);
-		SetVertexColor(item.VertexTL, p_Color);
-		SetVertexTexCoords(item.VertexTL, texCoordLeft, texCoordTop);
+		SetVertex(item1.VertexA,
+			p_Position.X + originX * cosAngle - originY * sinAngle,
+			p_Position.Y + originX * sinAngle + originY * cosAngle,
+			p_Color,
+			texCoordLeft, texCoordTop);
 
-		// Top right vertex.
-		SetVertexPosition(item.VertexTR, p_Position.X + (originX + sizeX) * cosAngle - originY * sinAngle,
-										 p_Position.Y + (originX + sizeX) * sinAngle + originY * cosAngle);
-		SetVertexColor(item.VertexTR, p_Color);
-		SetVertexTexCoords(item.VertexTR, texCoordRight, texCoordTop);
+		// Top right vertex. (2)
+		SetVertex(item1.VertexC,
+			p_Position.X + (originX + sizeX) * cosAngle - originY * sinAngle,
+			p_Position.Y + (originX + sizeX) * sinAngle + originY * cosAngle,
+			p_Color,
+			texCoordRight, texCoordTop);
 
-		// Bottom left vertex.
-		SetVertexPosition(item.VertexBL, p_Position.X + originX * cosAngle - (originY + sizeY) * sinAngle,
-										 p_Position.Y + originX * sinAngle + (originY + sizeY) * cosAngle);
-		SetVertexColor(item.VertexBL, p_Color);
-		SetVertexTexCoords(item.VertexBL, texCoordLeft, texCoordBottom);
+		SetVertex(item2.VertexA,
+			p_Position.X + (originX + sizeX) * cosAngle - originY * sinAngle,
+			p_Position.Y + (originX + sizeX) * sinAngle + originY * cosAngle,
+			p_Color,
+			texCoordRight, texCoordTop);
+
+		// Bottom left vertex. (2)
+		SetVertex(item1.VertexB,
+			p_Position.X + originX * cosAngle - (originY + sizeY) * sinAngle,
+			p_Position.Y + originX * sinAngle + (originY + sizeY) * cosAngle,
+			p_Color,
+			texCoordLeft, texCoordBottom);
+
+		SetVertex(item2.VertexB,
+			p_Position.X + originX * cosAngle - (originY + sizeY) * sinAngle,
+			p_Position.Y + originX * sinAngle + (originY + sizeY) * cosAngle,
+			p_Color,
+			texCoordLeft, texCoordBottom);
 
 		// Bottom right vertex.
-		SetVertexPosition(item.VertexBR, p_Position.X + (originX + sizeX) * cosAngle - (originY + sizeY) * sinAngle,
-										 p_Position.Y + (originX + sizeX) * sinAngle + (originY + sizeY) * cosAngle);
-		SetVertexColor(item.VertexBR, p_Color);
-		SetVertexTexCoords(item.VertexBR, texCoordRight, texCoordBottom);
+		SetVertex(item2.VertexC,
+			p_Position.X + (originX + sizeX) * cosAngle - (originY + sizeY) * sinAngle,
+			p_Position.Y + (originX + sizeX) * sinAngle + (originY + sizeY) * cosAngle,
+			p_Color,
+			texCoordRight, texCoordBottom);
 
 		return true;
 	}
@@ -471,33 +543,45 @@ namespace SAGE
 				float texCoordLeft = textureBounds.X / textureWidth + correctionX;
 				float texCoordRight = (textureBounds.X + textureBounds.Width) / textureWidth - correctionX;
 
-				SpriteBatchItem& item = GetNextItem(texture, p_Depth);
+				SpriteBatchItem& item1 = GetNextItem(texture, p_Depth);
+				SpriteBatchItem& item2 = GetNextItem(texture, p_Depth);
 
 				// Top left vertex.
-				SetVertexPosition(item.VertexTL, p_Position.X + originX + offsetX,
-												 p_Position.Y + originY + offsetY);
-				SetVertexColor(item.VertexTL, p_Color);
-				SetVertexTexCoords(item.VertexTL, texCoordLeft, texCoordTop);
+				SetVertex(item1.VertexA,
+					p_Position.X + originX + offsetX, p_Position.Y + originY + offsetY,
+					p_Color,
+					texCoordLeft, texCoordTop);
 
-				// Top right vertex.
-				SetVertexPosition(item.VertexTR, p_Position.X + originX + sizeX + offsetX,
-												 p_Position.Y + originY + offsetY);
-				SetVertexColor(item.VertexTR, p_Color);
-				SetVertexTexCoords(item.VertexTR, texCoordRight, texCoordTop);
+				// Top right vertex. (2)
+				SetVertex(item1.VertexC,
+					p_Position.X + originX + sizeX + offsetX, p_Position.Y + originY + offsetY,
+					p_Color,
+					texCoordRight, texCoordTop);
 
-				// Bottom left vertex.
-				SetVertexPosition(item.VertexBL, p_Position.X + originX + offsetX,
-												 p_Position.Y + originY + sizeY + offsetY);
-				SetVertexColor(item.VertexBL, p_Color);
-				SetVertexTexCoords(item.VertexBL, texCoordLeft, texCoordBottom);
+				SetVertex(item2.VertexA,
+					p_Position.X + originX + sizeX + offsetX, p_Position.Y + originY + offsetY,
+					p_Color,
+					texCoordRight, texCoordTop);
+
+				// Bottom left vertex. (2)
+				SetVertex(item1.VertexB,
+					p_Position.X + originX + offsetX, p_Position.Y + originY + sizeY + offsetY,
+					p_Color,
+					texCoordLeft, texCoordBottom);
+
+				SetVertex(item2.VertexB,
+					p_Position.X + originX + offsetX, p_Position.Y + originY + sizeY + offsetY,
+					p_Color,
+					texCoordLeft, texCoordBottom);
 
 				// Bottom right vertex.
-				SetVertexPosition(item.VertexBR, p_Position.X + originX + sizeX + offsetX,
-												 p_Position.Y + originY + sizeY + offsetY);
-				SetVertexColor(item.VertexBR, p_Color);
-				SetVertexTexCoords(item.VertexBR, texCoordRight, texCoordBottom);
+				SetVertex(item2.VertexC,
+					p_Position.X + originX + sizeX + offsetX, p_Position.Y + originY + sizeY + offsetY,
+					p_Color,
+					texCoordRight, texCoordBottom);
 
-				TransformVerticesAbout(item, p_Position, cosAngle, sinAngle, p_Orientation);
+				TransformVerticesAbout(item1, p_Position, cosAngle, sinAngle, p_Orientation);
+				TransformVerticesAbout(item2, p_Position, cosAngle, sinAngle, p_Orientation);
 
 				offsetX += p_Font->GetCharacterSpacing(character) * p_Scale.X;
 			}
@@ -600,10 +684,9 @@ namespace SAGE
 				length = 0;
 			}
 
-			m_VertexBuffer[length * 4 + 0] = item.VertexBL;
-			m_VertexBuffer[length * 4 + 1] = item.VertexBR;
-			m_VertexBuffer[length * 4 + 2] = item.VertexTR;
-			m_VertexBuffer[length * 4 + 3] = item.VertexTL;
+			m_VertexBuffer[length * 3 + 0] = item.VertexA;
+			m_VertexBuffer[length * 3 + 1] = item.VertexB;
+			m_VertexBuffer[length * 3 + 2] = item.VertexC;
 
 			length++;
 		}
@@ -645,7 +728,7 @@ namespace SAGE
 
 		// Bind the element buffer and draw.
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_IndexBufferObject);
-		glDrawElements(GL_TRIANGLES, p_Length * 6, GL_UNSIGNED_SHORT, nullptr);
+		glDrawElements(GL_TRIANGLES, p_Length * 3, GL_UNSIGNED_SHORT, nullptr);
 
 		// Clear bindings.
 		glBindVertexArray(0);
@@ -687,6 +770,13 @@ namespace SAGE
 		p_Vertex.TexCoord.Y = p_V;
 	}
 
+	void SpriteBatch::SetVertex(VertexPositionColorTexture& p_Vertex, float p_X, float p_Y, const Color& p_Color, float p_U, float p_V)
+	{
+		SetVertexPosition(p_Vertex, p_X, p_Y);
+		SetVertexColor(p_Vertex, p_Color);
+		SetVertexTexCoords(p_Vertex, p_U, p_V);
+	}
+
 	void SpriteBatch::TransformVerticesAbout(SpriteBatchItem& p_Item, const Vector2& p_Position, float p_CosAngle, float p_SinAngle, Orientation p_Orientation)
 	{
 		RotateVerticesAbout(p_Item, p_Position, p_CosAngle, p_SinAngle);
@@ -695,18 +785,16 @@ namespace SAGE
 
 	void SpriteBatch::RotateVerticesAbout(SpriteBatchItem& p_Item, const Vector2& p_Position, float p_CosAngle, float p_SinAngle)
 	{
-		RotateVertexAbout(p_Item.VertexTL, p_Position, p_CosAngle, p_SinAngle);
-		RotateVertexAbout(p_Item.VertexTR, p_Position, p_CosAngle, p_SinAngle);
-		RotateVertexAbout(p_Item.VertexBL, p_Position, p_CosAngle, p_SinAngle);
-		RotateVertexAbout(p_Item.VertexBR, p_Position, p_CosAngle, p_SinAngle);
+		RotateVertexAbout(p_Item.VertexA, p_Position, p_CosAngle, p_SinAngle);
+		RotateVertexAbout(p_Item.VertexB, p_Position, p_CosAngle, p_SinAngle);
+		RotateVertexAbout(p_Item.VertexC, p_Position, p_CosAngle, p_SinAngle);
 	}
 
 	void SpriteBatch::FlipVerticesAbout(SpriteBatchItem& p_Item, const Vector2& p_Position, Orientation p_Orientation)
 	{
-		FlipVertexAbout(p_Item.VertexTL, p_Position, p_Orientation);
-		FlipVertexAbout(p_Item.VertexTR, p_Position, p_Orientation);
-		FlipVertexAbout(p_Item.VertexBL, p_Position, p_Orientation);
-		FlipVertexAbout(p_Item.VertexBR, p_Position, p_Orientation);
+		FlipVertexAbout(p_Item.VertexA, p_Position, p_Orientation);
+		FlipVertexAbout(p_Item.VertexB, p_Position, p_Orientation);
+		FlipVertexAbout(p_Item.VertexC, p_Position, p_Orientation);
 	}
 
 	void SpriteBatch::RotateVertexAbout(VertexPositionColorTexture& p_Vertex, const Vector2& p_Position, float p_CosAngle, float p_SinAngle)
