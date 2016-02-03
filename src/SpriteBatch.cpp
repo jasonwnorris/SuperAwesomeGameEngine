@@ -298,6 +298,15 @@ namespace SAGE
 
 	bool SpriteBatch::DrawSolidTriangle(const Vector2 p_Positions[3], const Color& p_Color, float p_Depth)
 	{
+		Color colors[3] = {
+			p_Color, p_Color, p_Color
+		};
+
+		return DrawSolidTriangle(p_Positions, colors, p_Depth);
+	}
+	
+	bool SpriteBatch::DrawSolidTriangle(const Vector2 p_Positions[3], const Color p_Colors[3], float p_Depth)
+	{
 		if (!m_WithinDrawPair)
 		{
 			SDL_Log("[SpriteBatch::DrawSolidTriangle] Must start a draw pair first.");
@@ -309,19 +318,19 @@ namespace SAGE
 		// Top left vertex.
 		SetVertex(item.VertexA,
 			p_Positions[0].X, p_Positions[0].Y,
-			p_Color,
+			p_Colors[0],
 			0.0f, 0.0f);
 
 		// Top right vertex.
 		SetVertex(item.VertexB,
 			p_Positions[1].X, p_Positions[1].Y,
-			p_Color,
+			p_Colors[1],
 			0.0f, 0.0f);
 
 		// Bottom left vertex.
 		SetVertex(item.VertexC,
 			p_Positions[2].X, p_Positions[2].Y,
-			p_Color,
+			p_Colors[2],
 			0.0f, 0.0f);
 
 		return true;
@@ -387,6 +396,54 @@ namespace SAGE
 	bool SpriteBatch::DrawSolidRectangle(const Vector2& p_Position, const Vector2& p_Dimensions, const Color& p_Color, float p_Depth)
 	{
 		return DrawSolidRectangle(p_Position.X, p_Position.Y, p_Dimensions.X, p_Dimensions.Y, p_Color, p_Depth);
+	}
+
+	bool SpriteBatch::DrawSolidCircle(const Vector2& p_Position, const Color& p_Color, float p_Radius, float p_Depth)
+	{
+		return DrawSolidCircle(p_Position, p_Color, p_Color, p_Radius, p_Depth);
+	}
+
+	bool SpriteBatch::DrawSolidCircle(const Vector2& p_Position, const Color& p_ColorA, const Color& p_ColorB, float p_Radius, float p_Depth)
+	{
+		if (!m_WithinDrawPair)
+		{
+			SDL_Log("[SpriteBatch::DrawSolidCircle] Must start a draw pair first.");
+			return false;
+		}
+
+		Vector2 positions[3];
+		positions[1] = p_Position;
+
+		Color colors[3] = {
+			p_ColorB,
+			p_ColorA,
+			p_ColorB
+		};
+
+		float step = Math::Pi / 16.0f;
+		for (float angle = 0.0f; angle < Math::TwoPi; angle += step)
+		{
+			float cosAngleA = cosf(angle);
+			float sinAngleA = sinf(angle);
+			float cosAngleB = cosf(angle + step);
+			float sinAngleB = sinf(angle + step);
+
+			positions[0].X = p_Position.X + p_Radius * cosAngleA;
+			positions[0].Y = p_Position.Y + p_Radius * sinAngleA;
+
+			positions[2].X = p_Position.X + p_Radius * cosAngleB;
+			positions[2].Y = p_Position.Y + p_Radius * sinAngleB;
+/*
+			SDL_Log("Angle: %f, { %f, %f }, { %f, %f }, { %f, %f }",
+				angle,
+				positions[0].X, positions[0].Y,
+				positions[1].X, positions[1].Y,
+				positions[2].X, positions[2].Y);
+*/
+			DrawSolidTriangle(positions, colors, p_Depth);
+		}
+
+		return true;
 	}
 
 	bool SpriteBatch::DrawSprite(const Texture& p_Texture, const Vector2& p_Position, const Vector2& p_Dimensions, const Rectangle& p_SourceRectangle, const Color& p_Color, const Vector2& p_Origin, float p_Rotation, const Vector2& p_Scale, Orientation p_Orientation, float p_Depth)

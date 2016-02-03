@@ -82,10 +82,14 @@ namespace SAGE
 			bool DrawCircle(const Vector2& p_Position, const std::vector<Color>& p_Colors, float p_Radius, float p_Thickness = 1.0f, float p_Depth = 0.0f);
 
 			bool DrawSolidTriangle(const Vector2 p_Positions[3], const Color& p_Color, float p_Depth = 0.0f);
+			bool DrawSolidTriangle(const Vector2 p_Positions[3], const Color p_Colors[3], float p_Depth = 0.0f);
 
 			bool DrawSolidRectangle(float p_X, float p_Y, float p_Width, float p_Height, const Color& p_Color, float p_Depth = 0.0f);
 			bool DrawSolidRectangle(const Rectangle& p_Rectangle, const Color& p_Color, float p_Depth = 0.0f);
 			bool DrawSolidRectangle(const Vector2& p_Position, const Vector2& p_Dimensions, const Color& p_Color, float p_Depth = 0.0f);
+
+			bool DrawSolidCircle(const Vector2& p_Position, const Color& p_Color, float p_Radius, float p_Depth = 0.0f);
+			bool DrawSolidCircle(const Vector2& p_Position, const Color& p_ColorA, const Color& p_ColorB, float p_Radius, float p_Depth = 0.0f);
 
 			bool DrawSprite(const Texture& p_Texture, const Vector2& p_Position, const Vector2& p_Dimensions, const Rectangle& p_SourceRectangle, const Color& p_Color, const Vector2& p_Origin, float p_Rotation, const Vector2& p_Scale, Orientation p_Orientation, float p_Depth = 0.0f);
 			bool DrawSprite(const Texture& p_Texture, const Vector2& p_Position, const Rectangle& p_DestinationRectangle, const Rectangle& p_SourceRectangle, const Color& p_Color, const Vector2& p_Origin, float p_Rotation, const Vector2& p_Scale, Orientation p_Orientation, float p_Depth = 0.0f);
